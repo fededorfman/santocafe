@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: santocafe-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-santocafe}
+      MYSQL_USER: ${MYSQL_USER:-santocafe}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-santocafe123}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./apps/api/db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  adminer:
+    image: adminer
+    container_name: santocafe-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:

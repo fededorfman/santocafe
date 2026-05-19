@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* ============================
+   Paleta de marca — Santo Café
+   ============================ */
+:root {
+  /* Colores de marca */
+  --color-terracota: #8C6239;
+  --color-marron-oscuro: #2C1D11;
+  --color-beige-arena: #E6DCC3;
+  --color-blanco-crema: #FAF7F2;
+
+  /* Aliases semánticos */
+  --background: var(--color-blanco-crema);
+  --foreground: var(--color-marron-oscuro);
+  --accent: var(--color-terracota);
+  --surface: var(--color-beige-arena);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+
+  /* Colores de marca disponibles como clases Tailwind */
+  --color-terracota: #8C6239;
+  --color-marron: #2C1D11;
+  --color-beige: #E6DCC3;
+  --color-crema: #FAF7F2;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lora', 'Playfair Display', serif;
+}
