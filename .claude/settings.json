@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(mkdir *)",
+      "Bash(mv *)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:drive.google.com)",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}
