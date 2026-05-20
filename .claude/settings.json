@@ -1,4 +1,5 @@
 {
+  "enabledMcpjsonServers": ["frame0"],
   "permissions": {
     "allow": [
       "Bash(git *)",
