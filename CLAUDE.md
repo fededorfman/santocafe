@@ -10,6 +10,18 @@ Santo Café is a specialty coffee management system for an Argentine company. It
 - `apps/web` — Public website with WooCommerce (future)
 - `packages/shared` — Shared TypeScript types and utilities (not yet implemented)
 
+## Branch Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Source of truth — base for all long-lived branches |
+| `prod` | Production-ready code only |
+| `qa` | Staging / QA testing |
+| `dev` | **Active development — always work here** |
+
+**Flow:** feature branches off `dev` → PR into `dev` → promote to `qa` → promote to `prod`.  
+Never commit directly to `prod` or `qa`.
+
 ## Development Commands
 
 **Start everything (order matters):**
