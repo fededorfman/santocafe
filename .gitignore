@@ -42,3 +42,6 @@ coverage/
 
 # MySQL data (local dev)
 mysql-data/
+
+# Claude Code — overrides locales (contienen rutas absolutas de cada máquina)
+.claude/settings.local.json
