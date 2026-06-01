@@ -18,5 +18,11 @@
 /* 5. WooCommerce overrides */
 @import url('_woocommerce.css');
 
-/* 6. Responsive */
+/* 6. Homepage */
+@import url('_home.css');
+
+/* 7. Product card */
+@import url('_product-card.css');
+
+/* 8. Responsive */
 @import url('_responsive.css');
