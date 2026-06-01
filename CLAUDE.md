@@ -80,6 +80,37 @@ Copy `.env.example` to `.env` before starting. Key variables:
 | Beige Arena | `#E6DCC3` | Secondary backgrounds |
 | Blanco Crema | `#FAF7F2` | Reading backgrounds |
 
+## Web Pública (apps/web)
+
+WordPress + WooCommerce. País: Chile. Moneda: CLP.  
+Spec completa: `docs/web/especificaciones-web.md`  
+Notas operativas y pendientes: `docs/web/notas-operativas.md`
+
+Paleta propia (distinta al backoffice): dorado `#dfb33e`, oscuro `#1a1310`, crema `#fcfaf7`.  
+Tipografía: Playfair Display (headings) + Inter (cuerpo).  
+Pasarela de pago: Flow (integración con SII Chile).
+
+## Productos Reales
+
+8 cafés de especialidad. Catálogo completo en `docs/productos/catalogo.csv`.
+
+| SKU | Nombre | Origen | SCA | Proceso |
+|-----|--------|--------|-----|---------|
+| 1 | Macondo | Colombia | 84 | Lavado |
+| 2 | Camino Inca | Perú | 83 | Lavado |
+| 3 | Cielo Andino | Colombia | 85 | Lavado y Fermentado |
+| 4 | Santo Yungas | Bolivia | 84 | Lavado |
+| 5 | Santo Ouro Doce | Brasil | 83 | Natural |
+| 6 | Santo Sereno | Guatemala | 85 | Lavado |
+| 7 | Santo Equilibrio | Colombia | 84 | Lavado |
+| 8 | Los Santos | Costa Rica | 84.75 | Lavado |
+
+Presentaciones: 250gr y 1kg. Moliendas: Grano, Espresso, Italiana, Filtro.
+
+## Logo
+
+`assets/logos/logo.png` — fuente. Copiado a `apps/backoffice/public/logo.png`.
+
 ## Planned Modules
 
 Auth (passwordless email), Dashboard (role-based: Admin / Ops Manager), Pedidos, Entregas (maps), Inventario (reorder point algorithm), Usuarios. Roles: Administrador (full control), Gerente de Ops (supply chain & logistics).
