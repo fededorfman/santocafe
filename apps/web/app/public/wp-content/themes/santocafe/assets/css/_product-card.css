@@ -1,0 +1,203 @@
+/* ============================================================
+   Product Card — usado en home, shop y cualquier loop de WC
+   ============================================================ */
+
+.product-card {
+    background: var(--color-tarjeta);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.product-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* ---- Image zone ---- */
+.product-card__image-zone {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--color-oscuro);
+}
+
+.product-card__image-link {
+    display: block;
+    height: 100%;
+}
+
+.product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-card__image {
+    transform: scale(1.04);
+}
+
+.product-card__image--placeholder {
+    background: linear-gradient(135deg, #2a1f1a 0%, #1a1310 100%);
+    height: 100%;
+}
+
+/* Badges (bottom-left of image zone) */
+.product-card__badges {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 2;
+}
+
+/* Info button (top-right) */
+.product-card__info-btn {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(26, 19, 16, 0.72);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+    backdrop-filter: blur(4px);
+}
+
+.product-card__info-btn:hover {
+    background: rgba(26, 19, 16, 0.95);
+}
+
+/* Sale badge (diagonal ribbon) */
+.product-card__offer-badge {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    left: var(--spacing-sm);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    z-index: 2;
+}
+
+/* ---- Content zone ---- */
+.product-card__content {
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+/* Title */
+.product-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.product-card__title a {
+    color: var(--color-oscuro);
+    transition: color var(--transition-fast);
+}
+
+.product-card__title a:hover {
+    color: var(--color-dorado-suave);
+}
+
+/* Tasting notes */
+.product-card__notes {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* Profile bar in card */
+.product-card__profile {
+    margin-top: var(--spacing-xs);
+}
+
+.product-card__profile .profile-bar__label {
+    min-width: 36px;
+    color: var(--color-texto-suave);
+}
+
+/* Format selector */
+.product-card__format {
+    margin-top: var(--spacing-xs);
+}
+
+.product-card__format .pill-selector__option {
+    font-size: var(--font-size-xs);
+    padding: 5px var(--spacing-sm);
+}
+
+/* Molienda text */
+.product-card__molienda {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    margin: 0;
+}
+
+.product-card__molienda-edit {
+    color: var(--color-texto-suave);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+}
+
+.product-card__molienda-edit:hover {
+    color: var(--color-dorado-suave);
+}
+
+/* Footer: price + add button */
+.product-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-top: auto;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-borde);
+}
+
+.product-card__price {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-oscuro);
+    line-height: 1;
+}
+
+.product-card__add {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+.product-card__add svg {
+    width: 14px;
+    height: 14px;
+}

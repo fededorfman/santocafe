@@ -82,4 +82,47 @@
         setTimeout(updateSpacer, 250);
     });
 
+    // ============================================================
+    // Hero scroll indicator
+    // ============================================================
+    var $scrollIndicator = $('.js-scroll-indicator');
+    if ($scrollIndicator.length) {
+        setTimeout(function () {
+            $scrollIndicator.addClass('is-visible');
+        }, 800);
+
+        // Hide on scroll
+        $(window).on('scroll.hero', function () {
+            if ($(this).scrollTop() > 80) {
+                $scrollIndicator.removeClass('is-visible');
+                $(window).off('scroll.hero');
+            }
+        });
+    }
+
+    // ============================================================
+    // Product Card — format selector (250g / 1kg)
+    // Updates price display and add-to-cart URL on pill click.
+    // ============================================================
+    $(document).on('click', '.product-card__format .pill-selector__option', function () {
+        var $pill   = $(this);
+        var $card   = $pill.closest('.product-card');
+        var price   = $pill.data('price');
+        var addUrl  = $pill.data('add-url');
+
+        // Update selected state
+        $pill.siblings('.pill-selector__option').removeClass('is-selected');
+        $pill.addClass('is-selected');
+
+        // Update price
+        if (price) {
+            $card.find('.js-card-price').text(price);
+        }
+
+        // Update add-to-cart URL
+        if (addUrl) {
+            $card.find('.js-card-add').attr('href', addUrl);
+        }
+    });
+
 })(jQuery);
