@@ -1,0 +1,22 @@
+/* ============================================================
+   Santo Café — CSS Principal
+   Importa todos los módulos en orden
+   ============================================================ */
+
+/* 1. Tokens de diseño (variables CSS) */
+@import url('_variables.css');
+
+/* 2. Reset y base */
+@import url('_base.css');
+
+/* 3. Layout */
+@import url('_layout.css');
+
+/* 4. Componentes */
+@import url('_components.css');
+
+/* 5. WooCommerce overrides */
+@import url('_woocommerce.css');
+
+/* 6. Responsive */
+@import url('_responsive.css');

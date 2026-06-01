@@ -1,0 +1,17 @@
+/*
+Theme Name:  Santo Café
+Theme URI:   https://santocafe.cl
+Description: Tema custom para Santo Café — E-commerce de café de especialidad en Chile. WordPress + WooCommerce.
+Version:     0.1.0
+Author:      Santo Café
+Author URI:  https://santocafe.cl
+Text Domain: santocafe
+Domain Path: /languages
+Tags:        woocommerce, e-commerce, custom
+Requires at least: 6.0
+Requires PHP: 8.0
+License:     Proprietary
+*/
+
+/* Los estilos reales están en assets/css/main.css */
+/* Este archivo solo existe para que WordPress reconozca el tema */
