@@ -1,0 +1,184 @@
+/* ============================================================
+   Componentes reutilizables — botones, badges, barra de perfil
+   ============================================================ */
+
+/* ---- Buttons ---- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-xl);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn--primary {
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    border-color: var(--color-dorado);
+}
+
+.btn--primary:hover {
+    background: var(--color-dorado-hover);
+    border-color: var(--color-dorado-hover);
+    color: var(--color-oscuro);
+}
+
+.btn--outline {
+    background: transparent;
+    color: var(--color-dorado);
+    border-color: var(--color-dorado);
+}
+
+.btn--outline:hover {
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+.btn--dark {
+    background: var(--color-oscuro);
+    color: #fff;
+    border-color: var(--color-oscuro);
+}
+
+.btn--dark:hover {
+    background: #2a1f1a;
+    border-color: #2a1f1a;
+    color: #fff;
+}
+
+.btn--sm {
+    padding: 6px var(--spacing-md);
+    font-size: var(--font-size-xs);
+}
+
+.btn--lg {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-base);
+}
+
+.btn--full { width: 100%; }
+
+/* ---- Cart Badge ---- */
+.cart-icon__badge {
+    position: absolute;
+    top: -7px;
+    right: -9px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    display: block;
+    transition: transform var(--transition-fast);
+    pointer-events: none;
+}
+
+.cart-icon__badge.is-empty { display: none; }
+
+/* ---- SCA / Country Badge ---- */
+.sca-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(26, 19, 16, 0.80);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    line-height: 1.4;
+}
+
+.sca-badge--gold {
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+/* ---- Profile Bar (Intensidad / Acidez / Cuerpo) ---- */
+.profile-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.profile-bar__label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 80px;
+    color: var(--color-texto-suave);
+    flex-shrink: 0;
+}
+
+.profile-bar__segments {
+    display: flex;
+    gap: 3px;
+}
+
+.profile-bar__segment {
+    width: 24px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-borde);
+    transition: background var(--transition-fast);
+}
+
+.profile-bar__segment--active { background: var(--color-dorado); }
+
+/* ---- Pill selector (250g / 1kg, molienda) ---- */
+.pill-selector {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.pill-selector__option {
+    padding: 6px var(--spacing-md);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--color-borde);
+    background: transparent;
+    color: var(--color-texto-suave);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    line-height: 1.4;
+}
+
+.pill-selector__option:hover {
+    border-color: var(--color-oscuro);
+    color: var(--color-oscuro);
+}
+
+.pill-selector__option.is-selected,
+.pill-selector__option[aria-selected="true"] {
+    background: var(--color-oscuro);
+    border-color: var(--color-oscuro);
+    color: #fff;
+}

@@ -1,0 +1,92 @@
+<?php
+defined('ABSPATH') || exit;
+
+$shop_url = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 )
+    ? get_permalink( wc_get_page_id( 'shop' ) )
+    : home_url( '/' );
+?>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="site-footer__grid">
+
+            <!-- Col 1: Identidad -->
+            <div class="site-footer__col site-footer__brand">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-footer__logo">
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>"
+                         alt="<?php bloginfo( 'name' ); ?>"
+                         width="100" height="35">
+                </a>
+                <p class="site-footer__tagline">
+                    Tostadores de café de especialidad.<br>Tostado diario en Chile.
+                </p>
+                <div class="site-footer__social">
+                    <a href="#" class="social-icon" aria-label="Facebook" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             width="18" height="18" aria-hidden="true">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Col 2: Tienda -->
+            <div class="site-footer__col">
+                <h4 class="site-footer__heading">Tienda</h4>
+                <ul class="site-footer__links">
+                    <li><a href="<?php echo esc_url( $shop_url ); ?>">Nuestros Cafés</a></li>
+                    <li><a href="#">Blends</a></li>
+                    <li><a href="#">Especialidad de Origen</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Preparación -->
+            <div class="site-footer__col">
+                <h4 class="site-footer__heading">Preparación</h4>
+                <ul class="site-footer__links">
+                    <li><a href="#">Café para espresso</a></li>
+                    <li><a href="#">Café para italiana</a></li>
+                    <li><a href="#">Café para filtro</a></li>
+                    <li><a href="#">Café arábica</a></li>
+                    <li><a href="#">Café ecológico</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Empresa + Legal -->
+            <div class="site-footer__col">
+                <h4 class="site-footer__heading">Empresa</h4>
+                <ul class="site-footer__links">
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <h4 class="site-footer__heading site-footer__heading--spaced">Legal</h4>
+                <ul class="site-footer__links">
+                    <li><a href="#">Aviso legal</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                    <li><a href="#">Política de cookies</a></li>
+                    <li><a href="#">Condiciones de venta</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="site-footer__bottom">
+        <div class="container site-footer__bottom-inner">
+            <span>© <?php echo esc_html( date( 'Y' ) ); ?> Santo Café · Café de especialidad en Chile.</span>
+            <span class="site-footer__bottom-tagline">Un buen día, un buen café.</span>
+        </div>
+    </div>
+</footer>
+
+<?php wp_footer(); ?>
+</body>
+</html>

@@ -1,0 +1,38 @@
+/* ============================================================
+   Responsive — ajustes por breakpoint
+   ============================================================ */
+
+/* === Tablet (≤ 1024px) === */
+@media (max-width: 1024px) {
+
+    /* Header: mostrar hamburger, ocultar menú horizontal */
+    .site-nav__menu    { display: none; }
+    .site-nav__hamburger { display: flex; }
+
+    .site-nav          { height: var(--header-height-mob); }
+    .header-spacer     { height: var(--header-height-mob); }
+
+    /* Footer: 2 columnas */
+    .site-footer__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+}
+
+/* === Mobile (≤ 600px) === */
+@media (max-width: 600px) {
+
+    .container { padding-inline: var(--spacing-md); }
+
+    /* Footer: 1 columna */
+    .site-footer__grid {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-xl) 0;
+    }
+
+    .site-footer__bottom-inner {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+}
