@@ -27,5 +27,8 @@
 /* 8. Modal */
 @import url('_modal.css');
 
-/* 9. Responsive */
+/* 9. Product detail */
+@import url('_product-detail.css');
+
+/* 10. Responsive */
 @import url('_responsive.css');
