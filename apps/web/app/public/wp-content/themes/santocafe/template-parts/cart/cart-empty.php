@@ -15,7 +15,7 @@ $catalog_url = home_url( '/#catalogo' );
              alt="" width="160" height="160" loading="lazy">
     </div>
 
-    <h2 class="cart-empty__title">Tu carrito está vacío</h2>
+    <h2 class="cart-empty__title">No te quedes sin café.</h2>
     <p class="cart-empty__text">
         El café está triste porque tu carrito está vacío.
         Descubrí nuestros orígenes de especialidad.
