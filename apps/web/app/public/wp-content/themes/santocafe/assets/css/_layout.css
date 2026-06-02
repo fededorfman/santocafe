@@ -21,8 +21,10 @@
     flex-direction: column;
 }
 
-.header-spacer {
-    height: var(--header-height);
+/* Non-hero pages: push main content below the fixed header */
+.wc-main,
+.site-main {
+    padding-top: var(--header-height);
 }
 
 /* ---- Shipping Banner ---- */

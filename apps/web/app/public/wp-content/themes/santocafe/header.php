@@ -137,5 +137,3 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
     <div class="mobile-drawer-overlay js-drawer-overlay" aria-hidden="true"></div>
 
 </header>
-
-<div class="header-spacer"></div>

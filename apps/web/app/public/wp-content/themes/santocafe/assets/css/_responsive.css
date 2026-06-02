@@ -10,7 +10,8 @@
     .site-nav__hamburger { display: flex; }
 
     .site-nav        { height: var(--header-height-mob); }
-    .header-spacer   { height: var(--header-height-mob); }
+    .wc-main,
+    .site-main       { padding-top: var(--header-height-mob); }
 
     /* Logo centered via absolute positioning */
     .site-nav__inner {
