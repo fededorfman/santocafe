@@ -206,4 +206,81 @@
         if (addUrl) $modal.find('.js-modal-add').attr('href', addUrl);
     });
 
+    // ============================================================
+    // Product Detail Page
+    // ============================================================
+    var $detail = $('.product-detail-page');
+
+    if ($detail.length) {
+
+        // Recalculate CTA price = raw unit price × quantity
+        function updateDetailCtaPrice() {
+            var raw = parseInt($detail.find('.product-detail__format .is-selected').data('raw-price'), 10) || 0;
+            var qty = parseInt($detail.find('.js-qty-input').val(), 10) || 1;
+            var total = raw * qty;
+            $detail.find('.js-cta-price').text(formatClp(total));
+        }
+
+        // Format an integer as CLP: 15500 → "$15.500"
+        function formatClp(amount) {
+            return '$' + String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // --- Format selector (250g / 1kg) ---
+        $detail.on('click', '.product-detail__format .pill-selector__option', function () {
+            var $pill   = $(this);
+            var price   = $pill.data('price');
+            var perCup  = $pill.data('per-cup');
+            var varId   = $pill.data('variation-id');
+            var peso    = $pill.data('peso');
+
+            $pill.siblings('.pill-selector__option').removeClass('is-selected');
+            $pill.addClass('is-selected');
+
+            // Update displayed price + per-cup
+            $detail.find('.js-detail-price').text(price);
+            $detail.find('.js-per-cup').contents().last().replaceWith(perCup + '/taza');
+
+            // Update hidden form inputs
+            $detail.find('.js-variation-id').val(varId);
+            $detail.find('.js-peso-input').val(peso);
+
+            updateDetailCtaPrice();
+        });
+
+        // --- Molienda selector ---
+        $detail.on('click', '.molienda-option', function () {
+            var $opt = $(this);
+            $opt.siblings('.molienda-option').removeClass('is-selected').attr('aria-pressed', 'false');
+            $opt.addClass('is-selected').attr('aria-pressed', 'true');
+            $detail.find('.js-molienda-input').val($opt.data('value'));
+        });
+
+        // --- Quantity picker ---
+        $detail.on('click', '.js-qty-btn', function () {
+            var action  = $(this).data('action');
+            var $input  = $detail.find('.qty-picker__input');
+            var current = parseInt($input.val(), 10) || 1;
+            var next    = action === 'plus'
+                ? Math.min(current + 1, 20)
+                : Math.max(current - 1, 1);
+
+            $input.val(next);
+            $detail.find('.js-qty-input').val(next);
+            updateDetailCtaPrice();
+        });
+
+        // --- Tabs ---
+        $detail.on('click', '.tab-btn', function () {
+            var $btn = $(this);
+            var tab  = $btn.data('tab');
+
+            $btn.siblings('.tab-btn').removeClass('is-active').attr('aria-selected', 'false');
+            $btn.addClass('is-active').attr('aria-selected', 'true');
+
+            $detail.find('.tab-panel').removeClass('is-active');
+            $detail.find('#tab-' + tab).addClass('is-active');
+        });
+    }
+
 })(jQuery);

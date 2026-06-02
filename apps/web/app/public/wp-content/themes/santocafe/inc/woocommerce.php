@@ -52,6 +52,36 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): 
 } );
 
 // ============================================================
+// Molienda — persist as cart item data (not a WC variation)
+// ============================================================
+
+// 1. Save molienda when item is added to cart
+add_filter( 'woocommerce_add_cart_item_data', function ( array $data, int $product_id, int $variation_id ): array {
+    if ( ! empty( $_POST['molienda'] ) ) {
+        $data['molienda'] = sanitize_text_field( wp_unslash( $_POST['molienda'] ) );
+    }
+    return $data;
+}, 10, 3 );
+
+// 2. Display molienda in cart and checkout review
+add_filter( 'woocommerce_get_item_data', function ( array $item_data, array $cart_item ): array {
+    if ( ! empty( $cart_item['molienda'] ) ) {
+        $item_data[] = [
+            'key'   => __( 'Molienda', 'santocafe' ),
+            'value' => esc_html( $cart_item['molienda'] ),
+        ];
+    }
+    return $item_data;
+}, 10, 2 );
+
+// 3. Save molienda as order line item meta (shows in admin + emails)
+add_action( 'woocommerce_checkout_create_order_line_item', function ( \WC_Order_Item_Product $item, string $cart_item_key, array $values ): void {
+    if ( ! empty( $values['molienda'] ) ) {
+        $item->add_meta_data( __( 'Molienda', 'santocafe' ), esc_html( $values['molienda'] ), true );
+    }
+}, 10, 3 );
+
+// ============================================================
 // Body classes
 // ============================================================
 add_filter( 'body_class', function ( array $classes ): array {
