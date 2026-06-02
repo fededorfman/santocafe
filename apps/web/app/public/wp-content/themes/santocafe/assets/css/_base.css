@@ -12,6 +12,7 @@ html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden; /* prevent horizontal scroll from overflowing elements */
 }
 
 body {
@@ -22,6 +23,7 @@ body {
     background-color: var(--color-crema);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
