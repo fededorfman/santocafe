@@ -1,7 +1,6 @@
 <?php
 defined('ABSPATH') || exit;
 
-$gap        = function_exists( 'sc_get_shipping_gap' ) ? sc_get_shipping_gap() : 0;
 $cart_count = ( function_exists( 'WC' ) && WC()->cart )
     ? WC()->cart->get_cart_contents_count()
     : 0;
@@ -24,26 +23,9 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 
 <header class="site-header js-site-header">
 
-    <?php
-    $has_cart_items = function_exists( 'WC' ) && WC()->cart && $cart_count > 0;
-    if ( $has_cart_items && $gap > 0 ) : ?>
-    <div class="shipping-banner js-shipping-banner">
-        <div class="container">
-            <p class="shipping-banner__text">
-                Te faltan <strong><?php echo esc_html( sc_format_clp( $gap ) ); ?></strong>
-                para envío gratis dentro de Chile.
-            </p>
-            <button class="shipping-banner__close js-close-banner" aria-label="Cerrar aviso">✕</button>
-        </div>
+    <div class="js-banner-slot">
+        <?php get_template_part( 'template-parts/shipping-banner' ); ?>
     </div>
-    <?php elseif ( $has_cart_items && $gap === 0 ) : ?>
-    <div class="shipping-banner shipping-banner--success js-shipping-banner">
-        <div class="container">
-            <p class="shipping-banner__text">¡Tu pedido tiene <strong>envío gratis</strong>! 🎉</p>
-            <button class="shipping-banner__close js-close-banner" aria-label="Cerrar aviso">✕</button>
-        </div>
-    </div>
-    <?php endif; ?>
 
     <nav class="site-nav" aria-label="Navegación principal">
         <div class="container site-nav__inner">

@@ -30,5 +30,8 @@
 /* 9. Product detail */
 @import url('_product-detail.css');
 
-/* 10. Responsive */
+/* 10. Cart */
+@import url('_cart.css');
+
+/* 11. Responsive */
 @import url('_responsive.css');

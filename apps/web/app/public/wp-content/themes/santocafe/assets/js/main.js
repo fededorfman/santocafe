@@ -283,4 +283,81 @@
         });
     }
 
+    // ============================================================
+    // Cart Page — AJAX qty / molienda / remove with fragment refresh
+    // ============================================================
+    if ($('.cart-page').length) {
+
+        // Replace the inner HTML of each stable wrapper with fresh server HTML.
+        function applyCartFragments(fragments) {
+            $.each(fragments, function (selector, html) {
+                $(selector).html(html);
+            });
+        }
+
+        // Update the header cart badge with the new count.
+        function updateCartBadge(count) {
+            var $badge = $('.cart-icon__badge');
+            $badge.text(count).toggleClass('is-empty', count === 0);
+        }
+
+        // Re-evaluate banner visibility memory: a cart change should let the
+        // banner re-appear even if the user had closed it earlier.
+        function resetBannerMemory() {
+            sessionStorage.removeItem('sc_banner_closed');
+        }
+
+        function postCart(data, $row) {
+            if ($row && $row.length) $row.addClass('is-updating');
+
+            $.post(SC.ajaxUrl, $.extend({
+                action: 'sc_update_cart',
+                nonce:  SC.nonce
+            }, data))
+            .done(function (res) {
+                if (res && res.success) {
+                    resetBannerMemory();
+                    applyCartFragments(res.data.fragments);
+                    updateCartBadge(res.data.count);
+                }
+            })
+            .always(function () {
+                if ($row && $row.length) $row.removeClass('is-updating');
+            });
+        }
+
+        // Quantity ±
+        $(document).on('click', '.js-cart-qty', function () {
+            var $btn   = $(this);
+            var key    = $btn.data('key');
+            var $input = $btn.siblings('.qty-picker__input');
+            var cur    = parseInt($input.val(), 10) || 1;
+            var qty    = $btn.data('action') === 'plus'
+                ? Math.min(cur + 1, 20)
+                : Math.max(cur - 1, 1);
+
+            if (qty === cur) return;
+            postCart({ cart_action: 'update_qty', cart_key: key, qty: qty },
+                     $btn.closest('.cart-item'));
+        });
+
+        // Molienda pill
+        $(document).on('click', '.js-cart-molienda', function () {
+            var $b = $(this);
+            if ($b.hasClass('is-selected')) return;
+            postCart({
+                cart_action: 'change_molienda',
+                cart_key:    $b.data('key'),
+                molienda:    $b.data('molienda')
+            }, $b.closest('.cart-item'));
+        });
+
+        // Remove item
+        $(document).on('click', '.js-cart-remove', function () {
+            var $b = $(this);
+            postCart({ cart_action: 'remove', cart_key: $b.data('key') },
+                     $b.closest('.cart-item'));
+        });
+    }
+
 })(jQuery);
