@@ -66,21 +66,6 @@
         $badge.toggleClass('is-empty', count === 0);
     });
 
-    // ============================================================
-    // Header Spacer — dynamic height (accounts for banner show/hide)
-    // ============================================================
-    function updateSpacer() {
-        var h = $('.site-header').outerHeight(true) || 0;
-        $('.header-spacer').css('height', h + 'px');
-    }
-
-    updateSpacer();
-    $(window).on('resize', updateSpacer);
-
-    // Also update after banner closes
-    $(document).on('click', '.js-close-banner', function () {
-        setTimeout(updateSpacer, 250);
-    });
 
     // ============================================================
     // Transparent navbar — transparent at top on pages with .hero,
