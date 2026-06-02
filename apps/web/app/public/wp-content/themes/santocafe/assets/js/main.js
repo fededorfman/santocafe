@@ -83,6 +83,23 @@
     });
 
     // ============================================================
+    // Transparent navbar — adds .is-scrolled to header after 30px scroll
+    // ============================================================
+    var $siteHeader   = $('.js-site-header');
+    var SCROLL_OFFSET = 30;
+
+    function updateNavBg() {
+        if ( $(window).scrollTop() > SCROLL_OFFSET ) {
+            $siteHeader.addClass('is-scrolled');
+        } else {
+            $siteHeader.removeClass('is-scrolled');
+        }
+    }
+
+    updateNavBg(); // run on load (handles browser back-navigation)
+    $(window).on('scroll.navbg', updateNavBg);
+
+    // ============================================================
     // Hero scroll indicator
     // ============================================================
     var $scrollIndicator = $('.js-scroll-indicator');
