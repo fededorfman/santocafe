@@ -15,7 +15,6 @@
     /* Logo centered via absolute positioning */
     .site-nav__inner {
         position: relative;
-        padding-right: var(--spacing-xl); /* extra breathing room on the right */
     }
 
     .site-nav__logo {
@@ -41,9 +40,6 @@
 @media (max-width: 600px) {
 
     .container { padding-inline: var(--spacing-md); }
-
-    /* Hide brand name — logo image alone fits better when centered on small screens */
-    .site-nav__brand-name { display: none; }
 
     /* Footer: 1 columna */
     .site-footer__grid {
