@@ -76,16 +76,22 @@
     background: var(--color-oscuro);
     height: 70px;
     flex-shrink: 0;
-    transition: background var(--transition-base);
+    transition:
+        background var(--transition-base),
+        backdrop-filter var(--transition-base),
+        -webkit-backdrop-filter var(--transition-base);
 }
 
-/* Transparent navbar on front-page when at the very top */
-.front-page .site-nav {
+/* Transparent state — applied by JS when .hero is present and page is at top */
+.site-header.is-transparent .site-nav {
     background: transparent;
 }
 
-.front-page .site-header.is-scrolled .site-nav {
-    background: var(--color-oscuro);
+/* Scrolled state — dark background with blur */
+.site-header.is-scrolled .site-nav {
+    background: rgba(26, 19, 16, 0.92);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .site-nav__inner {

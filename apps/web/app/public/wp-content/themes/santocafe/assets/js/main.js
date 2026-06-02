@@ -83,20 +83,26 @@
     });
 
     // ============================================================
-    // Transparent navbar — adds .is-scrolled to header after 30px scroll
+    // Transparent navbar — transparent at top on pages with .hero,
+    // dark + blur when scrolled. Detected via DOM, not WP body class.
     // ============================================================
     var $siteHeader   = $('.js-site-header');
     var SCROLL_OFFSET = 30;
+    var hasHero       = $('.hero').length > 0;
 
     function updateNavBg() {
-        if ( $(window).scrollTop() > SCROLL_OFFSET ) {
-            $siteHeader.addClass('is-scrolled');
+        var scrolled = $(window).scrollTop() > SCROLL_OFFSET;
+
+        if ( scrolled || !hasHero ) {
+            // Dark + blur
+            $siteHeader.addClass('is-scrolled').removeClass('is-transparent');
         } else {
-            $siteHeader.removeClass('is-scrolled');
+            // Transparent (only on hero pages at the top)
+            $siteHeader.addClass('is-transparent').removeClass('is-scrolled');
         }
     }
 
-    updateNavBg(); // run on load (handles browser back-navigation)
+    updateNavBg();
     $(window).on('scroll.navbg', updateNavBg);
 
     // ============================================================
