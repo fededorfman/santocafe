@@ -30,6 +30,7 @@ $moliendas = [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ];
         $qty       = (int) $item['quantity'];
         $peso      = $item['variation']['attribute_pa_peso'] ?? '';
         $molienda  = $item['molienda'] ?? 'Grano';
+        $name      = get_the_title( $pid ); // parent name (avoids "- 250g" duplication)
         $unit      = (float) $product->get_price();
         $unit_fmt  = sc_format_clp( (int) $unit );
         $line_fmt  = sc_format_clp( (int) ( $unit * $qty ) );
@@ -44,37 +45,14 @@ $moliendas = [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ];
 
         <div class="cart-item__info">
             <a class="cart-item__name" href="<?php echo esc_url( get_permalink( $pid ) ); ?>">
-                <?php echo esc_html( $product->get_name() ); ?><?php
-                    if ( $peso ) echo ' &mdash; ' . esc_html( $peso ); ?>, <?php echo esc_html( $molienda ); ?>
+                <?php echo esc_html( $name );
+                    if ( $peso ) echo ' &mdash; ' . esc_html( $peso ); ?>
             </a>
             <span class="cart-item__unit"><?php echo esc_html( $unit_fmt ); ?></span>
             <span class="cart-item__attrs">
                 peso: <strong><?php echo esc_html( $peso ); ?></strong> /
                 molienda: <strong><?php echo esc_html( $molienda ); ?></strong>
             </span>
-
-            <div class="pill-selector cart-item__molienda">
-                <?php foreach ( $moliendas as $m ) : ?>
-                <button type="button"
-                        class="pill-selector__option js-cart-molienda <?php echo $m === $molienda ? 'is-selected' : ''; ?>"
-                        data-key="<?php echo esc_attr( $key ); ?>"
-                        data-molienda="<?php echo esc_attr( $m ); ?>">
-                    <?php echo esc_html( $m ); ?>
-                </button>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <div class="qty-picker cart-item__qty">
-            <button class="qty-picker__btn js-cart-qty" data-action="minus"
-                    data-key="<?php echo esc_attr( $key ); ?>" type="button"
-                    aria-label="Reducir cantidad">−</button>
-            <input class="qty-picker__input" type="number"
-                   value="<?php echo esc_attr( $qty ); ?>" min="1" max="20"
-                   readonly aria-label="Cantidad">
-            <button class="qty-picker__btn js-cart-qty" data-action="plus"
-                    data-key="<?php echo esc_attr( $key ); ?>" type="button"
-                    aria-label="Aumentar cantidad">+</button>
         </div>
 
         <div class="cart-item__total"><?php echo esc_html( $line_fmt ); ?></div>
@@ -90,6 +68,32 @@ $moliendas = [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ];
                 <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
             </svg>
         </button>
+
+        <!-- Second row: molienda + quantity (more breathing room) -->
+        <div class="cart-item__controls">
+            <div class="pill-selector cart-item__molienda">
+                <?php foreach ( $moliendas as $m ) : ?>
+                <button type="button"
+                        class="pill-selector__option js-cart-molienda <?php echo $m === $molienda ? 'is-selected' : ''; ?>"
+                        data-key="<?php echo esc_attr( $key ); ?>"
+                        data-molienda="<?php echo esc_attr( $m ); ?>">
+                    <?php echo esc_html( $m ); ?>
+                </button>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="qty-picker cart-item__qty">
+                <button class="qty-picker__btn js-cart-qty" data-action="minus"
+                        data-key="<?php echo esc_attr( $key ); ?>" type="button"
+                        aria-label="Reducir cantidad">−</button>
+                <input class="qty-picker__input" type="number"
+                       value="<?php echo esc_attr( $qty ); ?>" min="1" max="20"
+                       readonly aria-label="Cantidad">
+                <button class="qty-picker__btn js-cart-qty" data-action="plus"
+                        data-key="<?php echo esc_attr( $key ); ?>" type="button"
+                        aria-label="Aumentar cantidad">+</button>
+            </div>
+        </div>
 
     </div>
     <?php endforeach; ?>

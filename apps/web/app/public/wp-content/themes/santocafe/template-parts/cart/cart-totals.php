@@ -27,6 +27,8 @@ if ( ! $cart || $cart->is_empty() ) {
         </form>
     </details>
 
+    <?php $free_shipping = function_exists( 'sc_get_shipping_gap' ) && sc_get_shipping_gap() === 0; ?>
+
     <div class="cart-summary__rows">
         <div class="cart-summary__row">
             <span>Subtotal</span>
@@ -40,25 +42,26 @@ if ( ! $cart || $cart->is_empty() ) {
         </div>
         <?php endforeach; ?>
 
-        <?php if ( $cart->needs_shipping() && $cart->show_shipping() ) : ?>
         <div class="cart-summary__row cart-summary__row--shipping">
             <span>Envío</span>
-            <span><?php wc_cart_totals_shipping_html(); ?></span>
+            <span>
+                <?php if ( $free_shipping ) : ?>
+                    <strong class="cart-summary__free">Gratis</strong>
+                <?php else : ?>
+                    <span class="cart-summary__muted">Calculado en el pago</span>
+                <?php endif; ?>
+            </span>
         </div>
-        <?php endif; ?>
-
-        <?php foreach ( $cart->get_tax_totals() as $code => $tax ) : ?>
-        <div class="cart-summary__row">
-            <span><?php echo esc_html( $tax->label ); ?></span>
-            <span><?php echo wp_kses_post( $tax->formatted_amount ); ?></span>
-        </div>
-        <?php endforeach; ?>
 
         <div class="cart-summary__row cart-summary__row--total">
             <span>Total</span>
             <span><?php wc_cart_totals_order_total_html(); ?></span>
         </div>
     </div>
+
+    <p class="cart-summary__note">
+        IVA incluido. Envío solo a Región Metropolitana de Santiago.
+    </p>
 
     <a href="<?php echo esc_url( wc_get_checkout_url() ); ?>"
        class="btn btn--primary btn--full btn--lg cart-summary__checkout">
