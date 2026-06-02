@@ -10,18 +10,15 @@ $catalog_url = home_url( '/#catalogo' );
 ?>
 <div class="cart-empty">
 
-    <div class="cart-empty__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-        </svg>
+    <div class="cart-empty__image" aria-hidden="true">
+        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/cart-empty.jpg' ); ?>"
+             alt="" width="160" height="160" loading="lazy">
     </div>
 
     <h2 class="cart-empty__title">Tu carrito está vacío</h2>
     <p class="cart-empty__text">
-        Todavía no agregaste ningún café. Descubrí nuestros orígenes de especialidad.
+        El café está triste porque tu carrito está vacío.
+        Descubrí nuestros orígenes de especialidad.
     </p>
     <a href="<?php echo esc_url( $catalog_url ); ?>" class="btn btn--primary btn--lg">
         Ver nuestros cafés
