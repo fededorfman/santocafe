@@ -33,10 +33,10 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 // ============================================================
 // CSV Path
 // ============================================================
-$csv_path = realpath( __DIR__ . '/../../docs/productos/catalogo.csv' );
+$csv_path = realpath( __DIR__ . '/../../../docs/productos/catalogo.csv' );
 
 if ( ! $csv_path || ! file_exists( $csv_path ) ) {
-    sc_import_log( "❌ CSV not found. Expected: " . __DIR__ . '/../../docs/productos/catalogo.csv' );
+    sc_import_log( "❌ CSV not found. Expected: " . __DIR__ . '/../../../docs/productos/catalogo.csv' );
     exit( 1 );
 }
 
@@ -60,9 +60,25 @@ $errors  = 0;
 
 while ( ( $row = fgetcsv( $handle ) ) !== false ) {
     // Pad row to avoid undefined index warnings
-    $row = array_pad( $row, 22, '' );
+    $row = array_pad( $row, 14, '' );
 
-    $title = trim( $row[3] );
+    /**
+     * Local CSV column map (docs/productos/catalogo.csv):
+     *  0  SKU
+     *  1  Título
+     *  2  Variedad
+     *  3  Tipo          (ignored — all "100% Arábica")
+     *  4  Notas de cata
+     *  5  Precio 250gr  (plain number)
+     *  6  Precio 1kg    (plain number)
+     *  7  SCA
+     *  8  Destacado     (ignored)
+     *  9  País de Origen
+     *  10 Ciudad/Región
+     *  11 Altitud
+     *  12 Proceso
+     */
+    $title = trim( $row[1] );
     if ( empty( $title ) ) continue;
 
     // --- Idempotency check ---
@@ -73,12 +89,9 @@ while ( ( $row = fgetcsv( $handle ) ) !== false ) {
         continue;
     }
 
-    // --- Parse prices ---
-    // Format in CSV: "15500 / 49600"
-    $price_raw  = trim( $row[7] );
-    $price_parts = array_map( 'trim', explode( '/', $price_raw ) );
-    $price_250g  = isset( $price_parts[0] ) ? (float) $price_parts[0] : 0;
-    $price_1kg   = isset( $price_parts[1] ) ? (float) $price_parts[1] : 0;
+    // --- Prices (separate columns) ---
+    $price_250g = (float) trim( $row[5] );
+    $price_1kg  = (float) trim( $row[6] );
 
     // --- Create Variable Product ---
     $product = new WC_Product_Variable();
@@ -86,13 +99,7 @@ while ( ( $row = fgetcsv( $handle ) ) !== false ) {
     $product->set_status( 'publish' );
     $product->set_catalog_visibility( 'visible' );
     $product->set_sku( 'SC-' . str_pad( trim( $row[0] ), 2, '0', STR_PAD_LEFT ) );
-    $product->set_short_description( wp_kses_post( trim( $row[6] ) ) ); // notas de cata
-
-    // Descripción larga = "Descripción del productor" (col 13)
-    $description = trim( $row[13] );
-    if ( $description ) {
-        $product->set_description( wp_kses_post( $description ) );
-    }
+    $product->set_short_description( wp_kses_post( trim( $row[4] ) ) ); // notas de cata
 
     // --- Attributes ---
     $attrs = [];
@@ -120,17 +127,14 @@ while ( ( $row = fgetcsv( $handle ) ) !== false ) {
 
     // --- Custom meta ---
     $meta_map = [
-        '_sc_sca_score'  => trim( $row[8] ),
-        '_sc_pais'       => trim( $row[10] ),
-        '_sc_region'     => trim( $row[11] ), // Ciudad de Origen
-        '_sc_productor'  => trim( $row[12] ), // Nombre de Productor
-        '_sc_altitud'    => trim( $row[14] ),
-        '_sc_proceso'    => trim( $row[15] ),
-        '_sc_intensidad' => trim( $row[16] ),
-        '_sc_acidez'     => trim( $row[17] ),
-        '_sc_cuerpo'     => trim( $row[18] ),
-        '_sc_notas_cata' => trim( $row[6] ),
-        '_sc_variedad'   => trim( $row[4] ),
+        '_sc_sca_score'  => trim( $row[7] ),
+        '_sc_pais'       => trim( $row[9] ),
+        '_sc_region'     => trim( $row[10] ),
+        '_sc_altitud'    => trim( $row[11] ),
+        '_sc_proceso'    => trim( $row[12] ),
+        '_sc_notas_cata' => trim( $row[4] ),
+        '_sc_variedad'   => trim( $row[2] ),
+        // Intensidad, acidez, cuerpo not in local CSV — filled manually in WP admin
     ];
 
     foreach ( $meta_map as $key => $value ) {
