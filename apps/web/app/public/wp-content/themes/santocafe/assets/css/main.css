@@ -24,5 +24,8 @@
 /* 7. Product card */
 @import url('_product-card.css');
 
-/* 8. Responsive */
+/* 8. Modal */
+@import url('_modal.css');
+
+/* 9. Responsive */
 @import url('_responsive.css');
