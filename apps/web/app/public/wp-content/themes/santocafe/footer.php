@@ -46,11 +46,9 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
             <div class="site-footer__col">
                 <h4 class="site-footer__heading">Navegación</h4>
                 <ul class="site-footer__links">
-                    <li><a href="<?php echo esc_url( $shop_url ); ?>">Nuestros Cafés</a></li>
-                    <li><a href="<?php echo esc_url( $cart_url ); ?>">Tu Carrito</a></li>
-                    <li><a href="<?php echo esc_url( $account_url ); ?>">Tu Cuenta</a></li>
-                    <li><a href="#nosotros">Sobre Nosotros</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/#catalogo' ) ); ?>">Nuestros Cafés</a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/#nosotros' ) ); ?>">Sobre Nosotros</a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/#contacto' ) ); ?>">Contacto</a></li>
                 </ul>
             </div>
 
