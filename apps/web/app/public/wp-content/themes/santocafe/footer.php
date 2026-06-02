@@ -1,9 +1,13 @@
 <?php
 defined('ABSPATH') || exit;
 
-$shop_url = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 )
+$shop_url    = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 )
     ? get_permalink( wc_get_page_id( 'shop' ) )
     : home_url( '/' );
+$cart_url    = function_exists( 'wc_get_cart_url' )    ? wc_get_cart_url()    : home_url( '/carrito/' );
+$account_url = function_exists( 'wc_get_account_endpoint_url' )
+    ? wc_get_account_endpoint_url( 'dashboard' )
+    : home_url( '/cuenta/' );
 ?>
 
 <footer class="site-footer">
@@ -38,13 +42,15 @@ $shop_url = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 
                 </div>
             </div>
 
-            <!-- Col 2: Tienda -->
+            <!-- Col 2: Navegación principal -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Tienda</h4>
+                <h4 class="site-footer__heading">Navegación</h4>
                 <ul class="site-footer__links">
                     <li><a href="<?php echo esc_url( $shop_url ); ?>">Nuestros Cafés</a></li>
-                    <li><a href="#">Blends</a></li>
-                    <li><a href="#">Especialidad de Origen</a></li>
+                    <li><a href="<?php echo esc_url( $cart_url ); ?>">Tu Carrito</a></li>
+                    <li><a href="<?php echo esc_url( $account_url ); ?>">Tu Cuenta</a></li>
+                    <li><a href="#nosotros">Sobre Nosotros</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </div>
 
@@ -60,14 +66,9 @@ $shop_url = ( function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 
                 </ul>
             </div>
 
-            <!-- Col 4: Empresa + Legal -->
+            <!-- Col 4: Legal -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Empresa</h4>
-                <ul class="site-footer__links">
-                    <li><a href="#nosotros">Nosotros</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-                <h4 class="site-footer__heading site-footer__heading--spaced">Legal</h4>
+                <h4 class="site-footer__heading">Legal</h4>
                 <ul class="site-footer__links">
                     <li><a href="#">Aviso legal</a></li>
                     <li><a href="#">Política de privacidad</a></li>

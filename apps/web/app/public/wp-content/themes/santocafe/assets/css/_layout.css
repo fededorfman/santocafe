@@ -246,7 +246,6 @@
 .site-footer {
     background: var(--color-oscuro);
     color: rgba(255, 255, 255, 0.75);
-    margin-top: var(--spacing-2xl);
 }
 
 .site-footer__grid {
