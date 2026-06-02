@@ -298,7 +298,7 @@
     align-items: center;
     text-align: center;
     gap: var(--spacing-md);
-    padding: var(--spacing-2xl) var(--spacing-md);
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
 }
 
 .cart-empty__image {
