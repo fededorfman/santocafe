@@ -284,84 +284,64 @@
     }
 
     // ============================================================
-    // Cart Page — AJAX qty / molienda / remove with fragment refresh
+    // Cart — unified fragment application (drawer + cart page)
+    // Each fragment includes its wrapper → replaceWith. Selectors not
+    // present on the current page simply no-op.
     // ============================================================
-    if ($('.cart-page').length) {
+    function applyFragments(fragments) {
+        $.each(fragments, function (selector, html) {
+            $(selector).replaceWith(html);
+        });
+    }
 
-        // Replace the inner HTML of each stable wrapper with fresh server HTML.
-        function applyCartFragments(fragments) {
-            $.each(fragments, function (selector, html) {
-                $(selector).html(html);
-            });
-        }
+    // Mutate the cart (qty / molienda / remove) via sc_update_cart.
+    // Works for both the cart page (.cart-item) and the drawer (.mini_cart_item).
+    function postCart(data, $row) {
+        if ($row && $row.length) $row.addClass('is-updating');
 
-        // Update the header cart badge with the new count.
-        function updateCartBadge(count) {
-            var $badge = $('.cart-icon__badge');
-            $badge.text(count).toggleClass('is-empty', count === 0);
-        }
-
-        // Re-evaluate banner visibility memory: a cart change should let the
-        // banner re-appear even if the user had closed it earlier.
-        function resetBannerMemory() {
-            sessionStorage.removeItem('sc_banner_closed');
-        }
-
-        function postCart(data, $row) {
-            if ($row && $row.length) $row.addClass('is-updating');
-
-            $.post(SC.ajaxUrl, $.extend({
-                action: 'sc_update_cart',
-                nonce:  SC.nonce
-            }, data))
+        $.post(SC.ajaxUrl, $.extend({ action: 'sc_update_cart', nonce: SC.nonce }, data))
             .done(function (res) {
                 if (res && res.success) {
-                    resetBannerMemory();
-                    applyCartFragments(res.data.fragments);
-                    updateCartBadge(res.data.count);
+                    sessionStorage.removeItem('sc_banner_closed');
+                    applyFragments(res.data.fragments);
                 }
             })
             .always(function () {
                 if ($row && $row.length) $row.removeClass('is-updating');
             });
-        }
-
-        // Quantity ±
-        $(document).on('click', '.js-cart-qty', function () {
-            var $btn   = $(this);
-            var key    = $btn.data('key');
-            var $input = $btn.siblings('.qty-picker__input');
-            var cur    = parseInt($input.val(), 10) || 1;
-            var qty    = $btn.data('action') === 'plus'
-                ? Math.min(cur + 1, 20)
-                : Math.max(cur - 1, 1);
-
-            if (qty === cur) return;
-            postCart({ cart_action: 'update_qty', cart_key: key, qty: qty },
-                     $btn.closest('.cart-item'));
-        });
-
-        // Molienda pill
-        $(document).on('click', '.js-cart-molienda', function () {
-            var $b = $(this);
-            if ($b.hasClass('is-selected')) return;
-            postCart({
-                cart_action: 'change_molienda',
-                cart_key:    $b.data('key'),
-                molienda:    $b.data('molienda')
-            }, $b.closest('.cart-item'));
-        });
-
-        // Remove item
-        $(document).on('click', '.js-cart-remove', function () {
-            var $b = $(this);
-            postCart({ cart_action: 'remove', cart_key: $b.data('key') },
-                     $b.closest('.cart-item'));
-        });
     }
 
+    // Quantity ±  (global: cart page + drawer)
+    $(document).on('click', '.js-cart-qty', function () {
+        var $btn   = $(this);
+        var $input = $btn.siblings('.qty-picker__input');
+        var cur    = parseInt($input.val(), 10) || 1;
+        var qty    = $btn.data('action') === 'plus'
+            ? Math.min(cur + 1, 20)
+            : Math.max(cur - 1, 1);
+
+        if (qty === cur) return;
+        postCart({ cart_action: 'update_qty', cart_key: $btn.data('key'), qty: qty },
+                 $btn.closest('.cart-item, .mini_cart_item'));
+    });
+
+    // Molienda pill  (global)
+    $(document).on('click', '.js-cart-molienda', function () {
+        var $b = $(this);
+        if ($b.hasClass('is-selected')) return;
+        postCart({ cart_action: 'change_molienda', cart_key: $b.data('key'), molienda: $b.data('molienda') },
+                 $b.closest('.cart-item, .mini_cart_item'));
+    });
+
+    // Remove item  (global)
+    $(document).on('click', '.js-cart-remove', function () {
+        var $b = $(this);
+        postCart({ cart_action: 'remove', cart_key: $b.data('key') },
+                 $b.closest('.cart-item, .mini_cart_item'));
+    });
+
     // ============================================================
-    // Cart Drawer (mini-cart) + AJAX add-to-cart
+    // Cart Drawer open/close + AJAX add-to-cart
     // ============================================================
     var $cartDrawer        = $('.js-cart-drawer');
     var $cartDrawerOverlay = $('.js-cart-drawer-overlay');
@@ -390,13 +370,6 @@
         if (e.key === 'Escape' && $cartDrawer.hasClass('is-open')) closeCartDrawer();
     });
 
-    // Replace fragments returned by the server (each includes its wrapper)
-    function applyAddFragments(fragments) {
-        $.each(fragments, function (selector, html) {
-            $(selector).replaceWith(html);
-        });
-    }
-
     // POST to sc_add_to_cart, refresh fragments and open the drawer
     function addToCart(data, $btn) {
         if ($btn && $btn.length) $btn.addClass('is-loading').prop('disabled', true);
@@ -404,9 +377,8 @@
         $.post(SC.ajaxUrl, $.extend({ action: 'sc_add_to_cart', nonce: SC.nonce }, data))
             .done(function (res) {
                 if (res && res.success) {
-                    applyAddFragments(res.data.fragments);
                     sessionStorage.removeItem('sc_banner_closed');
-                    $(document.body).trigger('wc_fragments_refreshed');
+                    applyFragments(res.data.fragments);
                     openCartDrawer();
                 }
             })

@@ -68,6 +68,12 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): 
 } );
 
 // ============================================================
+// Suppress the native "X has been added to your cart" notice —
+// the slide-in drawer is the add-to-cart feedback.
+// ============================================================
+add_filter( 'wc_add_to_cart_message_html', '__return_null' );
+
+// ============================================================
 // Molienda — persist as cart item data (not a WC variation)
 // ============================================================
 

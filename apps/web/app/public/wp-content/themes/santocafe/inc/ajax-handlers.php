@@ -106,14 +106,9 @@ function sc_ajax_update_cart(): void {
 
     $cart->calculate_totals();
 
-    // Fragments are inner HTML; the JS replaces the contents of each stable wrapper.
     wp_send_json_success( [
-        'fragments' => [
-            '.js-cart-items'  => sc_render_part( 'template-parts/cart/cart-items' ),
-            '.js-cart-totals' => sc_render_part( 'template-parts/cart/cart-totals' ),
-            '.js-banner-slot' => sc_render_part( 'template-parts/shipping-banner' ),
-        ],
-        'count' => $cart->get_cart_contents_count(),
+        'fragments' => sc_get_cart_fragments(),
+        'count'     => $cart->get_cart_contents_count(),
     ] );
 }
 
@@ -127,6 +122,30 @@ function sc_render_part( string $slug ): string {
     ob_start();
     get_template_part( $slug );
     return (string) ob_get_clean();
+}
+
+/**
+ * Build the full set of cart fragments (badge, mini-cart drawer, banner,
+ * cart-page items + totals). All wrapper-included → applied with replaceWith.
+ * Shared by sc_add_to_cart and sc_update_cart so drawer and cart page stay
+ * in sync regardless of where the change originated.
+ */
+function sc_get_cart_fragments(): array {
+    // badge + div.widget_shopping_cart_content + .js-banner-slot (all wrapped)
+    $fragments = apply_filters( 'woocommerce_add_to_cart_fragments', [] );
+
+    // Cart page wrappers (no-op on pages without them)
+    $fragments['.js-cart-items'] =
+        '<div class="cart-layout__items js-cart-items">'
+        . sc_render_part( 'template-parts/cart/cart-items' )
+        . '</div>';
+
+    $fragments['.js-cart-totals'] =
+        '<aside class="cart-layout__summary js-cart-totals">'
+        . sc_render_part( 'template-parts/cart/cart-totals' )
+        . '</aside>';
+
+    return $fragments;
 }
 
 // ============================================================
@@ -163,7 +182,7 @@ function sc_ajax_add_to_cart(): void {
     }
 
     wp_send_json_success( [
-        'fragments' => apply_filters( 'woocommerce_add_to_cart_fragments', [] ),
+        'fragments' => sc_get_cart_fragments(),
         'count'     => WC()->cart->get_cart_contents_count(),
     ] );
 }
