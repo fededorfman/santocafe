@@ -12,8 +12,9 @@ html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    /* No overflow-x here — setting it on html changes the scroll root
-       and can break mouse wheel scroll in Safari/Chrome */
+    /* clip (not hidden) clips off-canvas fixed drawers without creating a
+       scroll container, so vertical mouse-wheel scroll keeps working */
+    overflow-x: clip;
 }
 
 body {

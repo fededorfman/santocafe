@@ -6,17 +6,18 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    right: -440px;
+    right: 0;
     width: min(440px, 92vw);
     background: var(--color-crema);
     z-index: 2000;
     display: flex;
     flex-direction: column;
-    transition: right var(--transition-base);
+    transform: translateX(100%);   /* off-canvas without causing horizontal scroll */
+    transition: transform var(--transition-base);
     box-shadow: -8px 0 40px rgba(0, 0, 0, 0.18);
 }
 
-.cart-drawer.is-open { right: 0; }
+.cart-drawer.is-open { transform: translateX(0); }
 
 .cart-drawer-overlay {
     position: fixed;
@@ -66,6 +67,7 @@
 /* ---- Body (mini-cart) ---- */
 .cart-drawer__body {
     flex: 1;
+    min-height: 0; /* allow the body to shrink and scroll (flexbox gotcha) */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: var(--spacing-md) var(--spacing-lg);
@@ -229,6 +231,5 @@
 @media (max-width: 600px) {
     .cart-drawer {
         width: 100vw;
-        right: -100vw;
     }
 }
