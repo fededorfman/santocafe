@@ -258,6 +258,7 @@
     .catalog-section__grid     { grid-template-columns: repeat(2, 1fr); }
     .nosotros__grid            { grid-template-columns: 1fr; }
     .nosotros__image           { max-height: 360px; object-fit: cover; }
+    .contacto__grid            { grid-template-columns: 1fr; gap: var(--spacing-xl); }
 }
 
 @media (max-width: 1024px) {
@@ -382,6 +383,11 @@
     align-items: start;
 }
 
+/* Prevent grid children from overflowing their tracks */
+.contacto__grid > * {
+    min-width: 0;
+}
+
 .contacto__label {
     display: inline-block;
     font-size: var(--font-size-xs);
@@ -477,6 +483,10 @@ a.contacto__item-value:hover {
 
 .form-field input,
 .form-field textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-sm);
