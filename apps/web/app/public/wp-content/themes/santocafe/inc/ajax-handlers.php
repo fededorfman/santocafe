@@ -128,3 +128,45 @@ function sc_render_part( string $slug ): string {
     get_template_part( $slug );
     return (string) ob_get_clean();
 }
+
+// ============================================================
+// Add to cart — AJAX for variable products (peso variation + molienda)
+// Returns the standard WC fragments (badge, mini-cart, banner).
+// ============================================================
+function sc_ajax_add_to_cart(): void {
+    check_ajax_referer( 'sc_nonce', 'nonce' );
+
+    if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+        wp_send_json_error( [ 'message' => 'Carrito no disponible.' ] );
+    }
+
+    $product_id   = absint( $_POST['product_id'] ?? 0 );
+    $variation_id = absint( $_POST['variation_id'] ?? 0 );
+    $qty          = max( 1, min( 20, absint( $_POST['quantity'] ?? 1 ) ) );
+    $peso         = sanitize_text_field( wp_unslash( $_POST['peso'] ?? '' ) );
+    $molienda     = sanitize_text_field( wp_unslash( $_POST['molienda'] ?? 'Grano' ) );
+
+    if ( ! $product_id ) {
+        wp_send_json_error( [ 'message' => 'Producto inválido.' ] );
+    }
+    if ( ! in_array( $molienda, [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ], true ) ) {
+        $molienda = 'Grano';
+    }
+
+    $variation = $peso ? [ 'attribute_pa_peso' => $peso ] : [];
+    $item_data = [ 'molienda' => $molienda ];
+
+    $added = WC()->cart->add_to_cart( $product_id, $qty, $variation_id, $variation, $item_data );
+
+    if ( ! $added ) {
+        wp_send_json_error( [ 'message' => 'No se pudo agregar el producto.' ] );
+    }
+
+    wp_send_json_success( [
+        'fragments' => apply_filters( 'woocommerce_add_to_cart_fragments', [] ),
+        'count'     => WC()->cart->get_cart_contents_count(),
+    ] );
+}
+
+add_action( 'wp_ajax_sc_add_to_cart',        'sc_ajax_add_to_cart' );
+add_action( 'wp_ajax_nopriv_sc_add_to_cart', 'sc_ajax_add_to_cart' );

@@ -33,5 +33,8 @@
 /* 10. Cart */
 @import url('_cart.css');
 
-/* 11. Responsive */
+/* 11. Cart drawer (mini-cart) */
+@import url('_cart-drawer.css');
+
+/* 12. Responsive */
 @import url('_responsive.css');

@@ -73,7 +73,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                 </a>
 
                 <a href="<?php echo esc_url( $cart_url ); ?>"
-                   class="site-nav__action-btn site-nav__cart" aria-label="Carrito de compras">
+                   class="site-nav__action-btn site-nav__cart js-open-cart-drawer" aria-label="Carrito de compras">
                     <svg class="icon" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
                          stroke-linejoin="round" aria-hidden="true">
@@ -119,3 +119,28 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
     <div class="mobile-drawer-overlay js-drawer-overlay" aria-hidden="true"></div>
 
 </header>
+
+<!-- Cart drawer (mini-cart, slides from the right) -->
+<aside class="cart-drawer js-cart-drawer" aria-hidden="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+        <span class="cart-drawer__title">Tu carrito</span>
+        <button class="cart-drawer__close js-cart-drawer-close" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div class="cart-drawer__body">
+        <div class="widget_shopping_cart_content">
+            <?php woocommerce_mini_cart(); ?>
+        </div>
+    </div>
+
+    <div class="cart-drawer__footer">
+        <button type="button" class="btn btn--outline btn--full js-cart-drawer-close">
+            Seguir comprando
+        </button>
+        <a href="<?php echo esc_url( function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : $cart_url ); ?>"
+           class="btn btn--primary btn--full cart-drawer__checkout">
+            Finalizar compra →
+        </a>
+    </div>
+</aside>
+<div class="cart-drawer-overlay js-cart-drawer-overlay" aria-hidden="true"></div>

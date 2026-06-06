@@ -360,4 +360,104 @@
         });
     }
 
+    // ============================================================
+    // Cart Drawer (mini-cart) + AJAX add-to-cart
+    // ============================================================
+    var $cartDrawer        = $('.js-cart-drawer');
+    var $cartDrawerOverlay = $('.js-cart-drawer-overlay');
+
+    function openCartDrawer() {
+        $cartDrawer.addClass('is-open').attr('aria-hidden', 'false');
+        $cartDrawerOverlay.addClass('is-visible');
+        $('body').css('overflow', 'hidden');
+    }
+
+    function closeCartDrawer() {
+        $cartDrawer.removeClass('is-open').attr('aria-hidden', 'true');
+        $cartDrawerOverlay.removeClass('is-visible');
+        $('body').css('overflow', '');
+    }
+
+    // Open via cart icon
+    $(document).on('click', '.js-open-cart-drawer', function (e) {
+        e.preventDefault();
+        openCartDrawer();
+    });
+
+    // Close via button / overlay / ESC
+    $(document).on('click', '.js-cart-drawer-close, .js-cart-drawer-overlay', closeCartDrawer);
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $cartDrawer.hasClass('is-open')) closeCartDrawer();
+    });
+
+    // Replace fragments returned by the server (each includes its wrapper)
+    function applyAddFragments(fragments) {
+        $.each(fragments, function (selector, html) {
+            $(selector).replaceWith(html);
+        });
+    }
+
+    // POST to sc_add_to_cart, refresh fragments and open the drawer
+    function addToCart(data, $btn) {
+        if ($btn && $btn.length) $btn.addClass('is-loading').prop('disabled', true);
+
+        $.post(SC.ajaxUrl, $.extend({ action: 'sc_add_to_cart', nonce: SC.nonce }, data))
+            .done(function (res) {
+                if (res && res.success) {
+                    applyAddFragments(res.data.fragments);
+                    sessionStorage.removeItem('sc_banner_closed');
+                    $(document.body).trigger('wc_fragments_refreshed');
+                    openCartDrawer();
+                }
+            })
+            .always(function () {
+                if ($btn && $btn.length) $btn.removeClass('is-loading').prop('disabled', false);
+            });
+    }
+
+    // --- Card "Añadir" ---
+    $(document).on('click', '.js-card-add', function (e) {
+        e.preventDefault();
+        var $card   = $(this).closest('.product-card');
+        var $format = $card.find('.product-card__format');
+        var $pill   = $format.find('.pill-selector__option.is-selected');
+
+        addToCart({
+            product_id:   $format.data('product-id'),
+            variation_id: $pill.data('variation-id'),
+            peso:         $pill.data('peso'),
+            molienda:     'Grano',
+            quantity:     1
+        }, $(this));
+    });
+
+    // --- Modal "Añadir" ---
+    $(document).on('click', '.js-modal-add', function (e) {
+        e.preventDefault();
+        var $format = $('.product-modal__format');
+        var $pill   = $format.find('.pill-selector__option.is-selected');
+
+        addToCart({
+            product_id:   $format.data('product-id'),
+            variation_id: $pill.data('variation-id'),
+            peso:         $pill.data('peso'),
+            molienda:     'Grano',
+            quantity:     1
+        }, $(this));
+    });
+
+    // --- Product detail form ---
+    $(document).on('submit', '.product-detail__cart-form', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+
+        addToCart({
+            product_id:   $form.find('input[name="add-to-cart"]').val(),
+            variation_id: $form.find('.js-variation-id').val(),
+            peso:         $form.find('.js-peso-input').val(),
+            molienda:     $form.find('.js-molienda-input').val(),
+            quantity:     $form.find('.js-qty-input').val()
+        }, $form.find('.product-detail__cta'));
+    });
+
 })(jQuery);
