@@ -35,11 +35,13 @@ add_filter( 'woocommerce_enqueue_styles', function ( array $styles ): array {
 } );
 
 // ============================================================
-// Cart fragment — keep cart badge in sync after AJAX add-to-cart
+// Cart fragments — keep badge, mini-cart drawer and shipping banner
+// in sync after any cart change (custom add + native mini-cart remove).
 // ============================================================
 add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): array {
     $count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
 
+    // Header badge
     ob_start();
     ?>
     <span class="cart-icon__badge js-cart-count <?php echo $count ? '' : 'is-empty'; ?>">
@@ -47,6 +49,20 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): 
     </span>
     <?php
     $fragments['.cart-icon__badge'] = ob_get_clean();
+
+    // Mini-cart drawer contents (list + subtotal) — uses the overridden mini-cart.php
+    ob_start();
+    ?>
+    <div class="widget_shopping_cart_content">
+        <?php woocommerce_mini_cart(); ?>
+    </div>
+    <?php
+    $fragments['div.widget_shopping_cart_content'] = ob_get_clean();
+
+    // Shipping banner
+    ob_start();
+    get_template_part( 'template-parts/shipping-banner' );
+    $fragments['.js-banner-slot'] = '<div class="js-banner-slot">' . ob_get_clean() . '</div>';
 
     return $fragments;
 } );

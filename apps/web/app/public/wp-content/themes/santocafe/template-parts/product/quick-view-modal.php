@@ -141,6 +141,7 @@ $add_1kg_url = add_query_arg( [
         <button class="pill-selector__option is-selected"
                 data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
                 data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
+                data-peso="250g"
                 data-add-url="<?php echo esc_url( $add_250_url ); ?>"
                 type="button">
             <?php echo esc_html( $price_250_fmt ); ?> / 250g
@@ -149,6 +150,7 @@ $add_1kg_url = add_query_arg( [
         <button class="pill-selector__option"
                 data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
                 data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
+                data-peso="1kg"
                 data-add-url="<?php echo esc_url( $add_1kg_url ); ?>"
                 type="button">
             <?php echo esc_html( $price_1kg_fmt ); ?> / 1kg

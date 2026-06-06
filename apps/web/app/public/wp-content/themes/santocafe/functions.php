@@ -41,15 +41,20 @@ add_action('wp_enqueue_scripts', function () {
     // CSS principal
     wp_enqueue_style('santocafe-main', $uri . '/assets/css/main.css', ['santocafe-fonts'], $ver);
 
+    // WooCommerce mini-cart fragments (refresh sin recargar + remove AJAX nativo)
+    wp_enqueue_script('wc-cart-fragments');
+
     // JS principal (en footer)
-    wp_enqueue_script('santocafe-main', $uri . '/assets/js/main.js', ['jquery'], $ver, true);
+    wp_enqueue_script('santocafe-main', $uri . '/assets/js/main.js', ['jquery', 'wc-cart-fragments'], $ver, true);
 
     // Variables PHP → JS
     wp_localize_script('santocafe-main', 'SC', [
-        'ajaxUrl'        => admin_url('admin-ajax.php'),
-        'nonce'          => wp_create_nonce('sc_nonce'),
+        'ajaxUrl'         => admin_url('admin-ajax.php'),
+        'nonce'           => wp_create_nonce('sc_nonce'),
         'freeShippingMin' => (int) get_option('sc_shipping_free_min', 50000),
-        'currency'       => get_woocommerce_currency_symbol(),
+        'currency'        => get_woocommerce_currency_symbol(),
+        'cartUrl'         => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/carrito/'),
+        'checkoutUrl'     => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/finalizar-compra/'),
     ]);
 });
 
