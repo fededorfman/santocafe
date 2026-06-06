@@ -1,12 +1,16 @@
 <?php
 /**
- * Mini-cart — Santo Café override.
- * Renders the cart drawer contents (list + subtotal). Action buttons live
- * in the drawer footer (header.php), not here.
+ * Mini-cart — Santo Café override (cart drawer contents).
+ * Uses the same item controls as the cart page (molienda pills + qty-picker
+ * + SVG remove), driven by the global sc_update_cart AJAX handler.
+ * Action buttons (Seguir comprando / Finalizar compra) live in the drawer
+ * footer (header.php), not here.
  *
  * @see woocommerce/templates/cart/mini-cart.php
  */
 defined( 'ABSPATH' ) || exit;
+
+$sc_moliendas = [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ];
 
 do_action( 'woocommerce_before_mini_cart' );
 ?>
@@ -21,16 +25,22 @@ do_action( 'woocommerce_before_mini_cart' );
             $_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
             $product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
-            if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_widget_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
+            if ( ! ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_widget_cart_item_visible', true, $cart_item, $cart_item_key ) ) ) {
+                continue;
+            }
 
-                // Parent product name (avoids "Camino Inca - 250g" duplication)
-                $product_name      = get_the_title( $product_id );
-                $thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail' ), $cart_item, $cart_item_key );
-                $product_price     = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
-                $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
-                ?>
-                <li class="woocommerce-mini-cart-item mini_cart_item">
+            $product_name      = get_the_title( $product_id ); // parent name (no "- 250g" dup)
+            $thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail' ), $cart_item, $cart_item_key );
+            $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 
+            $peso     = $cart_item['variation']['attribute_pa_peso'] ?? '';
+            $molienda = $cart_item['molienda'] ?? 'Grano';
+            $qty      = (int) $cart_item['quantity'];
+            $line     = sc_format_clp( (int) ( (float) $_product->get_price() * $qty ) );
+            ?>
+            <li class="woocommerce-mini-cart-item mini_cart_item" data-key="<?php echo esc_attr( $cart_item_key ); ?>">
+
+                <div class="mini-cart-item__top">
                     <div class="mini-cart-item__media">
                         <?php if ( $product_permalink ) : ?>
                         <a href="<?php echo esc_url( $product_permalink ); ?>"><?php echo $thumbnail; // phpcs:ignore ?></a>
@@ -38,7 +48,7 @@ do_action( 'woocommerce_before_mini_cart' );
                         <?php endif; ?>
                     </div>
 
-                    <div class="mini-cart-item__info">
+                    <div class="mini-cart-item__head">
                         <?php if ( $product_permalink ) : ?>
                         <a class="mini-cart-item__name" href="<?php echo esc_url( $product_permalink ); ?>">
                             <?php echo esc_html( $product_name ); ?>
@@ -46,40 +56,76 @@ do_action( 'woocommerce_before_mini_cart' );
                         <?php else : ?>
                         <span class="mini-cart-item__name"><?php echo esc_html( $product_name ); ?></span>
                         <?php endif; ?>
-
-                        <?php echo wc_get_formatted_cart_item_data( $cart_item ); // peso + molienda // phpcs:ignore ?>
-
-                        <span class="mini-cart-item__qty">
-                            <?php echo wp_kses_post( sprintf( '%s &times; %s', $cart_item['quantity'], $product_price ) ); ?>
-                        </span>
+                        <?php if ( $peso ) : ?>
+                        <span class="mini-cart-item__meta"><?php echo esc_html( $peso ); ?></span>
+                        <?php endif; ?>
                     </div>
 
-                    <?php
-                    echo apply_filters( // phpcs:ignore
-                        'woocommerce_cart_item_remove_link',
-                        sprintf(
-                            '<a role="button" href="%s" class="remove remove_from_cart_button mini-cart-item__remove" aria-label="%s" data-product_id="%s" data-cart_item_key="%s" data-product_sku="%s">&times;</a>',
-                            esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-                            esc_attr( sprintf( __( 'Quitar %s del carrito', 'santocafe' ), wp_strip_all_tags( $product_name ) ) ),
-                            esc_attr( $product_id ),
-                            esc_attr( $cart_item_key ),
-                            esc_attr( $_product->get_sku() )
-                        ),
-                        $cart_item_key
-                    );
-                    ?>
-                </li>
-                <?php
-            }
+                    <button class="mini-cart-item__remove js-cart-remove"
+                            data-key="<?php echo esc_attr( $cart_item_key ); ?>"
+                            aria-label="Eliminar producto">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                             stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                            <path d="M10 11v6M14 11v6"/>
+                            <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="pill-selector mini-cart-item__molienda">
+                    <?php foreach ( $sc_moliendas as $m ) : ?>
+                    <button type="button"
+                            class="pill-selector__option js-cart-molienda <?php echo $m === $molienda ? 'is-selected' : ''; ?>"
+                            data-key="<?php echo esc_attr( $cart_item_key ); ?>"
+                            data-molienda="<?php echo esc_attr( $m ); ?>">
+                        <?php echo esc_html( $m ); ?>
+                    </button>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="mini-cart-item__bottom">
+                    <div class="qty-picker">
+                        <button class="qty-picker__btn js-cart-qty" data-action="minus"
+                                data-key="<?php echo esc_attr( $cart_item_key ); ?>" type="button"
+                                aria-label="Reducir cantidad">−</button>
+                        <input class="qty-picker__input" type="number"
+                               value="<?php echo esc_attr( $qty ); ?>" min="1" max="20"
+                               readonly aria-label="Cantidad">
+                        <button class="qty-picker__btn js-cart-qty" data-action="plus"
+                                data-key="<?php echo esc_attr( $cart_item_key ); ?>" type="button"
+                                aria-label="Aumentar cantidad">+</button>
+                    </div>
+                    <span class="mini-cart-item__line"><?php echo esc_html( $line ); ?></span>
+                </div>
+
+            </li>
+            <?php
         }
 
         do_action( 'woocommerce_mini_cart_contents' );
         ?>
     </ul>
 
-    <p class="woocommerce-mini-cart__total total">
-        <?php do_action( 'woocommerce_widget_shopping_cart_total' ); ?>
-    </p>
+    <div class="woocommerce-mini-cart__total total">
+        <span>Subtotal</span>
+        <span><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
+    </div>
+
+    <?php $sc_free = function_exists( 'sc_get_shipping_gap' ) && sc_get_shipping_gap() === 0; ?>
+    <div class="mini-cart__shipping">
+        <span>Envío</span>
+        <span>
+            <?php if ( $sc_free ) : ?>
+                <strong class="cart-summary__free">Gratis en Región Metropolitana</strong>
+            <?php else : ?>
+                <span class="cart-summary__muted">Se calcula en el pago</span>
+            <?php endif; ?>
+        </span>
+    </div>
+    <p class="mini-cart__note">IVA incluido. Envío solo a Región Metropolitana de Santiago.</p>
 
 <?php else : ?>
 

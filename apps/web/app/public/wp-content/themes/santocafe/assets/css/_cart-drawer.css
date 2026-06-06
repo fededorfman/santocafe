@@ -93,12 +93,25 @@
 }
 
 .mini_cart_item {
-    display: grid;
-    grid-template-columns: 56px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
     padding: var(--spacing-md) 0;
     border-bottom: 1px solid var(--color-borde);
+    transition: opacity var(--transition-fast);
+}
+
+.mini_cart_item.is-updating {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* Top row: thumb + name/meta + remove */
+.mini-cart-item__top {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--spacing-md);
 }
 
 .mini-cart-item__media img {
@@ -110,7 +123,7 @@
     background: var(--color-oscuro);
 }
 
-.mini-cart-item__info {
+.mini-cart-item__head {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -128,51 +141,47 @@
 
 .mini-cart-item__name:hover { color: var(--color-dorado-suave); }
 
-/* WC variation/custom data (peso, molienda) */
-.mini_cart_item .variation,
-.mini_cart_item dl.variation {
-    margin: 0;
+.mini-cart-item__meta {
     font-size: var(--font-size-xs);
     color: var(--color-texto-suave);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
 }
 
-.mini_cart_item .variation dt,
-.mini_cart_item .variation dd {
-    margin: 0;
-    display: inline;
-}
-
-.mini_cart_item .variation dd { margin-right: var(--spacing-sm); }
-
-.mini-cart-item__qty {
-    font-size: var(--font-size-sm);
-    color: var(--color-texto-suave);
-}
-
+/* Remove button — same look as the cart page (.cart-item__remove) */
 .mini-cart-item__remove {
+    background: none;
+    border: none;
+    cursor: pointer;
     color: var(--color-texto-suave);
-    font-size: var(--font-size-xl);
-    line-height: 1;
-    text-decoration: none;
-    width: 26px;
-    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: color var(--transition-fast), background var(--transition-fast);
-    justify-self: end;
+    padding: var(--spacing-xs);
+    transition: color var(--transition-fast);
 }
 
-.mini-cart-item__remove:hover {
-    color: #c0392b;
-    background: rgba(192, 57, 43, 0.08);
+.mini-cart-item__remove:hover { color: #c0392b; }
+
+/* Molienda pills (compact) */
+.mini-cart-item__molienda .pill-selector__option {
+    font-size: var(--font-size-xs);
+    padding: 4px var(--spacing-sm);
 }
 
-/* Subtotal */
+/* Bottom row: qty-picker + line total */
+.mini-cart-item__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.mini-cart-item__line {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+
+/* Subtotal + shipping + note */
 .woocommerce-mini-cart__total {
     display: flex;
     align-items: center;
@@ -187,6 +196,22 @@
 .woocommerce-mini-cart__total .woocommerce-Price-amount {
     font-size: var(--font-size-lg);
     color: var(--color-dorado-suave);
+}
+
+.mini-cart__shipping {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+.mini-cart__note {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    line-height: 1.5;
+    margin-top: var(--spacing-sm);
 }
 
 /* Empty state */
