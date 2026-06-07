@@ -70,10 +70,15 @@ do_action( 'woocommerce_before_edit_account_form' );
 
 </form>
 
-<form class="woocommerce-EditAccountForm edit-account-password sc-form js-validate" action="" method="post" novalidate>
+<?php // Password panel: validated + saved inline via AJAX (sc_change_password),
+	// so wrong/empty inputs show errors on the fields without reloading.
+	// Keeps native WC fields as a no-JS fallback (posts save_account_details). ?>
+<form class="woocommerce-EditAccountForm edit-account-password sc-form js-password-form" action="" method="post" novalidate>
 
 	<div class="sc-form-card">
 		<h2 class="sc-form-card__title">Cambiar contraseña</h2>
+
+		<div class="sc-form-feedback js-password-feedback" role="status" hidden></div>
 
 		<p class="woocommerce-form-row form-row form-row-wide" id="password_current_field">
 			<label for="password_current">Contraseña actual</label>
@@ -89,7 +94,7 @@ do_action( 'woocommerce_before_edit_account_form' );
 			<input type="password" class="woocommerce-Input woocommerce-Input--password input-text" name="password_2" id="password_2" autocomplete="new-password" />
 		</p>
 
-		<?php // Carry the profile values, unchanged, so changing the password keeps them. ?>
+		<?php // Carry the profile values, unchanged, so the no-JS fallback keeps them. ?>
 		<input type="hidden" name="account_first_name" value="<?php echo esc_attr( $user->first_name ); ?>" />
 		<input type="hidden" name="account_last_name" value="<?php echo esc_attr( $user->last_name ); ?>" />
 		<input type="hidden" name="account_display_name" value="<?php echo esc_attr( $user->display_name ); ?>" />
@@ -103,5 +108,9 @@ do_action( 'woocommerce_before_edit_account_form' );
 	</div>
 
 </form>
+
+<div class="sc-account-logout">
+	<a href="<?php echo esc_url( wc_logout_url( home_url() ) ); ?>" class="sc-account-logout__btn">Cerrar sesión</a>
+</div>
 
 <?php do_action( 'woocommerce_after_edit_account_form' ); ?>

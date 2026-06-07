@@ -173,7 +173,7 @@
    ============================================================ */
 
 .sc-myaccount {
-    padding: var(--spacing-xl) 0 var(--spacing-2xl);
+    padding: 0;
 }
 
 .sc-myaccount__greeting {
@@ -515,6 +515,98 @@
     font-size: var(--font-size-xs);
     color: var(--color-texto-suave);
     line-height: 1.4;
+}
+
+/* Inline feedback inside a card (e.g. resultado del cambio de contraseña). */
+.sc-form-feedback {
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-form-feedback.is-success {
+    background: #eef7ed;
+    border: 1px solid #cfe8c9;
+    color: #2e7d32;
+}
+
+.sc-form-feedback.is-error {
+    background: #fdf3f2;
+    border: 1px solid #f3c4bf;
+    color: #c0392b;
+}
+
+/* Password visibility toggle — WooCommerce wraps the input in .password-input
+   and adds a .show-password-input button; we render it as an eye icon inside
+   the field (the show/hide behaviour is handled by WooCommerce's own JS). */
+.woocommerce-MyAccount-content .password-input {
+    position: relative;
+    display: block;
+}
+
+.woocommerce-MyAccount-content .password-input .input-text {
+    padding-right: 44px;
+}
+
+.woocommerce-MyAccount-content .show-password-input {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c1d11' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content .show-password-input::after {
+    content: none;
+}
+
+.woocommerce-MyAccount-content .show-password-input:hover {
+    opacity: 0.85;
+}
+
+.woocommerce-MyAccount-content .show-password-input.display-password {
+    opacity: 0.85;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c1d11' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/%3E%3Cline x1='1' y1='1' x2='23' y2='23'/%3E%3C/svg%3E");
+}
+
+/* Cerrar sesión — botón al final de Detalles de la cuenta. */
+.sc-account-logout {
+    max-width: 600px;
+    margin-top: var(--spacing-lg);
+}
+
+.woocommerce-MyAccount-content a.sc-account-logout__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-xl);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-account-logout__btn:hover {
+    border-color: #c0392b;
+    color: #c0392b;
 }
 
 .sc-form-back {
