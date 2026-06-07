@@ -444,4 +444,93 @@
         }, $form.find('.product-detail__cta'));
     });
 
+    // ============================================================
+    // FormValidate — reusable per-field form validation.
+    //
+    // Opt in by adding `js-validate` to any <form>. On submit it marks
+    // empty-required and invalid fields (red border + inline message) and
+    // blocks submission, focusing the first offender. Errors clear as the
+    // user fixes each field.
+    //
+    // Rules are read from the field, so it works with both WooCommerce
+    // fields (.validate-required / .validate-email / .validate-phone on the
+    // .form-row) and plain HTML inputs ([required], type=email/tel).
+    //
+    // To use elsewhere: add class `js-validate` to the form. Done.
+    // ============================================================
+    var FormValidate = {
+        ROW: '.form-row, .woocommerce-form-row, .sc-form-row',
+        EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        PHONE_RE: /^[\d\s\-+().]{6,}$/,
+
+        init: function () {
+            $(document).on('submit', 'form.js-validate', this.onSubmit.bind(this));
+            // Clear a field's error as soon as it becomes valid again.
+            $(document).on('input change blur', 'form.js-validate .sc-field--error :input', function () {
+                FormValidate.validateRow($(this).closest(FormValidate.ROW));
+            });
+        },
+
+        onSubmit: function (e) {
+            var $form = $(e.currentTarget);
+            var $first = null;
+
+            $form.find(this.ROW).each(function () {
+                var $row = $(this);
+                if (!FormValidate.validateRow($row) && !$first) {
+                    $first = $row.find(':input').filter(':visible').first();
+                }
+            });
+
+            if ($first && $first.length) {
+                e.preventDefault();
+                $first.trigger('focus');
+            }
+        },
+
+        // Returns true when the row is valid (or has no field to check).
+        validateRow: function ($row) {
+            var $input = $row.find('input, select, textarea').filter(':not([type=hidden])').first();
+            if (!$input.length) {
+                return true;
+            }
+
+            var val      = $.trim(($input.val() || '').toString());
+            var type     = ($input.attr('type') || '').toLowerCase();
+            var required = $row.hasClass('validate-required') || $input.prop('required');
+            var error    = '';
+
+            if (required && val === '') {
+                error = 'Este campo es obligatorio.';
+            } else if (val !== '' && ($row.hasClass('validate-email') || type === 'email') && !this.EMAIL_RE.test(val)) {
+                error = 'Ingresá un email válido.';
+            } else if (val !== '' && ($row.hasClass('validate-phone') || type === 'tel') && !this.PHONE_RE.test(val)) {
+                error = 'Ingresá un teléfono válido.';
+            }
+
+            if (error) {
+                this.mark($row, error);
+                return false;
+            }
+            this.clear($row);
+            return true;
+        },
+
+        mark: function ($row, msg) {
+            $row.addClass('sc-field--error');
+            var $msg = $row.find('.sc-field__error');
+            if (!$msg.length) {
+                $msg = $('<span class="sc-field__error" role="alert"></span>');
+                $row.append($msg);
+            }
+            $msg.text(msg);
+        },
+
+        clear: function ($row) {
+            $row.removeClass('sc-field--error').find('.sc-field__error').remove();
+        }
+    };
+
+    FormValidate.init();
+
 })(jQuery);

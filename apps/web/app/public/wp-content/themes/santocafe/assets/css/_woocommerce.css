@@ -391,39 +391,104 @@
     padding: 0;
 }
 
-/* Addresses grid */
-.woocommerce-MyAccount-content .woocommerce-Addresses {
+/* ---- Addresses overview (my-address.php) ---- */
+.sc-address-intro {
+    margin-bottom: var(--spacing-lg);
+}
+
+.woocommerce-MyAccount-content .sc-address-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-lg);
     margin: 0;
 }
 
-.woocommerce-MyAccount-content .woocommerce-Address {
-    margin: 0;
-}
-
-.woocommerce-MyAccount-content .woocommerce-Address-title {
+.sc-address-card {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-}
-
-.woocommerce-MyAccount-content .woocommerce-Address-title h2,
-.woocommerce-MyAccount-content .woocommerce-Address-title h3 {
-    margin: 0;
-}
-
-.woocommerce-MyAccount-content .woocommerce-Address address {
-    font-style: normal;
-    color: var(--color-texto);
-    line-height: 1.6;
-    background: var(--color-crema);
+    flex-direction: column;
+    background: var(--color-tarjeta);
     border: 1px solid var(--color-borde);
     border-radius: var(--radius-card);
-    padding: var(--spacing-md);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-lg);
+}
+
+.sc-address-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-address-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-crema);
+    color: var(--color-dorado-suave);
+    flex-shrink: 0;
+}
+
+.woocommerce-MyAccount-content .sc-address-card__title {
+    margin: 0;
+    font-size: var(--font-size-base);
+}
+
+.sc-address-card__body {
+    flex: 1;
+    margin-bottom: var(--spacing-lg);
+}
+
+.sc-address-card__body address {
+    font-style: normal;
+    color: var(--color-texto);
+    line-height: 1.7;
+}
+
+.sc-address-card__empty-text {
+    color: var(--color-texto-suave);
+    font-style: italic;
+    margin: 0;
+}
+
+/* Edit/Add action — outline pill, distinct from primary buttons */
+.woocommerce-MyAccount-content a.sc-address-card__edit {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px var(--spacing-lg);
+    border: 2px solid var(--color-dorado);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-address-card__edit:hover {
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+/* ---- Edit-address form: group País / Región / Ciudad in one row ---- */
+.sc-address-form .woocommerce-address-fields__field-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.sc-address-form .woocommerce-address-fields__field-wrapper > .form-row {
+    grid-column: 1 / -1; /* full width by default */
+    margin-bottom: 0;
+}
+
+.sc-address-form .woocommerce-address-fields__field-wrapper > .form-row.sc-geo-col {
+    grid-column: span 1; /* país / región / ciudad share a row */
 }
 
 /* Notice / info boxes */
@@ -446,9 +511,40 @@
     list-style: none;
 }
 
+/* ============================================================
+   FormValidate — reusable per-field error state.
+   Marked by main.js (FormValidate) on any form.js-validate after
+   pressing submit. Works on WooCommerce .form-row fields and any
+   .sc-form-row / .woocommerce-form-row wrapper.
+   ============================================================ */
+.sc-field--error input,
+.sc-field--error select,
+.sc-field--error textarea,
+.sc-field--error .select2-selection,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error input,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error select,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error textarea {
+    border-color: #c0392b;
+    background: #fdf3f2;
+}
+
+.sc-field__error {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: #c0392b;
+    line-height: 1.4;
+}
+
 @media (max-width: 600px) {
-    .woocommerce-MyAccount-content .woocommerce-Addresses {
+    .woocommerce-MyAccount-content .sc-address-cards {
         grid-template-columns: 1fr;
+    }
+    .sc-address-form .woocommerce-address-fields__field-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .sc-address-form .woocommerce-address-fields__field-wrapper > .form-row.sc-geo-col {
+        grid-column: 1 / -1;
     }
 }
 
