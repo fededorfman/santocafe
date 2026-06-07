@@ -75,8 +75,14 @@ $add_1kg_url = add_query_arg( [
         </svg>
     </button>
 
-    <?php if ( has_post_thumbnail( $id ) ) : ?>
-        <?php echo get_the_post_thumbnail( $id, 'medium', [ 'class' => 'product-modal__image', 'alt' => get_the_title( $id ) ] ); ?>
+    <?php
+    // Single clean src (no srcset): the cover container is wide enough that the
+    // browser would otherwise pick a larger thumbnail variant.
+    $sc_thumb_id  = get_post_thumbnail_id( $id );
+    $sc_thumb_url = $sc_thumb_id ? wp_get_attachment_image_url( $sc_thumb_id, 'woocommerce_single' ) : '';
+    ?>
+    <?php if ( $sc_thumb_url ) : ?>
+        <img class="product-modal__image" src="<?php echo esc_url( $sc_thumb_url ); ?>" alt="<?php echo esc_attr( get_the_title( $id ) ); ?>" loading="lazy">
     <?php else : ?>
         <div class="product-modal__image-placeholder"></div>
     <?php endif; ?>
