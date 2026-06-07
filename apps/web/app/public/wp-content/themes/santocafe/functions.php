@@ -41,11 +41,11 @@ add_action('wp_enqueue_scripts', function () {
     // CSS principal
     wp_enqueue_style('santocafe-main', $uri . '/assets/css/main.css', ['santocafe-fonts'], $ver);
 
-    // WooCommerce mini-cart fragments (refresh sin recargar + remove AJAX nativo)
-    wp_enqueue_script('wc-cart-fragments');
-
-    // JS principal (en footer)
-    wp_enqueue_script('santocafe-main', $uri . '/assets/js/main.js', ['jquery', 'wc-cart-fragments'], $ver, true);
+    // JS principal (en footer). Nota: NO encolamos wc-cart-fragments — el tema
+    // gestiona el mini-cart con su propio AJAX y el server lo renderiza en cada
+    // carga; wc-cart-fragments cacheaba el mini-cart en sessionStorage y pisaba
+    // el HTML del servidor (mostraba el estado vacío viejo).
+    wp_enqueue_script('santocafe-main', $uri . '/assets/js/main.js', ['jquery'], $ver, true);
 
     // Variables PHP → JS
     wp_localize_script('santocafe-main', 'SC', [

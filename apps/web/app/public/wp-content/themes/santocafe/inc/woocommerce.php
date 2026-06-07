@@ -85,9 +85,11 @@ add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
     'Usamos tus datos para gestionar tu cuenta y tu experiencia en este sitio, según nuestra [privacy_policy].'
 );
 
-// Relax password rules: drop the "strong password" requirement (strength meter).
+// Drop the password strength meter (relax password rules) and the cart-fragments
+// script (its sessionStorage cache fought with the theme's own mini-cart AJAX).
 add_action( 'wp_enqueue_scripts', function (): void {
     wp_dequeue_script( 'wc-password-strength-meter' );
+    wp_dequeue_script( 'wc-cart-fragments' );
 }, 99 );
 
 // Register validation: name + surname required, password >= 8 with a letter and a number.
