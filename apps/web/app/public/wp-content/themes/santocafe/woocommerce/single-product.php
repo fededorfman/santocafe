@@ -126,7 +126,10 @@ while ( have_posts() ) :
                 <header class="product-detail__header">
                     <div class="product-detail__badges">
                         <?php if ( $sca ) : ?>
-                        <span class="sca-badge sca-badge--gold">SCA <?php echo esc_html( $sca ); ?></span>
+                        <span class="sca-badge sca-badge--gold">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M9 12.4 7.5 22l4.5-2.8L16.5 22 15 12.4"/></svg>
+                            SCA <?php echo esc_html( $sca ); ?>
+                        </span>
                         <?php endif; ?>
                         <?php if ( $pais ) : ?>
                         <span class="country-badge"><?php echo esc_html( $pais ); ?></span>
@@ -157,8 +160,16 @@ while ( have_posts() ) :
                     </span>
                 </div>
 
-                <!-- Spec + profile cards -->
-                <?php if ( $altitud || $proceso || $notas || $intensidad || $acidez || $cuerpo ) : ?>
+                <!-- Notas de cata -->
+                <?php if ( $notas ) : ?>
+                <div class="product-detail__tasting">
+                    <span class="product-detail__tasting-label">Notas de cata</span>
+                    <p class="product-detail__tasting-value"><?php echo esc_html( $notas ); ?></p>
+                </div>
+                <?php endif; ?>
+
+                <!-- Spec + profile cards (3 columns) -->
+                <?php if ( $altitud || $proceso || $intensidad || $acidez || $cuerpo ) : ?>
                 <div class="product-detail__specs">
                     <?php if ( $altitud ) : ?>
                     <div class="detail-spec">
@@ -176,15 +187,6 @@ while ( have_posts() ) :
                         </span>
                         <span class="detail-spec__label">Proceso</span>
                         <span class="detail-spec__value"><?php echo esc_html( $proceso ); ?></span>
-                    </div>
-                    <?php endif; ?>
-                    <?php if ( $notas ) : ?>
-                    <div class="detail-spec">
-                        <span class="detail-spec__icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M16 9h2.5a2 2 0 0 1 0 4H16"/></svg>
-                        </span>
-                        <span class="detail-spec__label">Notas</span>
-                        <span class="detail-spec__value"><?php echo esc_html( $notas ); ?></span>
                     </div>
                     <?php endif; ?>
                     <?php if ( $intensidad || $acidez || $cuerpo ) : ?>

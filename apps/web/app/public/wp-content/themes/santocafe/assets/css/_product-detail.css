@@ -155,10 +155,35 @@
     line-height: 1.6;
 }
 
-/* Spec + profile cards (Altitud / Proceso / Notas / Perfil) */
+/* Notas de cata (1 column, centered) */
+.product-detail__tasting {
+    text-align: center;
+    padding: var(--spacing-xs) 0 var(--spacing-sm);
+}
+
+.product-detail__tasting-label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.product-detail__tasting-value {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+    line-height: 1.4;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Spec + profile cards (Altitud / Proceso / Perfil — 3 columns) */
 .product-detail__specs {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-sm);
 }
 
@@ -206,10 +231,23 @@
     gap: 6px;
 }
 
+.detail-spec--profile {
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+
 .detail-spec--profile .profile-bar__label {
-    min-width: 72px;
-    font-size: 10px;
+    min-width: 0;
+    font-size: 9px;
+    letter-spacing: 0.03em;
     color: var(--color-texto-suave);
+}
+
+.detail-spec--profile .profile-bar {
+    justify-content: space-between;
+}
+
+.detail-spec--profile .profile-bar__segment {
+    width: 13px;
 }
 
 /* Sections (formato, molienda, cantidad) */
@@ -233,20 +271,22 @@
     color: var(--color-texto-suave);
 }
 
-/* Format selector — two big cards (beige unselected, white + gold selected) */
+/* Format selector — two compact cards (beige unselected, white + gold selected) */
 .product-detail__format {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--spacing-sm);
 }
 
 .product-detail__format .pill-selector__option {
+    flex: 0 0 auto;
+    min-width: 132px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    padding: var(--spacing-lg) var(--spacing-md);
+    gap: 2px;
+    padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--radius-card);
     background: var(--color-beige);
     border-color: transparent;
@@ -265,7 +305,7 @@
 }
 
 .format-weight {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     font-weight: 700;
     line-height: 1.1;
 }
@@ -289,21 +329,21 @@
     align-items: center;
     gap: 4px;
     padding: var(--spacing-md) var(--spacing-sm);
-    border: 1.5px solid var(--color-borde);
-    border-radius: var(--radius-sm);
-    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-card);
+    background: var(--color-beige);
     cursor: pointer;
     transition: border-color var(--transition-fast), background var(--transition-fast);
     text-align: center;
 }
 
 .molienda-option:hover {
-    border-color: var(--color-dorado-suave);
+    border-color: var(--color-dorado);
 }
 
 .molienda-option.is-selected {
     border-color: var(--color-dorado);
-    background: rgba(223, 179, 62, 0.08);
+    background: var(--color-tarjeta);
 }
 
 .molienda-option__icon {
