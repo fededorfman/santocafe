@@ -237,12 +237,22 @@
 
     if ($detail.length) {
 
-        // Recalculate CTA price = raw unit price × quantity
+        // Recalculate CTA price (+ struck original) = unit × quantity
         function updateDetailCtaPrice() {
-            var raw = parseInt($detail.find('.product-detail__format .is-selected').data('raw-price'), 10) || 0;
-            var qty = parseInt($detail.find('.js-qty-input').val(), 10) || 1;
-            var total = raw * qty;
-            $detail.find('.js-cta-price').text(formatClp(total));
+            var $sel = $detail.find('.product-detail__format .is-selected');
+            var raw  = parseInt($sel.data('raw-price'), 10) || 0;
+            var comp = parseInt($sel.data('original-raw'), 10) || 0;
+            var disc = parseInt($sel.data('discount'), 10) || 0;
+            var qty  = parseInt($detail.find('.js-qty-input').val(), 10) || 1;
+
+            $detail.find('.js-cta-price').text(formatClp(raw * qty));
+
+            var $o = $detail.find('.js-cta-original');
+            if (disc > 0) {
+                $o.text(formatClp(comp * qty)).prop('hidden', false);
+            } else {
+                $o.prop('hidden', true);
+            }
         }
 
         // Format an integer as CLP: 15500 → "$15.500"
