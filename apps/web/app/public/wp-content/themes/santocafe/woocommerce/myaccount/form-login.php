@@ -23,8 +23,8 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <?php do_action( 'woocommerce_login_form_start' ); ?>
 
             <p class="woocommerce-form-row form-row">
-                <label for="username">Email o usuario</label>
-                <input type="text" name="username" id="username" autocomplete="username"
+                <label for="username">Email</label>
+                <input type="email" name="username" id="username" autocomplete="email"
                        value="<?php echo ( ! empty( $_POST['username'] ) && is_string( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>"
                        required aria-required="true" />
             </p>
@@ -54,11 +54,17 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <?php do_action( 'woocommerce_login_form_end' ); ?>
 
         </form>
+
+        <?php if ( $sc_registration ) : ?>
+        <p class="sc-account__switch">
+            ¿No tienes cuenta? <a href="#sc-register" class="js-goto-register">Regístrate</a>
+        </p>
+        <?php endif; ?>
     </div>
 
     <?php if ( $sc_registration ) : ?>
     <!-- Register -->
-    <div class="sc-account__card">
+    <div class="sc-account__card" id="sc-register">
         <h2 class="sc-account__title">Crear cuenta</h2>
         <p class="sc-account__sub">Registrate para comprar más rápido y seguir tus pedidos.</p>
 
@@ -96,7 +102,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
 
-            <button type="submit" class="btn btn--outline btn--full woocommerce-form-register__submit"
+            <button type="submit" class="btn btn--primary btn--full woocommerce-form-register__submit"
                     name="register" value="Crear cuenta">Crear cuenta</button>
 
             <?php do_action( 'woocommerce_register_form_end' ); ?>

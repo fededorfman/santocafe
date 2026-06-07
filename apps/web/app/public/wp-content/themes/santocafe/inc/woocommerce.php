@@ -80,6 +80,24 @@ add_filter( 'wc_add_to_cart_message_html', '__return_null' );
 add_filter( 'option_woocommerce_enable_myaccount_registration', fn() => 'yes' );
 add_filter( 'option_woocommerce_registration_generate_password', fn() => 'no' );
 
+// Privacy notice on the register form — Spanish, short.
+add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
+    'Usamos tus datos para gestionar tu cuenta y tu experiencia en este sitio, según nuestra [privacy_policy].'
+);
+
+// Relax password rules: drop the "strong password" requirement (strength meter)
+// and only require a minimum of 8 characters.
+add_action( 'wp_enqueue_scripts', function (): void {
+    wp_dequeue_script( 'wc-password-strength-meter' );
+}, 99 );
+
+add_action( 'woocommerce_register_post', function ( $username, $email, $errors ): void {
+    $password = $_POST['password'] ?? '';
+    if ( strlen( $password ) < 8 ) {
+        $errors->add( 'password_too_short', 'La contraseña debe tener al menos 8 caracteres.' );
+    }
+}, 10, 3 );
+
 // ============================================================
 // Molienda — persist as cart item data (not a WC variation)
 // ============================================================
