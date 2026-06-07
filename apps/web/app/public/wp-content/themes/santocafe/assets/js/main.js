@@ -111,17 +111,29 @@
     // ============================================================
     // Product Card — format selector (250g / 1kg)
     // ============================================================
-    $(document).on('click', '.product-card__format .pill-selector__option', function () {
-        var $pill  = $(this);
-        var $card  = $pill.closest('.product-card');
-        var price  = $pill.data('price');
-        var addUrl = $pill.data('add-url');
+    $(document).on('click', '.product-card__weights .product-card__weight', function () {
+        var $btn   = $(this);
+        var $card  = $btn.closest('.product-card');
+        var price  = $btn.data('price');
+        var addUrl = $btn.data('add-url');
+        var orig   = $btn.data('original');
+        var disc   = parseInt($btn.data('discount'), 10) || 0;
 
-        $pill.siblings('.pill-selector__option').removeClass('is-selected');
-        $pill.addClass('is-selected');
+        $btn.siblings('.product-card__weight').removeClass('is-selected');
+        $btn.addClass('is-selected');
 
         if (price)  $card.find('.js-card-price').text(price);
         if (addUrl) $card.find('.js-card-add').attr('href', addUrl);
+
+        var $orig = $card.find('.js-card-original');
+        var $disc = $card.find('.js-card-discount');
+        if (disc > 0) {
+            $orig.text(orig).prop('hidden', false);
+            $disc.text('-' + disc + '%').prop('hidden', false);
+        } else {
+            $orig.prop('hidden', true);
+            $disc.prop('hidden', true);
+        }
     });
 
     // ============================================================
@@ -402,14 +414,14 @@
     // --- Card "Añadir" ---
     $(document).on('click', '.js-card-add', function (e) {
         e.preventDefault();
-        var $card   = $(this).closest('.product-card');
-        var $format = $card.find('.product-card__format');
-        var $pill   = $format.find('.pill-selector__option.is-selected');
+        var $card    = $(this).closest('.product-card');
+        var $weights = $card.find('.product-card__weights');
+        var $sel     = $weights.find('.product-card__weight.is-selected');
 
         addToCart({
-            product_id:   $format.data('product-id'),
-            variation_id: $pill.data('variation-id'),
-            peso:         $pill.data('peso'),
+            product_id:   $weights.data('product-id'),
+            variation_id: $sel.data('variation-id'),
+            peso:         $sel.data('peso'),
             molienda:     'Grano',
             quantity:     1
         }, $(this));

@@ -14,6 +14,7 @@
 
     /* --- Colores de tarjetas y UI --- */
     --color-tarjeta:        #ffffff;
+    --color-beige:          #f3ece1;   /* Beige arena suave (botones de formato) */
     --color-borde:          #e5e5e5;
     --color-texto:          #1a1310;
     --color-texto-suave:    #555555;

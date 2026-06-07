@@ -41,6 +41,16 @@ $var_1kg_id    = $var_1kg  ? $var_1kg['variation_id']       : $id;
 $price_250_fmt = sc_format_clp( (int) $price_250 );
 $price_1kg_fmt = sc_format_clp( (int) $price_1kg );
 
+// ---- Regular prices + discount % (calculated from price difference) ----
+$reg_250 = $var_250 ? (float) $var_250['display_regular_price'] : (float) $product->get_regular_price();
+$reg_1kg = $var_1kg  ? (float) $var_1kg['display_regular_price']  : $reg_250 * 3.8;
+
+$disc_250 = ( $reg_250 > $price_250 ) ? (int) round( ( $reg_250 - $price_250 ) / $reg_250 * 100 ) : 0;
+$disc_1kg = ( $reg_1kg > $price_1kg ) ? (int) round( ( $reg_1kg - $price_1kg ) / $reg_1kg * 100 ) : 0;
+
+$reg_250_fmt = sc_format_clp( (int) $reg_250 );
+$reg_1kg_fmt = sc_format_clp( (int) $reg_1kg );
+
 // ---- Add-to-cart URLs ----
 $add_250_url = add_query_arg( [
     'add-to-cart'       => $id,
@@ -127,24 +137,32 @@ $on_sale = $product->is_on_sale();
         </div>
         <?php endif; ?>
 
-        <!-- Formato / precio selector -->
-        <div class="product-card__format pill-selector" data-product-id="<?php echo esc_attr( $id ); ?>">
-            <button class="pill-selector__option is-selected"
+        <hr class="product-card__divider">
+
+        <!-- Formato / precio selector (250g / 1kg) -->
+        <div class="product-card__weights" data-product-id="<?php echo esc_attr( $id ); ?>">
+            <button class="product-card__weight is-selected"
                     data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
-                    data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
                     data-peso="250g"
+                    data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
+                    data-original="<?php echo esc_attr( $reg_250_fmt ); ?>"
+                    data-discount="<?php echo esc_attr( $disc_250 ); ?>"
                     data-add-url="<?php echo esc_url( $add_250_url ); ?>"
                     type="button">
-                <?php echo esc_html( $price_250_fmt ); ?> / 250g
+                <span class="product-card__weight-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                <span class="product-card__weight-unit">250g</span>
             </button>
             <?php if ( $var_1kg ) : ?>
-            <button class="pill-selector__option"
+            <button class="product-card__weight"
                     data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
-                    data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
                     data-peso="1kg"
+                    data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
+                    data-original="<?php echo esc_attr( $reg_1kg_fmt ); ?>"
+                    data-discount="<?php echo esc_attr( $disc_1kg ); ?>"
                     data-add-url="<?php echo esc_url( $add_1kg_url ); ?>"
                     type="button">
-                <?php echo esc_html( $price_1kg_fmt ); ?> / 1kg
+                <span class="product-card__weight-price"><?php echo esc_html( $price_1kg_fmt ); ?></span>
+                <span class="product-card__weight-unit">1kg</span>
             </button>
             <?php endif; ?>
         </div>
@@ -152,16 +170,18 @@ $on_sale = $product->is_on_sale();
         <p class="product-card__molienda">
             Molienda: <strong>Grano</strong>
             <span aria-hidden="true"> · </span>
-            <a href="<?php echo esc_url( $cart_url ); ?>" class="product-card__molienda-edit">
-                editar en carrito
-            </a>
+            <span class="product-card__molienda-note">se edita en el carrito</span>
         </p>
 
-        <!-- Footer: precio + botón -->
+        <!-- Footer: precio (con descuento) + botón -->
         <div class="product-card__footer">
-            <span class="product-card__price js-card-price">
-                <?php echo esc_html( $price_250_fmt ); ?>
-            </span>
+            <div class="product-card__pricing">
+                <span class="product-card__price js-card-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                <span class="product-card__price-meta">
+                    <span class="product-card__price-was js-card-original"<?php echo $disc_250 ? '' : ' hidden'; ?>><?php echo esc_html( $reg_250_fmt ); ?></span>
+                    <span class="product-card__discount js-card-discount"<?php echo $disc_250 ? '' : ' hidden'; ?>>-<?php echo esc_html( $disc_250 ); ?>%</span>
+                </span>
+            </div>
             <a href="<?php echo esc_url( $add_250_url ); ?>"
                class="btn btn--primary btn--sm product-card__add js-card-add"
                aria-label="<?php echo esc_attr( 'Añadir ' . get_the_title() . ' al carrito' ); ?>">
