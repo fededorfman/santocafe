@@ -76,19 +76,21 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <?php if ( ! empty( $_POST['register'] ) ) { woocommerce_output_all_notices(); } ?>
 
-            <p class="woocommerce-form-row form-row">
-                <label for="reg_first_name">Nombre</label>
-                <input type="text" name="first_name" id="reg_first_name" autocomplete="given-name"
-                       value="<?php echo ( ! empty( $_POST['first_name'] ) ) ? esc_attr( wp_unslash( $_POST['first_name'] ) ) : ''; ?>"
-                       required aria-required="true" />
-            </p>
+            <div class="sc-account__row2">
+                <p class="woocommerce-form-row form-row">
+                    <label for="reg_first_name">Nombre</label>
+                    <input type="text" name="first_name" id="reg_first_name" autocomplete="given-name"
+                           value="<?php echo ( ! empty( $_POST['first_name'] ) ) ? esc_attr( wp_unslash( $_POST['first_name'] ) ) : ''; ?>"
+                           required aria-required="true" />
+                </p>
 
-            <p class="woocommerce-form-row form-row">
-                <label for="reg_last_name">Apellido</label>
-                <input type="text" name="last_name" id="reg_last_name" autocomplete="family-name"
-                       value="<?php echo ( ! empty( $_POST['last_name'] ) ) ? esc_attr( wp_unslash( $_POST['last_name'] ) ) : ''; ?>"
-                       required aria-required="true" />
-            </p>
+                <p class="woocommerce-form-row form-row">
+                    <label for="reg_last_name">Apellido</label>
+                    <input type="text" name="last_name" id="reg_last_name" autocomplete="family-name"
+                           value="<?php echo ( ! empty( $_POST['last_name'] ) ) ? esc_attr( wp_unslash( $_POST['last_name'] ) ) : ''; ?>"
+                           required aria-required="true" />
+                </p>
+            </div>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
             <p class="woocommerce-form-row form-row">

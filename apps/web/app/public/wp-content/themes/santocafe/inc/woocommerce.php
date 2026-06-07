@@ -127,6 +127,7 @@ add_action( 'init', function (): void {
 // My Account: drop "Escritorio" (dashboard) from the menu and make Pedidos the landing.
 add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
     unset( $items['dashboard'] );
+    unset( $items['downloads'] );
     return $items;
 } );
 
