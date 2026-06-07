@@ -126,10 +126,12 @@ add_action( 'init', function (): void {
     remove_action( 'woocommerce_before_customer_login_form', 'woocommerce_output_all_notices', 10 );
 } );
 
-// My Account: drop "Escritorio" (dashboard) from the menu and make Pedidos the landing.
+// My Account: drop "Escritorio" (dashboard), Descargas y Cerrar sesión del menú
+// (el logout vive ahora como botón al final de "Detalles de la cuenta").
 add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
     unset( $items['dashboard'] );
     unset( $items['downloads'] );
+    unset( $items['customer-logout'] );
     return $items;
 } );
 

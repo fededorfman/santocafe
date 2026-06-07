@@ -533,4 +533,77 @@
 
     FormValidate.init();
 
+    // ============================================================
+    // PasswordForm — inline validation + AJAX change (no page reload).
+    // Reuses FormValidate's per-field marking. Validates current/new/confirm
+    // client-side, then posts to sc_change_password; server errors (e.g. wrong
+    // current password) come back as per-field messages without refreshing.
+    // ============================================================
+    var PasswordForm = {
+        PW_RE: /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/,
+
+        init: function () {
+            $(document).on('submit', 'form.js-password-form', this.onSubmit);
+            // Clear a field's error as soon as the user edits it.
+            $(document).on('input', 'form.js-password-form .sc-field--error :input', function () {
+                FormValidate.clear($(this).closest('.form-row'));
+            });
+        },
+
+        onSubmit: function (e) {
+            e.preventDefault();
+            var $form = $(e.currentTarget);
+            var $cur  = $form.find('#password_current');
+            var $p1   = $form.find('#password_1');
+            var $p2   = $form.find('#password_2');
+            var cur = $cur.val(), p1 = $p1.val(), p2 = $p2.val();
+            var $feedback = $form.find('.js-password-feedback');
+
+            $feedback.attr('hidden', true).removeClass('is-error is-success').text('');
+            [ $cur, $p1, $p2 ].forEach(function ($f) { FormValidate.clear($f.closest('.form-row')); });
+
+            var $first = null;
+            var fail = function ($input, msg) {
+                FormValidate.mark($input.closest('.form-row'), msg);
+                if (!$first) { $first = $input; }
+            };
+
+            if (!cur) { fail($cur, 'Este campo es obligatorio.'); }
+            if (!p1) { fail($p1, 'Este campo es obligatorio.'); }
+            else if (!PasswordForm.PW_RE.test(p1)) { fail($p1, 'Mínimo 8 caracteres, con al menos una letra y un número.'); }
+            if (!p2) { fail($p2, 'Este campo es obligatorio.'); }
+            else if (p1 && p1 !== p2) { fail($p2, 'Las contraseñas no coinciden.'); }
+
+            if ($first) { $first.trigger('focus'); return; }
+
+            var $btn = $form.find('button[type="submit"]');
+            $btn.prop('disabled', true);
+
+            $.post(SC.ajaxUrl, {
+                action:  'sc_change_password',
+                nonce:   SC.nonce,
+                current: cur,
+                'new':   p1
+            }).done(function (res) {
+                if (res && res.success) {
+                    $cur.val(''); $p1.val(''); $p2.val('');
+                    $feedback.removeClass('is-error').addClass('is-success')
+                        .text((res.data && res.data.message) || 'Contraseña actualizada.').removeAttr('hidden');
+                } else {
+                    var d = (res && res.data) || {};
+                    var $field = d.field ? $form.find('#' + d.field) : $cur;
+                    FormValidate.mark($field.closest('.form-row'), d.message || 'No se pudo cambiar la contraseña.');
+                    $field.trigger('focus');
+                }
+            }).fail(function () {
+                $feedback.removeClass('is-success').addClass('is-error')
+                    .text('Ocurrió un error. Intentá de nuevo.').removeAttr('hidden');
+            }).always(function () {
+                $btn.prop('disabled', false);
+            });
+        }
+    };
+
+    PasswordForm.init();
+
 })(jQuery);

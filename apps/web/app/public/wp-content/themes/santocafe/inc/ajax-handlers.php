@@ -189,3 +189,40 @@ function sc_ajax_add_to_cart(): void {
 
 add_action( 'wp_ajax_sc_add_to_cart',        'sc_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_sc_add_to_cart', 'sc_ajax_add_to_cart' );
+
+// ============================================================
+// Change password — inline (no page reload) for "Detalles de la cuenta".
+// Returns per-field errors so the form can mark them without refreshing.
+// ============================================================
+function sc_ajax_change_password(): void {
+    check_ajax_referer( 'sc_nonce', 'nonce' );
+
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( [ 'field' => 'password_current', 'message' => 'Tu sesión expiró. Volvé a iniciar sesión.' ] );
+    }
+
+    $user    = wp_get_current_user();
+    $current = (string) ( $_POST['current'] ?? '' );
+    $new     = (string) ( $_POST['new'] ?? '' );
+
+    if ( '' === $current ) {
+        wp_send_json_error( [ 'field' => 'password_current', 'message' => 'Este campo es obligatorio.' ] );
+    }
+    if ( ! wp_check_password( $current, $user->user_pass, $user->ID ) ) {
+        wp_send_json_error( [ 'field' => 'password_current', 'message' => 'La contraseña actual es incorrecta.' ] );
+    }
+    if ( strlen( $new ) < 8 || ! preg_match( '/[A-Za-z]/', $new ) || ! preg_match( '/[0-9]/', $new ) ) {
+        wp_send_json_error( [ 'field' => 'password_1', 'message' => 'Mínimo 8 caracteres, con al menos una letra y un número.' ] );
+    }
+
+    wp_set_password( $new, $user->ID );
+
+    // wp_set_password invalidates the session — re-authenticate so the user
+    // stays logged in after changing their own password.
+    wp_set_current_user( $user->ID );
+    wp_set_auth_cookie( $user->ID, true );
+
+    wp_send_json_success( [ 'message' => 'Tu contraseña se actualizó correctamente.' ] );
+}
+
+add_action( 'wp_ajax_sc_change_password', 'sc_ajax_change_password' );
