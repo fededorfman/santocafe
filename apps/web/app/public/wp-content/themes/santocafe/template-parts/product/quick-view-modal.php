@@ -63,7 +63,10 @@ $add_1kg_url = add_query_arg( [
 
     <?php if ( $sca ) : ?>
     <div class="product-modal__sca">
-        <span class="sca-badge sca-badge--gold">SCA <?php echo esc_html( $sca ); ?></span>
+        <span class="sca-badge sca-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M9 12.4 7.5 22l4.5-2.8L16.5 22 15 12.4"/></svg>
+            SCA <?php echo esc_html( $sca ); ?>
+        </span>
     </div>
     <?php endif; ?>
 
