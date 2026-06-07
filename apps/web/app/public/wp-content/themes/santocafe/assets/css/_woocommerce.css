@@ -3,14 +3,21 @@
    ============================================================ */
 
 .sc-account {
-    max-width: 920px;
+    max-width: 960px;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-2xl);
     padding: var(--spacing-xl) 0 var(--spacing-2xl);
+}
+
+/* Two fields side by side (Nombre + Apellido) */
+.sc-account__row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
 }
 
 /* 2 columns on desktop/tablet (login left, register right); wraps to 1 on mobile.
@@ -229,5 +236,166 @@
         border-bottom: 1px solid var(--color-borde);
         padding-bottom: var(--spacing-md);
         margin-bottom: var(--spacing-sm);
+    }
+}
+
+/* ============================================================
+   My Account content — section styles (orders, addresses, edit)
+   ============================================================ */
+
+.woocommerce-MyAccount-content p {
+    color: var(--color-texto-suave);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.woocommerce-MyAccount-content h2,
+.woocommerce-MyAccount-content h3 {
+    font-family: var(--font-heading);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-md);
+}
+
+/* WooCommerce buttons → theme pill style */
+.woocommerce-MyAccount-content .woocommerce-Button,
+.woocommerce-MyAccount-content .button,
+.woocommerce-MyAccount-content button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-xl);
+    border: 2px solid var(--color-dorado);
+    border-radius: var(--radius-pill);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content .woocommerce-Button:hover,
+.woocommerce-MyAccount-content .button:hover,
+.woocommerce-MyAccount-content button[type="submit"]:hover {
+    background: var(--color-dorado-hover);
+    border-color: var(--color-dorado-hover);
+}
+
+/* Secondary (e.g. "Ver" pedido) */
+.woocommerce-MyAccount-content .button.view {
+    padding: 6px var(--spacing-md);
+}
+
+/* Tables (orders) */
+.woocommerce-MyAccount-content table.shop_table,
+.woocommerce-MyAccount-content table.woocommerce-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+}
+
+.woocommerce-MyAccount-content table.shop_table th {
+    text-align: left;
+    background: var(--color-crema);
+    color: var(--color-texto-suave);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.04em;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.woocommerce-MyAccount-content table.shop_table td {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--color-borde);
+    color: var(--color-texto);
+}
+
+/* Forms (edit account / addresses) */
+.woocommerce-MyAccount-content .woocommerce-EditAccountForm,
+.woocommerce-MyAccount-content .woocommerce-address-fields,
+.woocommerce-MyAccount-content form {
+    max-width: 520px;
+}
+
+.woocommerce-MyAccount-content label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.woocommerce-MyAccount-content input[type="text"],
+.woocommerce-MyAccount-content input[type="email"],
+.woocommerce-MyAccount-content input[type="password"],
+.woocommerce-MyAccount-content input[type="tel"],
+.woocommerce-MyAccount-content select,
+.woocommerce-MyAccount-content textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    background: var(--color-crema);
+    color: var(--color-texto);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content input:focus,
+.woocommerce-MyAccount-content select:focus,
+.woocommerce-MyAccount-content textarea:focus {
+    border-color: var(--color-dorado);
+}
+
+.woocommerce-MyAccount-content .form-row,
+.woocommerce-MyAccount-content .woocommerce-form-row {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Addresses grid */
+.woocommerce-MyAccount-content .woocommerce-Addresses {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.woocommerce-MyAccount-content .woocommerce-Address address {
+    font-style: normal;
+    color: var(--color-texto);
+    line-height: 1.6;
+    background: var(--color-crema);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    padding: var(--spacing-md);
+}
+
+/* Notice / info boxes */
+.woocommerce-MyAccount-content .woocommerce-info,
+.woocommerce-MyAccount-content .woocommerce-message,
+.woocommerce-MyAccount-content .woocommerce-Message {
+    background: var(--color-crema);
+    border: 1px solid var(--color-borde);
+    border-left: 3px solid var(--color-dorado);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--spacing-lg);
+}
+
+@media (max-width: 600px) {
+    .woocommerce-MyAccount-content .woocommerce-Addresses {
+        grid-template-columns: 1fr;
     }
 }
