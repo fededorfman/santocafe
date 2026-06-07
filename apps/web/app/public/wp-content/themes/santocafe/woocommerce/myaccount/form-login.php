@@ -24,7 +24,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
         </p>
         <?php endif; ?>
 
-        <form class="woocommerce-form woocommerce-form-login login js-validate" method="post">
+        <form class="woocommerce-form woocommerce-form-login login js-validate" method="post" novalidate>
 
             <?php do_action( 'woocommerce_login_form_start' ); ?>
 
@@ -70,7 +70,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
         <h2 class="sc-account__title">Crear cuenta</h2>
         <p class="sc-account__sub">Registrate para comprar más rápido y seguir tus pedidos.</p>
 
-        <form method="post" class="woocommerce-form woocommerce-form-register register js-validate" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
+        <form method="post" class="woocommerce-form woocommerce-form-register register js-validate" novalidate <?php do_action( 'woocommerce_register_form_tag' ); ?>>
 
             <?php do_action( 'woocommerce_register_form_start' ); ?>
 

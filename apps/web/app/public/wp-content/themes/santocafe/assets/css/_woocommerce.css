@@ -475,12 +475,18 @@
     color: var(--color-oscuro);
 }
 
-/* ---- Edit-address form: white card + single column ---- */
-.sc-address-form {
+/* ============================================================
+   Reusable account form layout — white card + single column.
+   Used by editar dirección y detalles de la cuenta. Add `sc-form`
+   to the <form>, wrap fields in `.sc-form-grid` (give the pairs you
+   want side by side the `sc-name-col` class), and put the buttons in
+   `.sc-form-actions`.
+   ============================================================ */
+.sc-form {
     max-width: 600px;
 }
 
-.sc-address-form__back {
+.sc-form-back {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -492,11 +498,11 @@
     transition: color var(--transition-fast);
 }
 
-.sc-address-form__back:hover {
+.sc-form-back:hover {
     color: var(--color-dorado-suave);
 }
 
-.sc-address-form__card {
+.sc-form-card {
     background: var(--color-tarjeta);
     border: 1px solid var(--color-borde);
     border-radius: var(--radius-card);
@@ -504,36 +510,52 @@
     padding: var(--spacing-xl);
 }
 
-.woocommerce-MyAccount-content .sc-address-form__title {
+.woocommerce-MyAccount-content .sc-form-card__title {
     margin-top: 0;
     margin-bottom: var(--spacing-lg);
 }
 
-/* Nombres + Apellidos share a row; everything else is full width, single column. */
-.sc-address-form__card .woocommerce-address-fields__field-wrapper {
+/* Single column by default; pairs marked .sc-name-col share a row. */
+.sc-form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-md);
 }
 
-.sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row {
+.sc-form-grid > .form-row {
     grid-column: 1 / -1; /* full width by default */
     margin-bottom: 0;
 }
 
-.sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row.sc-name-col {
-    grid-column: span 1; /* nombres / apellidos side by side */
+.sc-form-grid > .form-row.sc-name-col {
+    grid-column: span 1; /* e.g. nombres / apellidos side by side */
 }
 
-/* Actions — give the buttons room from the last input. */
-.sc-address-form__actions {
+/* Fieldset (cambio de contraseña) sits inside the card with its own gap. */
+.sc-form-card fieldset {
+    margin-top: var(--spacing-lg);
+}
+
+.sc-form-card fieldset .sc-form-grid,
+.sc-form-card fieldset > .form-row:first-of-type {
+    margin-top: var(--spacing-md);
+}
+
+/* Actions — room from the last input; Cancelar left, Guardar right. */
+.sc-form-actions {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-lg);
     margin: var(--spacing-xl) 0 0;
 }
 
-.woocommerce-MyAccount-content a.sc-address-form__cancel {
+/* Single primary button → align to the right. */
+.sc-form-actions--end {
+    justify-content: flex-end;
+}
+
+.woocommerce-MyAccount-content a.sc-form-cancel {
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--color-texto-suave);
@@ -541,7 +563,7 @@
     transition: color var(--transition-fast);
 }
 
-.woocommerce-MyAccount-content a.sc-address-form__cancel:hover {
+.woocommerce-MyAccount-content a.sc-form-cancel:hover {
     color: var(--color-oscuro);
 }
 
@@ -594,11 +616,14 @@
     .woocommerce-MyAccount-content .sc-address-cards {
         grid-template-columns: 1fr;
     }
-    .sc-address-form__card .woocommerce-address-fields__field-wrapper {
+    .sc-form-grid {
         grid-template-columns: 1fr;
     }
-    .sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row.sc-name-col {
+    .sc-form-grid > .form-row.sc-name-col {
         grid-column: 1 / -1;
+    }
+    .sc-form-actions {
+        flex-wrap: wrap;
     }
 }
 

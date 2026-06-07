@@ -17,8 +17,8 @@ if ( ! wc_ship_to_billing_address_only() && wc_shipping_enabled() ) {
 	$get_addresses = apply_filters(
 		'woocommerce_my_account_get_addresses',
 		array(
-			'billing'  => __( 'Dirección de facturación', 'santocafe' ),
 			'shipping' => __( 'Dirección de envío', 'santocafe' ),
+			'billing'  => __( 'Dirección de facturación', 'santocafe' ),
 		),
 		$customer_id
 	);
