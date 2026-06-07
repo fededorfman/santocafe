@@ -264,6 +264,13 @@
     }
 }
 
+/* Nuestra historia colapsa a una columna un poco antes (texto + imagen
+   quedan apretados cerca de los 900px). */
+@media (max-width: 900px) {
+    .nosotros__grid            { grid-template-columns: 1fr; }
+    .nosotros__image           { max-height: 360px; object-fit: cover; }
+}
+
 @media (max-width: 600px) {
     .hero__content             { gap: var(--spacing-md); }
     .features                  { padding: var(--spacing-xl) 0; }
@@ -272,8 +279,6 @@
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
     .nosotros                  { padding: var(--spacing-xl) 0; }
-    .nosotros__grid            { grid-template-columns: 1fr; }
-    .nosotros__image           { max-height: 360px; object-fit: cover; }
     .contacto                  { padding: var(--spacing-xl) 0; }
     .contacto__grid            { grid-template-columns: 1fr; gap: var(--spacing-xl); }
 }
