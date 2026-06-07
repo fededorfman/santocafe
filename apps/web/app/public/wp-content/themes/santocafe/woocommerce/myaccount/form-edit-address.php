@@ -5,7 +5,8 @@
  * Same WooCommerce hooks/nonce/save action as core, plus:
  *  - .js-validate → reusable per-field validation (see main.js FormValidate),
  *    which marks empty-required / invalid fields after pressing "Guardar".
- *  - País / Región / Ciudad grouped together (.sc-geo-col) in one row.
+ *  - White card panel + single-column layout (Nombres/Apellidos share a row).
+ *  - "Volver a mis direcciones" link on top, "Cancelar" link at the bottom.
  *
  * @see https://woocommerce.com/document/template-structure/
  * @package santocafe
@@ -19,8 +20,11 @@ $sc_titles  = array(
 );
 $page_title = $sc_titles[ $load_address ] ?? 'Dirección';
 
-// Fields grouped together in one row.
-$sc_geo_keys = array( 'billing_country', 'billing_state', 'billing_city', 'shipping_country', 'shipping_state', 'shipping_city' );
+// Nombres + Apellidos share a row; everything else is full width.
+$sc_name_keys = array( 'billing_first_name', 'billing_last_name', 'shipping_first_name', 'shipping_last_name' );
+
+// Back / cancel target: the addresses overview.
+$sc_back_url = wc_get_account_endpoint_url( 'edit-address' );
 
 do_action( 'woocommerce_before_edit_account_address_form' ); ?>
 
@@ -28,32 +32,39 @@ do_action( 'woocommerce_before_edit_account_address_form' ); ?>
 	<?php wc_get_template( 'myaccount/my-address.php' ); ?>
 <?php else : ?>
 
+	<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-address-form__back">
+		<span aria-hidden="true">&larr;</span> Volver a mis direcciones
+	</a>
+
 	<form method="post" class="sc-address-form js-validate" novalidate>
 
-		<h2><?php echo esc_html( apply_filters( 'woocommerce_my_account_edit_address_title', $page_title, $load_address ) ); ?></h2>
+		<div class="sc-address-form__card">
+			<h2 class="sc-address-form__title"><?php echo esc_html( apply_filters( 'woocommerce_my_account_edit_address_title', $page_title, $load_address ) ); ?></h2>
 
-		<div class="woocommerce-address-fields">
-			<?php do_action( "woocommerce_before_edit_address_form_{$load_address}" ); ?>
+			<div class="woocommerce-address-fields">
+				<?php do_action( "woocommerce_before_edit_address_form_{$load_address}" ); ?>
 
-			<div class="woocommerce-address-fields__field-wrapper">
-				<?php
-				foreach ( $address as $key => $field ) {
-					if ( in_array( $key, $sc_geo_keys, true ) ) {
-						$field['class']   = isset( $field['class'] ) ? (array) $field['class'] : array();
-						$field['class'][] = 'sc-geo-col';
+				<div class="woocommerce-address-fields__field-wrapper">
+					<?php
+					foreach ( $address as $key => $field ) {
+						if ( in_array( $key, $sc_name_keys, true ) ) {
+							$field['class']   = isset( $field['class'] ) ? (array) $field['class'] : array();
+							$field['class'][] = 'sc-name-col';
+						}
+						woocommerce_form_field( $key, $field, wc_get_post_data_by_key( $key, $field['value'] ) );
 					}
-					woocommerce_form_field( $key, $field, wc_get_post_data_by_key( $key, $field['value'] ) );
-				}
-				?>
+					?>
+				</div>
+
+				<?php do_action( "woocommerce_after_edit_address_form_{$load_address}" ); ?>
+
+				<div class="sc-address-form__actions">
+					<button type="submit" class="button" name="save_address" value="Guardar dirección">Guardar dirección</button>
+					<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-address-form__cancel">Cancelar</a>
+					<?php wp_nonce_field( 'woocommerce-edit_address', 'woocommerce-edit-address-nonce' ); ?>
+					<input type="hidden" name="action" value="edit_address" />
+				</div>
 			</div>
-
-			<?php do_action( "woocommerce_after_edit_address_form_{$load_address}" ); ?>
-
-			<p>
-				<button type="submit" class="button" name="save_address" value="Guardar dirección">Guardar dirección</button>
-				<?php wp_nonce_field( 'woocommerce-edit_address', 'woocommerce-edit-address-nonce' ); ?>
-				<input type="hidden" name="action" value="edit_address" />
-			</p>
 		</div>
 
 	</form>
