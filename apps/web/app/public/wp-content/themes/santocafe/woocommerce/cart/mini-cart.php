@@ -108,9 +108,12 @@ do_action( 'woocommerce_before_mini_cart' );
                     </div>
                     <span class="mini-cart-item__line">
                         <?php if ( $line_disc > 0 ) : ?>
-                        <span class="mini-cart-item__line-was"><?php echo esc_html( $line_was_fmt ); ?></span>
+                        <span class="mini-cart-item__line-meta">
+                            <span class="mini-cart-item__line-was"><?php echo esc_html( $line_was_fmt ); ?></span>
+                            <span class="mini-cart-item__line-disc">-<?php echo esc_html( $line_disc ); ?>%</span>
+                        </span>
                         <?php endif; ?>
-                        <?php echo esc_html( $line ); ?>
+                        <span class="mini-cart-item__line-now"><?php echo esc_html( $line ); ?></span>
                     </span>
                 </div>
 

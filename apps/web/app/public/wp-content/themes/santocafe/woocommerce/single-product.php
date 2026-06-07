@@ -157,41 +157,43 @@ while ( have_posts() ) :
                     </span>
                 </div>
 
-                <!-- Tasting notes -->
-                <?php if ( $notas ) : ?>
-                <p class="product-detail__notes"><?php echo esc_html( $notas ); ?></p>
-                <?php endif; ?>
-
-                <!-- Spec cards -->
-                <?php if ( $altitud || $proceso || $variedad ) : ?>
+                <!-- Spec + profile cards -->
+                <?php if ( $altitud || $proceso || $notas || $intensidad || $acidez || $cuerpo ) : ?>
                 <div class="product-detail__specs">
                     <?php if ( $altitud ) : ?>
                     <div class="detail-spec">
+                        <span class="detail-spec__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 12 6l8 13"/><path d="M9 14l3-2 2 2"/></svg>
+                        </span>
                         <span class="detail-spec__label">Altitud</span>
                         <span class="detail-spec__value"><?php echo esc_html( $altitud ); ?>m</span>
                     </div>
                     <?php endif; ?>
                     <?php if ( $proceso ) : ?>
                     <div class="detail-spec">
+                        <span class="detail-spec__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 1.5-5 5-9z"/></svg>
+                        </span>
                         <span class="detail-spec__label">Proceso</span>
                         <span class="detail-spec__value"><?php echo esc_html( $proceso ); ?></span>
                     </div>
                     <?php endif; ?>
-                    <?php if ( $variedad ) : ?>
+                    <?php if ( $notas ) : ?>
                     <div class="detail-spec">
-                        <span class="detail-spec__label">Variedad</span>
-                        <span class="detail-spec__value"><?php echo esc_html( $variedad ); ?></span>
+                        <span class="detail-spec__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M16 9h2.5a2 2 0 0 1 0 4H16"/></svg>
+                        </span>
+                        <span class="detail-spec__label">Notas</span>
+                        <span class="detail-spec__value"><?php echo esc_html( $notas ); ?></span>
                     </div>
                     <?php endif; ?>
-                </div>
-                <?php endif; ?>
-
-                <!-- Profile bars -->
-                <?php if ( $intensidad || $acidez || $cuerpo ) : ?>
-                <div class="product-detail__profiles">
-                    <?php if ( $intensidad ) sc_render_profile_bar( 'Intensidad', $intensidad ); ?>
-                    <?php if ( $acidez )     sc_render_profile_bar( 'Acidez',     $acidez ); ?>
-                    <?php if ( $cuerpo )     sc_render_profile_bar( 'Cuerpo',     $cuerpo ); ?>
+                    <?php if ( $intensidad || $acidez || $cuerpo ) : ?>
+                    <div class="detail-spec detail-spec--profile">
+                        <?php if ( $intensidad ) sc_render_profile_bar( 'Intensidad', $intensidad ); ?>
+                        <?php if ( $acidez )     sc_render_profile_bar( 'Acidez',     $acidez ); ?>
+                        <?php if ( $cuerpo )     sc_render_profile_bar( 'Cuerpo',     $cuerpo ); ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
 
@@ -205,10 +207,11 @@ while ( have_posts() ) :
                                 data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
                                 data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
                                 data-raw-price="<?php echo esc_attr( (int) $price_250 ); ?>"
+                                data-original-raw="<?php echo esc_attr( $pr_250['compare'] ); ?>"
                                 data-per-cup="<?php echo esc_attr( $per_cup_250 ); ?>"
                                 data-peso="250g"
                                 type="button">
-                            <?php echo esc_html( $price_250_fmt ); ?> / 250g
+                            <span class="format-weight">250g</span>
                             <span class="format-cups">~30 tazas</span>
                         </button>
                         <?php if ( $var_1kg ) : ?>
@@ -218,10 +221,11 @@ while ( have_posts() ) :
                                 data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
                                 data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
                                 data-raw-price="<?php echo esc_attr( (int) $price_1kg ); ?>"
+                                data-original-raw="<?php echo esc_attr( $pr_1kg['compare'] ); ?>"
                                 data-per-cup="<?php echo esc_attr( $per_cup_1kg ); ?>"
                                 data-peso="1kg"
                                 type="button">
-                            <?php echo esc_html( $price_1kg_fmt ); ?> / 1kg
+                            <span class="format-weight">1kg</span>
                             <span class="format-cups">~120 tazas</span>
                         </button>
                         <?php endif; ?>
@@ -297,6 +301,7 @@ while ( have_posts() ) :
                         </svg>
                         Agregar al carrito —
                         <span class="js-cta-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                        <span class="product-detail__cta-was js-cta-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
                     </button>
                 </form>
 

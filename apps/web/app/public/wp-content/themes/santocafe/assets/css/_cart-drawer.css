@@ -212,11 +212,27 @@
     color: var(--color-oscuro);
 }
 
+.mini-cart-item__line-meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .mini-cart-item__line-was {
     font-size: var(--font-size-xs);
     font-weight: 500;
     color: var(--color-texto-suave);
     text-decoration: line-through;
+}
+
+.mini-cart-item__line-disc {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-oscuro);
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    line-height: 1.4;
 }
 
 /* Subtotal + shipping + note */
