@@ -145,11 +145,13 @@ while ( have_posts() ) :
 
                 <!-- Price zone -->
                 <div class="product-detail__price-zone">
-                    <span class="product-detail__price js-detail-price">
-                        <?php echo esc_html( $price_250_fmt ); ?>
-                    </span>
-                    <span class="product-detail__price-was js-detail-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
-                    <span class="product-detail__discount js-detail-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
+                    <div class="product-detail__price-col">
+                        <span class="product-detail__price js-detail-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                        <span class="product-detail__price-meta">
+                            <span class="product-detail__price-was js-detail-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                            <span class="product-detail__discount js-detail-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
+                        </span>
+                    </div>
                     <span class="product-detail__per-cup js-per-cup"
                           data-per-cup-250="<?php echo esc_attr( $per_cup_250 ); ?>"
                           data-per-cup-1kg="<?php echo esc_attr( $per_cup_1kg ); ?>">

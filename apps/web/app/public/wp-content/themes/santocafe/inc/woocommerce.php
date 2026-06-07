@@ -143,6 +143,10 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //   wp option update woocommerce_myaccount_edit_account_endpoint editar
 //   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password
 //   wp rewrite flush
+//
+// The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
+// Productos → base personalizada). Set to /producto via:
+//   woocommerce_permalinks['product_base'] = '/producto'  +  rewrite flush
 
 add_action( 'template_redirect', function (): void {
     if ( function_exists( 'is_account_page' ) && is_account_page()
