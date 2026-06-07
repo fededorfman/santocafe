@@ -32,19 +32,19 @@ do_action( 'woocommerce_before_edit_account_address_form' ); ?>
 	<?php wc_get_template( 'myaccount/my-address.php' ); ?>
 <?php else : ?>
 
-	<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-address-form__back">
+	<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-form-back">
 		<span aria-hidden="true">&larr;</span> Volver a mis direcciones
 	</a>
 
-	<form method="post" class="sc-address-form js-validate" novalidate>
+	<form method="post" class="sc-address-form sc-form js-validate" novalidate>
 
-		<div class="sc-address-form__card">
-			<h2 class="sc-address-form__title"><?php echo esc_html( apply_filters( 'woocommerce_my_account_edit_address_title', $page_title, $load_address ) ); ?></h2>
+		<div class="sc-form-card">
+			<h2 class="sc-form-card__title"><?php echo esc_html( apply_filters( 'woocommerce_my_account_edit_address_title', $page_title, $load_address ) ); ?></h2>
 
 			<div class="woocommerce-address-fields">
 				<?php do_action( "woocommerce_before_edit_address_form_{$load_address}" ); ?>
 
-				<div class="woocommerce-address-fields__field-wrapper">
+				<div class="woocommerce-address-fields__field-wrapper sc-form-grid">
 					<?php
 					foreach ( $address as $key => $field ) {
 						if ( in_array( $key, $sc_name_keys, true ) ) {
@@ -58,9 +58,9 @@ do_action( 'woocommerce_before_edit_account_address_form' ); ?>
 
 				<?php do_action( "woocommerce_after_edit_address_form_{$load_address}" ); ?>
 
-				<div class="sc-address-form__actions">
+				<div class="sc-form-actions">
+					<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-form-cancel">Cancelar</a>
 					<button type="submit" class="button" name="save_address" value="Guardar dirección">Guardar dirección</button>
-					<a href="<?php echo esc_url( $sc_back_url ); ?>" class="sc-address-form__cancel">Cancelar</a>
 					<?php wp_nonce_field( 'woocommerce-edit_address', 'woocommerce-edit-address-nonce' ); ?>
 					<input type="hidden" name="action" value="edit_address" />
 				</div>
