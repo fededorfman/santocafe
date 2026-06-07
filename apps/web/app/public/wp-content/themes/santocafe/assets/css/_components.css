@@ -117,11 +117,11 @@
 .sca-badge--gold {
     background: linear-gradient(180deg, #e0bb55 0%, var(--color-dorado) 100%);
     color: var(--color-oscuro);
-    font-size: var(--font-size-sm);
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.02em;
-    gap: 6px;
-    padding: 6px 14px;
+    gap: 5px;
+    padding: 4px 11px;
     border: 1px solid rgba(140, 98, 57, 0.45);
     box-shadow: 0 2px 6px rgba(140, 98, 57, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
     backdrop-filter: none;
@@ -129,8 +129,8 @@
 }
 
 .sca-badge--gold svg {
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
 }
 
 /* ---- Profile Bar (Intensidad / Acidez / Cuerpo) ---- */

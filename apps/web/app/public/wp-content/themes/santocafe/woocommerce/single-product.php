@@ -57,30 +57,35 @@ while ( have_posts() ) :
     $pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
     // ---- Molienda options ----
+    $sc_icon_attrs = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
     $molienda_opts = [
         [
             'value'    => 'Grano',
             'label'    => 'En Grano',
             'sublabel' => 'Sin moler',
-            'icon'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="5" ry="7"/><path d="M12 5C9 3 6.5 5 7 8"/><path d="M12 19c3 2 5.5 0 5-3"/></svg>',
+            // Coffee bean
+            'icon'     => '<svg ' . $sc_icon_attrs . '><ellipse cx="12" cy="12" rx="6" ry="8.5"/><path d="M12 4c-2.6 2.5-2.6 13.5 0 16"/></svg>',
         ],
         [
             'value'    => 'Espresso',
             'label'    => 'Espresso',
             'sublabel' => 'Muy fina',
-            'icon'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="M9 21V9a3 3 0 016 0v12"/><path d="M6 9h12"/><path d="M8 13h8"/><circle cx="12" cy="5" r="1.5"/></svg>',
+            // Espresso cup + saucer
+            'icon'     => '<svg ' . $sc_icon_attrs . '><path d="M6 9h9v4a4 4 0 0 1-4 4h-1a4 4 0 0 1-4-4z"/><path d="M15 10h2.3a2 2 0 0 1 0 4H15"/><line x1="5" y1="20" x2="16" y2="20"/></svg>',
         ],
         [
             'value'    => 'Italiana',
             'label'    => 'Italiana',
             'sublabel' => 'Media-fina',
-            'icon'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 7H8L9 3z"/><path d="M8 10v4a4 4 0 008 0v-4"/><path d="M12 18v3"/><path d="M9 21h6"/></svg>',
+            // Moka pot
+            'icon'     => '<svg ' . $sc_icon_attrs . '><path d="M9 4h6l-.7 3H9.7z"/><path d="M8.5 7h7v2h-7z"/><path d="M9.3 9h5.4l-1 9h-3.4z"/><path d="M15.5 11l3 1.5-3 1.5"/></svg>',
         ],
         [
             'value'    => 'Filtro',
             'label'    => 'Filtro',
             'sublabel' => 'Media-gruesa',
-            'icon'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-4 9v6l-4 0v-6L6 3z"/><line x1="6" y1="3" x2="18" y2="3"/></svg>',
+            // Pour-over dripper + cup
+            'icon'     => '<svg ' . $sc_icon_attrs . '><path d="M5 7h14l-5 7h-4z"/><path d="M9 14h6v2a3 3 0 0 1-6 0z"/></svg>',
         ],
     ];
 
