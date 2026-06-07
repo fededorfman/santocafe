@@ -319,30 +319,18 @@ while ( have_posts() ) :
         </div>
         <!-- /main grid -->
 
-        <!-- ============ Tabs ============ -->
-        <div class="product-detail__tabs-wrap">
+        <!-- ============ Secciones (sin tabs) ============ -->
+        <div class="product-detail__sections">
 
-            <div class="tabs" role="tablist">
-                <button class="tab-btn is-active" role="tab" aria-selected="true"
-                        aria-controls="tab-origen" data-tab="origen">
-                    Ficha del origen
-                </button>
-                <?php if ( $product->get_description() ) : ?>
-                <button class="tab-btn" role="tab" aria-selected="false"
-                        aria-controls="tab-descripcion" data-tab="descripcion">
-                    Descripción
-                </button>
-                <?php endif; ?>
-                <button class="tab-btn" role="tab" aria-selected="false"
-                        aria-controls="tab-info" data-tab="info">
-                    Información
-                </button>
-            </div>
-
-            <!-- Tab: Ficha del origen -->
-            <div class="tab-panel is-active" id="tab-origen" role="tabpanel">
-                <div class="origin-sheet">
-                    <div class="origin-sheet__table-wrap">
+            <!-- 1) Descripción: ficha de origen + foto -->
+            <section class="product-section">
+                <h2 class="product-section__title">Descripción</h2>
+                <div class="product-desc__grid">
+                    <div class="origin-sheet">
+                        <?php if ( $pais ) : ?>
+                        <h3 class="origin-sheet__country"><?php echo esc_html( $pais ); ?></h3>
+                        <?php endif; ?>
+                        <p class="origin-sheet__sub">Finca / Productor Local</p>
                         <table class="origin-sheet__table">
                             <tbody>
                             <?php
@@ -350,7 +338,7 @@ while ( have_posts() ) :
                                 'País'      => $pais,
                                 'Región'    => $region,
                                 'Productor' => $productor,
-                                'Altitud'   => $altitud ? $altitud . ' msnm' : '',
+                                'Altura'    => $altitud ? $altitud . 'm' : '',
                                 'Variedad'  => $variedad,
                                 'Proceso'   => $proceso,
                             ];
@@ -364,41 +352,60 @@ while ( have_posts() ) :
                             </tbody>
                         </table>
                     </div>
-                    <?php if ( $notas ) : ?>
-                    <div class="origin-sheet__notes">
-                        <p class="origin-sheet__notes-label">Notas de cata</p>
-                        <p class="origin-sheet__notes-value"><?php echo esc_html( $notas ); ?></p>
+                    <?php
+                    $sc_gallery     = $product->get_gallery_image_ids();
+                    $sc_desc_img_id = ! empty( $sc_gallery ) ? (int) $sc_gallery[0] : get_post_thumbnail_id( $id );
+                    $sc_desc_img    = $sc_desc_img_id ? wp_get_attachment_image_url( $sc_desc_img_id, 'large' ) : '';
+                    ?>
+                    <?php if ( $sc_desc_img ) : ?>
+                    <div class="product-desc__photo">
+                        <img src="<?php echo esc_url( $sc_desc_img ); ?>" alt="<?php echo esc_attr( 'Origen de ' . get_the_title() ); ?>" loading="lazy">
                     </div>
                     <?php endif; ?>
                 </div>
-            </div>
+            </section>
 
-            <!-- Tab: Descripción -->
-            <?php if ( $product->get_description() ) : ?>
-            <div class="tab-panel" id="tab-descripcion" role="tabpanel">
-                <div class="product-detail__description">
-                    <?php echo wp_kses_post( $product->get_description() ); ?>
+            <!-- 2) Notas de cata -->
+            <?php if ( $notas ) : ?>
+            <section class="product-section">
+                <div class="origin-sheet__notes">
+                    <p class="origin-sheet__notes-label">Notas de cata</p>
+                    <p class="origin-sheet__notes-value"><?php echo esc_html( $notas ); ?></p>
                 </div>
-            </div>
+            </section>
             <?php endif; ?>
 
-            <!-- Tab: Información -->
-            <div class="tab-panel" id="tab-info" role="tabpanel">
+            <!-- 3) El Origen (descripción / historia) -->
+            <section class="product-section product-origin">
+                <h3 class="product-origin__title">El Origen<?php echo $pais ? ', ' . esc_html( $pais ) : ''; ?></h3>
+                <div class="product-detail__description">
+                    <?php
+                    if ( $product->get_description() ) {
+                        echo wp_kses_post( wpautop( $product->get_description() ) );
+                    } else {
+                        echo wp_kses_post( sc_origin_story( (string) $pais, (string) $altitud, (string) $notas, (string) $proceso, (string) $variedad ) );
+                    }
+                    ?>
+                </div>
+            </section>
+
+            <!-- 4) Información adicional -->
+            <section class="product-section">
+                <h2 class="product-section__title">Información adicional</h2>
                 <table class="product-info-table">
                     <tbody>
                     <?php
                     $info = [
-                        'País de origen' => $pais,
-                        'Puntaje SCA'    => $sca,
-                        'Altitud'        => $altitud ? $altitud . ' msnm' : '',
-                        'Proceso'        => $proceso,
-                        'Variedad'       => $variedad,
-                        'Notas de cata'  => $notas,
-                        'Intensidad'     => $intensidad ? $intensidad . '/5' : '',
-                        'Acidez'         => $acidez    ? $acidez    . '/5' : '',
-                        'Cuerpo'         => $cuerpo    ? $cuerpo    . '/5' : '',
-                        'Presentaciones' => '250g, 1kg',
-                        'Moliendas'      => 'Grano, Espresso, Italiana, Filtro',
+                        'Origen'      => $pais,
+                        'SCA'         => $sca,
+                        'Altitud'     => $altitud ? $altitud . 'm' : '',
+                        'Proceso'     => $proceso,
+                        'Notas'       => $notas,
+                        'Peso'        => '250g, 1kg',
+                        'Molienda'    => 'En Grano, Espresso, Italiana, Filtro',
+                        'Intensidad'  => $intensidad ? $intensidad . '/5' : '',
+                        'Acidez'      => $acidez    ? $acidez    . '/5' : '',
+                        'Cuerpo'      => $cuerpo    ? $cuerpo    . '/5' : '',
                     ];
                     foreach ( $info as $label => $value ) :
                         if ( ! $value ) continue; ?>
@@ -409,10 +416,10 @@ while ( have_posts() ) :
                     <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
+            </section>
 
         </div>
-        <!-- /tabs -->
+        <!-- /secciones -->
 
         <!-- ============ Related products ============ -->
         <?php if ( ! empty( $related_ids ) ) : ?>
