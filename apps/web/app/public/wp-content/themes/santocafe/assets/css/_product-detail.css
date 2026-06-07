@@ -108,9 +108,25 @@
 /* Price zone */
 .product-detail__price-zone {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: var(--spacing-md);
     flex-wrap: wrap;
+}
+
+.product-detail__price-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-detail__price-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.product-detail__price-meta:empty {
+    display: none;
 }
 
 .product-detail__price {
@@ -233,6 +249,7 @@
 
 .detail-spec--profile {
     padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--color-marron-suave);
 }
 
 .detail-spec--profile .profile-bar__label {
