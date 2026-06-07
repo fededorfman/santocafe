@@ -292,6 +292,14 @@
         $.each(fragments, function (selector, html) {
             $(selector).replaceWith(html);
         });
+        syncCartDrawerEmpty();
+    }
+
+    // Toggle the drawer's empty state (hides the footer buttons when empty).
+    function syncCartDrawerEmpty() {
+        var $drawer = $('.js-cart-drawer');
+        if ( ! $drawer.length ) return;
+        $drawer.toggleClass( 'is-empty', $drawer.find('.mini_cart_item').length === 0 );
     }
 
     // Mutate the cart (qty / molienda / remove) via sc_update_cart.
@@ -370,6 +378,9 @@
     $(document).on('keydown', function (e) {
         if (e.key === 'Escape' && $cartDrawer.hasClass('is-open')) closeCartDrawer();
     });
+
+    // Initial empty-state sync (hides footer when the cart is empty on load)
+    syncCartDrawerEmpty();
 
     // POST to sc_add_to_cart, refresh fragments and open the drawer
     function addToCart(data, $btn) {
