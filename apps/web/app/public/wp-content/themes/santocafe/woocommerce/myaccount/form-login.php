@@ -18,9 +18,17 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
     <div class="sc-account__card">
         <h2 class="sc-account__title">Iniciar sesión</h2>
 
+        <?php if ( $sc_registration ) : ?>
+        <p class="sc-account__switch">
+            ¿No tienes cuenta? <a href="#sc-register">Regístrate</a>
+        </p>
+        <?php endif; ?>
+
         <form class="woocommerce-form woocommerce-form-login login" method="post">
 
             <?php do_action( 'woocommerce_login_form_start' ); ?>
+
+            <?php if ( empty( $_POST['register'] ) ) { woocommerce_output_all_notices(); } ?>
 
             <p class="woocommerce-form-row form-row">
                 <label for="username">Email</label>
@@ -54,12 +62,6 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <?php do_action( 'woocommerce_login_form_end' ); ?>
 
         </form>
-
-        <?php if ( $sc_registration ) : ?>
-        <p class="sc-account__switch">
-            ¿No tienes cuenta? <a href="#sc-register" class="js-goto-register">Regístrate</a>
-        </p>
-        <?php endif; ?>
     </div>
 
     <?php if ( $sc_registration ) : ?>
@@ -71,6 +73,22 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
         <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?>>
 
             <?php do_action( 'woocommerce_register_form_start' ); ?>
+
+            <?php if ( ! empty( $_POST['register'] ) ) { woocommerce_output_all_notices(); } ?>
+
+            <p class="woocommerce-form-row form-row">
+                <label for="reg_first_name">Nombre</label>
+                <input type="text" name="first_name" id="reg_first_name" autocomplete="given-name"
+                       value="<?php echo ( ! empty( $_POST['first_name'] ) ) ? esc_attr( wp_unslash( $_POST['first_name'] ) ) : ''; ?>"
+                       required aria-required="true" />
+            </p>
+
+            <p class="woocommerce-form-row form-row">
+                <label for="reg_last_name">Apellido</label>
+                <input type="text" name="last_name" id="reg_last_name" autocomplete="family-name"
+                       value="<?php echo ( ! empty( $_POST['last_name'] ) ) ? esc_attr( wp_unslash( $_POST['last_name'] ) ) : ''; ?>"
+                       required aria-required="true" />
+            </p>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
             <p class="woocommerce-form-row form-row">
@@ -92,7 +110,8 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <p class="woocommerce-form-row form-row">
                 <label for="reg_password">Contraseña</label>
                 <input type="password" name="password" id="reg_password" autocomplete="new-password"
-                       required aria-required="true" />
+                       minlength="8" required aria-required="true" />
+                <small class="sc-account__hint">Mínimo 8 caracteres, con al menos una letra y un número.</small>
             </p>
             <?php else : ?>
             <p class="sc-account__sub">Te enviaremos un enlace para definir tu contraseña por email.</p>

@@ -113,11 +113,21 @@
 
 .sc-account .btn { margin-top: var(--spacing-xs); }
 
-/* "¿No tienes cuenta? Regístrate" */
+/* Remove WooCommerce's default border box inside login/register forms */
+.sc-account .woocommerce-form-login,
+.sc-account .woocommerce-form-register,
+.woocommerce form.login,
+.woocommerce form.register {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+/* "¿No tienes cuenta? Regístrate" — under the title, mobile only, no separator */
 .sc-account__switch {
-    margin-top: var(--spacing-md);
-    padding-top: var(--spacing-md);
-    border-top: 1px solid var(--color-borde);
+    display: none;
+    margin-bottom: var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--color-texto-suave);
 }
@@ -129,6 +139,19 @@
 
 .sc-account__switch a:hover { color: var(--color-dorado); }
 
+@media (max-width: 600px) {
+    .sc-account__switch { display: block; }
+}
+
+/* Password hint */
+.sc-account__hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: 11px;
+    color: var(--color-texto-suave);
+    line-height: 1.4;
+}
+
 /* Privacy notice on register form — small and muted */
 .sc-account .woocommerce-privacy-policy-text,
 .sc-account .woocommerce-privacy-policy-text p {
@@ -138,22 +161,47 @@
     margin: var(--spacing-sm) 0 0;
 }
 
-/* ---- Logged-in account dashboard (light touch) ---- */
+/* ============================================================
+   My Account — logged in (greeting + 2-column layout)
+   ============================================================ */
+
+.sc-myaccount {
+    padding: var(--spacing-xl) 0 var(--spacing-2xl);
+}
+
+.sc-myaccount__greeting {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-lg);
+}
+
+.sc-myaccount__layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+/* Navigation (left column) */
 .woocommerce-MyAccount-navigation ul {
     list-style: none;
-    margin: 0 0 var(--spacing-lg);
+    margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-    border-bottom: 1px solid var(--color-borde);
-    padding-bottom: var(--spacing-md);
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.woocommerce-MyAccount-navigation li {
+    border-bottom: none;
 }
 
 .woocommerce-MyAccount-navigation a {
+    display: block;
     font-size: var(--font-size-sm);
     color: var(--color-texto-suave);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-sm);
     transition: color var(--transition-fast), background var(--transition-fast);
 }
@@ -162,4 +210,24 @@
 .woocommerce-MyAccount-navigation .is-active a {
     color: var(--color-oscuro);
     background: var(--color-crema);
+    font-weight: 600;
+}
+
+/* Content (right column) */
+.woocommerce-MyAccount-content {
+    min-width: 0;
+}
+
+@media (max-width: 600px) {
+    .sc-myaccount__layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    .woocommerce-MyAccount-navigation ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--color-borde);
+        padding-bottom: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
+    }
 }

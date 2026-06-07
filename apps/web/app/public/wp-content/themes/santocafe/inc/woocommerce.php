@@ -85,18 +85,58 @@ add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
     'Usamos tus datos para gestionar tu cuenta y tu experiencia en este sitio, según nuestra [privacy_policy].'
 );
 
-// Relax password rules: drop the "strong password" requirement (strength meter)
-// and only require a minimum of 8 characters.
+// Relax password rules: drop the "strong password" requirement (strength meter).
 add_action( 'wp_enqueue_scripts', function (): void {
     wp_dequeue_script( 'wc-password-strength-meter' );
 }, 99 );
 
+// Register validation: name + surname required, password >= 8 with a letter and a number.
 add_action( 'woocommerce_register_post', function ( $username, $email, $errors ): void {
-    $password = $_POST['password'] ?? '';
-    if ( strlen( $password ) < 8 ) {
-        $errors->add( 'password_too_short', 'La contraseña debe tener al menos 8 caracteres.' );
+    if ( empty( trim( $_POST['first_name'] ?? '' ) ) ) {
+        $errors->add( 'first_name_required', 'Ingresá tu nombre.' );
+    }
+    if ( empty( trim( $_POST['last_name'] ?? '' ) ) ) {
+        $errors->add( 'last_name_required', 'Ingresá tu apellido.' );
+    }
+
+    $password = (string) ( $_POST['password'] ?? '' );
+    if ( strlen( $password ) < 8 || ! preg_match( '/[A-Za-z]/', $password ) || ! preg_match( '/[0-9]/', $password ) ) {
+        $errors->add(
+            'password_invalid',
+            'La contraseña debe tener al menos 8 caracteres, con al menos una letra y un número.'
+        );
     }
 }, 10, 3 );
+
+// Save first/last name on registration.
+add_action( 'woocommerce_created_customer', function ( int $customer_id ): void {
+    if ( ! empty( $_POST['first_name'] ) ) {
+        update_user_meta( $customer_id, 'first_name', sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) );
+    }
+    if ( ! empty( $_POST['last_name'] ) ) {
+        update_user_meta( $customer_id, 'last_name', sanitize_text_field( wp_unslash( $_POST['last_name'] ) ) );
+    }
+} );
+
+// Notices: don't print them above the login/register forms — the templates
+// print them inside the relevant form instead.
+add_action( 'init', function (): void {
+    remove_action( 'woocommerce_before_customer_login_form', 'woocommerce_output_all_notices', 10 );
+} );
+
+// My Account: drop "Escritorio" (dashboard) from the menu and make Pedidos the landing.
+add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
+    unset( $items['dashboard'] );
+    return $items;
+} );
+
+add_action( 'template_redirect', function (): void {
+    if ( function_exists( 'is_account_page' ) && is_account_page()
+        && is_user_logged_in() && ! is_wc_endpoint_url() ) {
+        wp_safe_redirect( wc_get_account_endpoint_url( 'orders' ) );
+        exit;
+    }
+} );
 
 // ============================================================
 // Molienda — persist as cart item data (not a WC variation)
