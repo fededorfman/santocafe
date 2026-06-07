@@ -378,9 +378,11 @@
 
 .contacto__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-2xl);
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
     align-items: start;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 /* Prevent grid children from overflowing their tracks */

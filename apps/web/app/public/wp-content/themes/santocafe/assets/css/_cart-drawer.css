@@ -177,6 +177,18 @@
     gap: var(--spacing-md);
 }
 
+/* Compact qty-picker (similar height to the molienda pills) */
+.qty-picker--sm .qty-picker__btn {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-base);
+}
+
+.qty-picker--sm .qty-picker__input {
+    width: 30px;
+    font-size: var(--font-size-sm);
+}
+
 .mini-cart-item__line {
     font-size: var(--font-size-base);
     font-weight: 700;
