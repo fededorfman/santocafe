@@ -135,12 +135,13 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
     return $items;
 } );
 
-// NOTE: account endpoint slugs (pedidos / direcciones / editar) are stored as
-// WooCommerce options in the DB (Ajustes → Avanzado → Endpoints de la cuenta),
-// because WC caches the query vars before the theme loads. They were set via:
+// NOTE: account endpoint slugs (pedidos / direcciones / editar / recuperar-password)
+// are stored as WooCommerce options in the DB (Ajustes → Avanzado → Endpoints de la
+// cuenta), because WC caches the query vars before the theme loads. They were set via:
 //   wp option update woocommerce_myaccount_orders_endpoint pedidos
 //   wp option update woocommerce_myaccount_edit_address_endpoint direcciones
 //   wp option update woocommerce_myaccount_edit_account_endpoint editar
+//   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password
 //   wp rewrite flush
 
 add_action( 'template_redirect', function (): void {

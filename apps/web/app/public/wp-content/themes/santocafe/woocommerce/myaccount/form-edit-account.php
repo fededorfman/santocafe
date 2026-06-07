@@ -31,6 +31,11 @@ do_action( 'woocommerce_before_edit_account_form' );
 		<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
 
 		<div class="sc-form-grid">
+			<div class="form-row sc-form-readonly">
+				<span class="sc-form-readonly__label">Correo electrónico</span>
+				<span class="sc-form-readonly__value"><?php echo esc_html( $user->user_email ); ?></span>
+			</div>
+
 			<p class="woocommerce-form-row form-row sc-name-col validate-required" id="account_first_name_field">
 				<label for="account_first_name">Nombres&nbsp;<span class="required" aria-hidden="true">*</span></label>
 				<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="account_first_name" id="account_first_name" autocomplete="given-name" value="<?php echo esc_attr( $user->first_name ); ?>" required aria-required="true" />
@@ -39,11 +44,6 @@ do_action( 'woocommerce_before_edit_account_form' );
 				<label for="account_last_name">Apellidos&nbsp;<span class="required" aria-hidden="true">*</span></label>
 				<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="account_last_name" id="account_last_name" autocomplete="family-name" value="<?php echo esc_attr( $user->last_name ); ?>" required aria-required="true" />
 			</p>
-
-			<div class="form-row sc-form-readonly">
-				<span class="sc-form-readonly__label">Correo electrónico</span>
-				<span class="sc-form-readonly__value"><?php echo esc_html( $user->user_email ); ?></span>
-			</div>
 		</div>
 
 		<?php
