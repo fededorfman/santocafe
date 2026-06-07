@@ -74,6 +74,13 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): 
 add_filter( 'wc_add_to_cart_message_html', '__return_null' );
 
 // ============================================================
+// My Account — enable registration on the login page and show a
+// password field (instead of emailing an auto-generated one).
+// ============================================================
+add_filter( 'option_woocommerce_enable_myaccount_registration', fn() => 'yes' );
+add_filter( 'option_woocommerce_registration_generate_password', fn() => 'no' );
+
+// ============================================================
 // Molienda — persist as cart item data (not a WC variation)
 // ============================================================
 

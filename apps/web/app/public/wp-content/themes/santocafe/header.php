@@ -107,7 +107,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                         <li><a href="' . esc_url( home_url( '/#catalogo' ) ) . '">Tienda</a></li>
                         <li><a href="' . esc_url( home_url( '/#nosotros' ) ) . '">Nosotros</a></li>
                         <li><a href="' . esc_url( home_url( '/#contacto' ) ) . '">Contacto</a></li>
-                        <li><a href="' . esc_url( $cart_url ) . '">Carrito de Compras</a></li>
+                        <li><a href="' . esc_url( $cart_url ) . '" class="js-open-cart-drawer">Carrito de Compras</a></li>
                         <li><a href="' . esc_url( $account_url ) . '">Mi Cuenta</a></li>
                     </ul>';
                 },
