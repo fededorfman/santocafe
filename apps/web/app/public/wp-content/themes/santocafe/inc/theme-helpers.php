@@ -147,6 +147,32 @@ function sc_get_shipping_gap(): int {
 }
 
 /**
+ * Generated origin story — used on the product page when the product has no
+ * manual description. Grounded in the product's own meta (país, altitud,
+ * notas, proceso, variedad).
+ */
+function sc_origin_story( string $pais, string $altitud, string $notas, string $proceso, string $variedad ): string {
+    $alt = $altitud ? '<strong>' . esc_html( $altitud ) . 'm</strong>' : 'la altura de la finca';
+
+    $p1 = sprintf(
+        'Este café proviene de %s, una zona de tierras altas con laderas escarpadas, valles húmedos y una fuerte tradición cafetera de pequeños productores. La altitud de %s ofrece condiciones ideales para el desarrollo de cafés complejos y dulces, gracias a noches frescas y una estación seca marcada que favorece un secado uniforme.',
+        esc_html( $pais ?: 'su origen' ),
+        $alt
+    );
+
+    $p2 = sprintf(
+        'Presenta un perfil dulce y balanceado%s. Es una taza armoniosa, de alta tomabilidad, que refleja la claridad del proceso <strong>%s</strong>%s.',
+        $notas ? ', con notas de <strong>' . esc_html( $notas ) . '</strong>' : '',
+        esc_html( function_exists( 'mb_strtolower' ) ? mb_strtolower( $proceso ?: 'de beneficio' ) : strtolower( $proceso ?: 'de beneficio' ) ),
+        $variedad ? ' y el potencial de las variedades ' . esc_html( $variedad ) . ' cultivadas en altura' : ''
+    );
+
+    $p3 = 'Las cerezas se recolectan manualmente en su punto óptimo de maduración, seguidas de un beneficio cuidadoso y un secado lento que asegura una taza limpia, definida y de la más alta calidad.';
+
+    return "<p>{$p1}</p><p>{$p2}</p><p>{$p3}</p>";
+}
+
+/**
  * Render a profile bar (Intensidad / Acidez / Cuerpo).
  *
  * @param string $label  Display label, e.g. 'Intensidad'

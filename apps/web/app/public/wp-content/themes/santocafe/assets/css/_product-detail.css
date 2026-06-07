@@ -488,81 +488,60 @@
 }
 
 /* ============================================================
-   Tabs
+   Sections (descripción / notas / origen / información)
    ============================================================ */
 
-.product-detail__tabs-wrap {
+.product-detail__sections {
     margin-top: var(--spacing-2xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-borde);
-}
-
-.tabs {
     display: flex;
-    gap: var(--spacing-lg);
-    border-bottom: 1px solid var(--color-borde);
-    margin-bottom: var(--spacing-xl);
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
 }
 
-.tab-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--spacing-sm) 0;
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    color: var(--color-texto-suave);
-    position: relative;
-    transition: color var(--transition-fast);
-}
-
-.tab-btn::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--color-oscuro);
-    transform: scaleX(0);
-    transition: transform var(--transition-fast);
-}
-
-.tab-btn:hover {
+.product-section__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
     color: var(--color-oscuro);
+    margin-bottom: var(--spacing-lg);
 }
 
-.tab-btn.is-active {
-    color: var(--color-oscuro);
-    font-weight: 600;
-}
-
-.tab-btn.is-active::after {
-    transform: scaleX(1);
-}
-
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.is-active {
-    display: block;
-    animation: tab-fade var(--transition-base);
-}
-
-@keyframes tab-fade {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Origin sheet */
-.origin-sheet {
+/* Descripción: ficha de origen (izquierda) + foto (derecha) */
+.product-desc__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: center;
-    max-width: 900px;
+    align-items: start;
+}
+
+.origin-sheet__country {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    line-height: 1.1;
+}
+
+.origin-sheet__sub {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    color: var(--color-texto-suave);
+    margin: var(--spacing-xs) 0 var(--spacing-lg);
+}
+
+.product-desc__photo img {
+    width: 100%;
+    border-radius: var(--radius-card);
+    display: block;
+    box-shadow: var(--shadow-card);
+}
+
+/* El Origen (historia) */
+.product-origin__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-md);
 }
 
 .origin-sheet__table {
@@ -611,9 +590,9 @@
     font-style: italic;
 }
 
-/* Description tab */
+/* Description / origin story */
 .product-detail__description {
-    max-width: 720px;
+    max-width: 880px;
     line-height: 1.75;
     color: var(--color-texto-suave);
 }
@@ -699,7 +678,7 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .origin-sheet {
+    .product-desc__grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
     }
