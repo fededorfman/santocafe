@@ -475,20 +475,74 @@
     color: var(--color-oscuro);
 }
 
-/* ---- Edit-address form: group País / Región / Ciudad in one row ---- */
-.sc-address-form .woocommerce-address-fields__field-wrapper {
+/* ---- Edit-address form: white card + single column ---- */
+.sc-address-form {
+    max-width: 600px;
+}
+
+.sc-address-form__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.sc-address-form__back:hover {
+    color: var(--color-dorado-suave);
+}
+
+.sc-address-form__card {
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-xl);
+}
+
+.woocommerce-MyAccount-content .sc-address-form__title {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Nombres + Apellidos share a row; everything else is full width, single column. */
+.sc-address-form__card .woocommerce-address-fields__field-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-md);
 }
 
-.sc-address-form .woocommerce-address-fields__field-wrapper > .form-row {
+.sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row {
     grid-column: 1 / -1; /* full width by default */
     margin-bottom: 0;
 }
 
-.sc-address-form .woocommerce-address-fields__field-wrapper > .form-row.sc-geo-col {
-    grid-column: span 1; /* país / región / ciudad share a row */
+.sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row.sc-name-col {
+    grid-column: span 1; /* nombres / apellidos side by side */
+}
+
+/* Actions — give the buttons room from the last input. */
+.sc-address-form__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0 0;
+}
+
+.woocommerce-MyAccount-content a.sc-address-form__cancel {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-address-form__cancel:hover {
+    color: var(--color-oscuro);
 }
 
 /* Notice / info boxes */
@@ -540,10 +594,10 @@
     .woocommerce-MyAccount-content .sc-address-cards {
         grid-template-columns: 1fr;
     }
-    .sc-address-form .woocommerce-address-fields__field-wrapper {
+    .sc-address-form__card .woocommerce-address-fields__field-wrapper {
         grid-template-columns: 1fr;
     }
-    .sc-address-form .woocommerce-address-fields__field-wrapper > .form-row.sc-geo-col {
+    .sc-address-form__card .woocommerce-address-fields__field-wrapper > .form-row.sc-name-col {
         grid-column: 1 / -1;
     }
 }
