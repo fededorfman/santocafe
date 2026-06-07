@@ -87,10 +87,10 @@ do_action( 'woocommerce_before_mini_cart' );
                 </div>
 
                 <div class="mini-cart-item__bottom">
-                    <div class="qty-picker">
+                    <div class="qty-picker qty-picker--sm">
                         <button class="qty-picker__btn js-cart-qty" data-action="minus"
                                 data-key="<?php echo esc_attr( $cart_item_key ); ?>" type="button"
-                                aria-label="Reducir cantidad">−</button>
+                                aria-label="Reducir cantidad" <?php echo $qty <= 1 ? 'disabled' : ''; ?>>−</button>
                         <input class="qty-picker__input" type="number"
                                value="<?php echo esc_attr( $qty ); ?>" min="1" max="20"
                                readonly aria-label="Cantidad">

@@ -12,9 +12,9 @@ html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    /* clip (not hidden) clips off-canvas fixed drawers without creating a
-       scroll container, so vertical mouse-wheel scroll keeps working */
-    overflow-x: clip;
+    /* No overflow-x on html: `hidden` breaks wheel scroll and `clip` can force
+       overflow-y to clip too (kills vertical scroll). The cart drawer stays
+       off-canvas via transform (no horizontal overflow); body clips the rest. */
 }
 
 body {

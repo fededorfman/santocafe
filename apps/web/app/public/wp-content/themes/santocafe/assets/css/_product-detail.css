@@ -300,6 +300,15 @@
     background: var(--color-crema);
 }
 
+.qty-picker__btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.qty-picker__btn:disabled:hover {
+    background: transparent;
+}
+
 .qty-picker__input {
     width: 44px;
     text-align: center;
