@@ -21,9 +21,9 @@ do_action( 'woocommerce_before_lost_password_form' );
             </p>
 
             <p class="woocommerce-form-row form-row">
-                <label for="user_login">Email o usuario</label>
-                <input class="woocommerce-Input woocommerce-Input--text input-text" type="text"
-                       name="user_login" id="user_login" autocomplete="username" required aria-required="true" />
+                <label for="user_login">Email</label>
+                <input class="woocommerce-Input woocommerce-Input--text input-text" type="email"
+                       name="user_login" id="user_login" autocomplete="email" required aria-required="true" />
             </p>
 
             <?php do_action( 'woocommerce_lostpassword_form' ); ?>

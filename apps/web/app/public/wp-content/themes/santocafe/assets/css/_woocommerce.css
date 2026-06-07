@@ -3,20 +3,36 @@
    ============================================================ */
 
 .sc-account {
-    max-width: 460px;
+    max-width: 920px;
     margin: 0 auto;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
     gap: var(--spacing-lg);
     padding: var(--spacing-xl) 0 var(--spacing-2xl);
 }
 
+/* 2 columns on desktop/tablet (login left, register right); wraps to 1 on mobile.
+   A single card (lost-password) stays centered and narrow. */
 .sc-account__card {
+    flex: 1 1 300px;
+    max-width: 440px;
     background: var(--color-tarjeta);
     border: 1px solid var(--color-borde);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     padding: var(--spacing-xl);
+}
+
+@media (max-width: 600px) {
+    .sc-account__card { flex-basis: 100%; }
+}
+
+/* Highlight the register card when reached via "Regístrate" */
+.sc-account__card:target {
+    border-color: var(--color-dorado);
+    box-shadow: 0 0 0 2px rgba(223, 179, 62, 0.25), var(--shadow-card);
 }
 
 .sc-account__title {
@@ -96,6 +112,31 @@
 .sc-account__link:hover { color: var(--color-dorado); }
 
 .sc-account .btn { margin-top: var(--spacing-xs); }
+
+/* "¿No tienes cuenta? Regístrate" */
+.sc-account__switch {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-borde);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+.sc-account__switch a {
+    color: var(--color-dorado-suave);
+    font-weight: 600;
+}
+
+.sc-account__switch a:hover { color: var(--color-dorado); }
+
+/* Privacy notice on register form — small and muted */
+.sc-account .woocommerce-privacy-policy-text,
+.sc-account .woocommerce-privacy-policy-text p {
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--color-texto-suave);
+    margin: var(--spacing-sm) 0 0;
+}
 
 /* ---- Logged-in account dashboard (light touch) ---- */
 .woocommerce-MyAccount-navigation ul {
