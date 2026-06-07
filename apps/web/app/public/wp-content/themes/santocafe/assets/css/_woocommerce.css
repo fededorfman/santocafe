@@ -486,6 +486,37 @@
     max-width: 600px;
 }
 
+/* Stacked panels (e.g. perfil + cambiar contraseña) keep some air between them. */
+.woocommerce-MyAccount-content form.sc-form + form.sc-form {
+    margin-top: var(--spacing-lg);
+}
+
+/* Read-only / informative field (e.g. el email no editable). */
+.sc-form-readonly__label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.sc-form-readonly__value {
+    display: block;
+    color: var(--color-texto);
+    font-size: var(--font-size-sm);
+}
+
+/* Inline hint under a field (e.g. requisitos de la contraseña). */
+.sc-form-hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    line-height: 1.4;
+}
+
 .sc-form-back {
     display: inline-flex;
     align-items: center;
