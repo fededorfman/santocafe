@@ -175,13 +175,13 @@
 }
 
 .product-card__weight:hover {
-    border-color: var(--color-oscuro);
+    border-color: var(--color-dorado);
 }
 
 .product-card__weight.is-selected {
-    background: var(--color-oscuro);
-    border-color: var(--color-oscuro);
-    color: #fff;
+    background: var(--color-tarjeta);
+    border-color: var(--color-dorado);
+    color: var(--color-oscuro);
 }
 
 .product-card__weight-price {
@@ -194,10 +194,6 @@
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: var(--color-texto-suave);
-}
-
-.product-card__weight.is-selected .product-card__weight-unit {
-    color: rgba(255, 255, 255, 0.75);
 }
 
 /* Molienda note (plain label, not a link) */

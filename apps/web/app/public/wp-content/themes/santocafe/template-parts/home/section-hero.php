@@ -22,8 +22,8 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
         </p>
 
         <p class="hero__description">
-            Seleccionamos y tostamos artesanalmente los mejores cafés del mundo.
-            100% natural de origen. Tostado diario. Envío gratis desde $50.000.
+            Seleccionamos los mejores cafés de especialidad del mundo, con el tueste
+            más reciente para que lleguen frescos a tu taza. Envío gratis desde $50.000.
         </p>
 
         <a href="#catalogo" class="btn btn--primary btn--lg hero__cta">

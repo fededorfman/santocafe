@@ -22,7 +22,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                          width="100" height="35">
                 </a>
                 <p class="site-footer__tagline">
-                    Tostadores de café de especialidad.<br>Tostado diario en Chile.
+                    Café de especialidad.<br>Del origen a tu taza, en Chile.
                 </p>
                 <div class="site-footer__social">
                     <a href="#" class="social-icon" aria-label="Facebook" rel="noopener">
