@@ -50,6 +50,12 @@ while ( have_posts() ) :
     $per_cup_250   = sc_format_clp( (int) round( $price_250 / 30 ) );
     $per_cup_1kg   = sc_format_clp( (int) round( $price_1kg / 120 ) );
 
+    // Discount (250g vs regular; 1kg vs the higher of regular or 4×250g)
+    $reg_250 = $var_250 ? (float) $var_250['display_regular_price'] : (float) $product->get_regular_price();
+    $reg_1kg = $var_1kg  ? (float) $var_1kg['display_regular_price']  : $reg_250 * 3.8;
+    $pr_250  = sc_weight_pricing( $price_250, $reg_250 );
+    $pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
+
     // ---- Molienda options ----
     $molienda_opts = [
         [
@@ -134,6 +140,8 @@ while ( have_posts() ) :
                     <span class="product-detail__price js-detail-price">
                         <?php echo esc_html( $price_250_fmt ); ?>
                     </span>
+                    <span class="product-detail__price-was js-detail-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                    <span class="product-detail__discount js-detail-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
                     <span class="product-detail__per-cup js-per-cup"
                           data-per-cup-250="<?php echo esc_attr( $per_cup_250 ); ?>"
                           data-per-cup-1kg="<?php echo esc_attr( $per_cup_1kg ); ?>">
@@ -194,6 +202,8 @@ while ( have_posts() ) :
                         <button class="pill-selector__option is-selected"
                                 data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
                                 data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
+                                data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
+                                data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
                                 data-raw-price="<?php echo esc_attr( (int) $price_250 ); ?>"
                                 data-per-cup="<?php echo esc_attr( $per_cup_250 ); ?>"
                                 data-peso="250g"
@@ -205,6 +215,8 @@ while ( have_posts() ) :
                         <button class="pill-selector__option"
                                 data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
                                 data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
+                                data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
+                                data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
                                 data-raw-price="<?php echo esc_attr( (int) $price_1kg ); ?>"
                                 data-per-cup="<?php echo esc_attr( $per_cup_1kg ); ?>"
                                 data-peso="1kg"

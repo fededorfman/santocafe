@@ -210,12 +210,24 @@
         var $pill  = $(this);
         var price  = $pill.data('price');
         var addUrl = $pill.data('add-url');
+        var orig   = $pill.data('original');
+        var disc   = parseInt($pill.data('discount'), 10) || 0;
 
         $pill.siblings('.pill-selector__option').removeClass('is-selected');
         $pill.addClass('is-selected');
 
         if (price)  $modal.find('.js-modal-price').text(price);
         if (addUrl) $modal.find('.js-modal-add').attr('href', addUrl);
+
+        var $o = $modal.find('.js-modal-original');
+        var $d = $modal.find('.js-modal-discount');
+        if (disc > 0) {
+            $o.text(orig).prop('hidden', false);
+            $d.text('-' + disc + '%').prop('hidden', false);
+        } else {
+            $o.prop('hidden', true);
+            $d.prop('hidden', true);
+        }
     });
 
     // ============================================================
@@ -246,12 +258,26 @@
             var varId   = $pill.data('variation-id');
             var peso    = $pill.data('peso');
 
+            var orig    = $pill.data('original');
+            var disc    = parseInt($pill.data('discount'), 10) || 0;
+
             $pill.siblings('.pill-selector__option').removeClass('is-selected');
             $pill.addClass('is-selected');
 
             // Update displayed price + per-cup
             $detail.find('.js-detail-price').text(price);
             $detail.find('.js-per-cup').contents().last().replaceWith(perCup + '/taza');
+
+            // Update discount (original struck + %)
+            var $o = $detail.find('.js-detail-original');
+            var $d = $detail.find('.js-detail-discount');
+            if (disc > 0) {
+                $o.text(orig).prop('hidden', false);
+                $d.text('-' + disc + '%').prop('hidden', false);
+            } else {
+                $o.prop('hidden', true);
+                $d.prop('hidden', true);
+            }
 
             // Update hidden form inputs
             $detail.find('.js-variation-id').val(varId);

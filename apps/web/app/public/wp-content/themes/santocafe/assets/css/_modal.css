@@ -178,33 +178,37 @@
 }
 
 .product-modal__profiles .profile-bar__label {
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--color-texto-suave);
     min-width: 90px;
 }
 
 .product-modal__profiles .profile-bar__segment {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--color-borde);
 }
 
-/* Format selector in modal */
+.product-modal__profiles .profile-bar__segment--active {
+    background: var(--color-dorado);
+}
+
+/* Format selector in modal — beige unselected, white + gold selected */
 .product-modal__format {
     padding-top: var(--spacing-md);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--color-borde);
 }
 
 .product-modal__format .pill-selector__option {
-    border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.65);
-    background: transparent;
+    border-color: transparent;
+    color: var(--color-oscuro);
+    background: var(--color-beige);
 }
 
 .product-modal__format .pill-selector__option:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #fff;
+    border-color: var(--color-dorado);
+    color: var(--color-oscuro);
 }
 
 .product-modal__format .pill-selector__option.is-selected {
-    background: var(--color-dorado);
+    background: var(--color-tarjeta);
     border-color: var(--color-dorado);
     color: var(--color-oscuro);
 }
@@ -217,12 +221,40 @@
     flex-wrap: wrap;
 }
 
+.product-modal__pricing {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .product-modal__price {
     font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--color-dorado);
     line-height: 1;
-    flex: 1;
+}
+
+.product-modal__price-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.product-modal__price-was {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    text-decoration: line-through;
+}
+
+.product-modal__discount {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-oscuro);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    line-height: 1.3;
 }
 
 /* Loading state */
