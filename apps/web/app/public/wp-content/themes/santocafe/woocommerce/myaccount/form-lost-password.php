@@ -14,7 +14,7 @@ do_action( 'woocommerce_before_lost_password_form' );
     <div class="sc-account__card">
         <h2 class="sc-account__title">Recuperar contraseña</h2>
 
-        <form method="post" class="woocommerce-ResetPassword lost_reset_password">
+        <form method="post" class="woocommerce-ResetPassword lost_reset_password js-validate">
 
             <p class="sc-account__sub">
                 <?php echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Ingresá tu email o usuario y te enviaremos un enlace para crear una nueva contraseña.', 'santocafe' ) ); ?>

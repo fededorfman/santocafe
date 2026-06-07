@@ -150,6 +150,63 @@ add_action( 'template_redirect', function (): void {
 } );
 
 // ============================================================
+// Address fields — reorder + relabel (My Account + checkout)
+// Order: Nombres, Apellidos, País, Región, Ciudad, Dirección,
+//        Dirección 2, Teléfono. Labels in plain Spanish.
+// Labels/priorities are safe to apply everywhere; email + postcode
+// are only stripped on the My Account address screen (checkout still
+// needs the email to send the order confirmation).
+// ============================================================
+function sc_address_fields_layout( array $fields, string $prefix ): array {
+    $set = static function ( string $key, array $changes ) use ( &$fields, $prefix ): void {
+        if ( isset( $fields[ $prefix . $key ] ) ) {
+            $fields[ $prefix . $key ] = array_merge( $fields[ $prefix . $key ], $changes );
+        }
+    };
+
+    $set( 'first_name', [ 'priority' => 10, 'label' => 'Nombres' ] );
+    $set( 'last_name',  [ 'priority' => 20, 'label' => 'Apellidos' ] );
+    $set( 'country',    [ 'priority' => 30, 'label' => 'País' ] );
+    $set( 'state',      [ 'priority' => 40, 'label' => 'Región' ] );
+    $set( 'city',       [ 'priority' => 50, 'label' => 'Ciudad' ] );
+    $set( 'address_1',  [ 'priority' => 60, 'label' => 'Dirección' ] );
+    $set( 'address_2',  [ 'priority' => 70, 'label' => 'Dirección (depto, oficina, etc.)', 'placeholder' => 'Depto, oficina, etc. (opcional)' ] );
+    $set( 'phone',      [ 'priority' => 80, 'label' => 'Teléfono' ] );
+
+    // My Account address form only: drop email + postcode.
+    if ( function_exists( 'is_account_page' ) && is_account_page() ) {
+        unset( $fields[ $prefix . 'email' ], $fields[ $prefix . 'postcode' ] );
+    }
+
+    return $fields;
+}
+add_filter( 'woocommerce_billing_fields',  fn( array $f ): array => sc_address_fields_layout( $f, 'billing_' ) );
+add_filter( 'woocommerce_shipping_fields', fn( array $f ): array => sc_address_fields_layout( $f, 'shipping_' ) );
+
+// WooCommerce's address-i18n.js relabels + reorders country/state/city/address
+// on the client from the per-country *locale* data. Mirror our labels/order
+// there too, otherwise the script reverts País→"País/Región",
+// Ciudad→"Comuna / Ciudad", and pushes the address fields above city/region.
+add_filter( 'woocommerce_get_country_locale_default', function ( array $fields ): array {
+    $set = static function ( string $key, array $changes ) use ( &$fields ): void {
+        if ( isset( $fields[ $key ] ) ) {
+            $fields[ $key ] = array_merge( $fields[ $key ], $changes );
+        }
+    };
+
+    $set( 'first_name', [ 'priority' => 10 ] );
+    $set( 'last_name',  [ 'priority' => 20 ] );
+    $set( 'country',    [ 'priority' => 30, 'label' => 'País' ] );
+    $set( 'state',      [ 'priority' => 40 ] ); // CL locale labels this "Región".
+    $set( 'city',       [ 'priority' => 50, 'label' => 'Ciudad' ] );
+    $set( 'address_1',  [ 'priority' => 60, 'label' => 'Dirección' ] );
+    $set( 'address_2',  [ 'priority' => 70 ] );
+    $set( 'phone',      [ 'priority' => 80 ] );
+
+    return $fields;
+} );
+
+// ============================================================
 // Molienda — persist as cart item data (not a WC variation)
 // ============================================================
 
