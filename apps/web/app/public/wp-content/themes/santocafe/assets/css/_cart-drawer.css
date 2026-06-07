@@ -84,6 +84,19 @@
     background: var(--color-crema);
 }
 
+/* Empty drawer: hide the footer; show the /cart empty state centered (no suggested grid) */
+.cart-drawer.is-empty .cart-drawer__footer {
+    display: none;
+}
+
+.cart-drawer .cart-suggested {
+    display: none;
+}
+
+.cart-drawer .cart-empty {
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
 /* ============================================================
    Mini-cart contents
    ============================================================ */

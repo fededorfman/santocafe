@@ -129,7 +129,7 @@ do_action( 'woocommerce_before_mini_cart' );
 
 <?php else : ?>
 
-    <p class="woocommerce-mini-cart__empty-message">Tu carrito está vacío.</p>
+    <?php get_template_part( 'template-parts/cart/cart-empty' ); ?>
 
 <?php endif; ?>
 
