@@ -358,9 +358,10 @@
         $('body').css('overflow', '');
     }
 
-    // Open via cart icon
+    // Open via cart icon / mobile menu link (closes the mobile menu first)
     $(document).on('click', '.js-open-cart-drawer', function (e) {
         e.preventDefault();
+        closeDrawer();        // close the mobile nav drawer if open (no-op otherwise)
         openCartDrawer();
     });
 
