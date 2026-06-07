@@ -120,6 +120,22 @@
     line-height: 1;
 }
 
+.product-detail__price-was {
+    font-size: var(--font-size-lg);
+    color: var(--color-texto-suave);
+    text-decoration: line-through;
+}
+
+.product-detail__discount {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-oscuro);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    line-height: 1.3;
+}
+
 .product-detail__per-cup {
     display: inline-flex;
     align-items: center;
@@ -201,7 +217,7 @@
     color: var(--color-texto-suave);
 }
 
-/* Format pills with cups subtext */
+/* Format pills with cups subtext — beige unselected, white + gold selected */
 .product-detail__format .pill-selector__option {
     display: flex;
     flex-direction: column;
@@ -209,6 +225,20 @@
     gap: 2px;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
+    background: var(--color-beige);
+    border-color: transparent;
+    color: var(--color-oscuro);
+}
+
+.product-detail__format .pill-selector__option:hover {
+    border-color: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+.product-detail__format .pill-selector__option.is-selected {
+    background: var(--color-tarjeta);
+    border-color: var(--color-dorado);
+    color: var(--color-oscuro);
 }
 
 .format-cups {

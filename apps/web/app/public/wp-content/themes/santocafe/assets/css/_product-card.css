@@ -134,13 +134,16 @@
     margin: 0;
 }
 
-/* Profile bar in card */
+/* Profile bars in card (Intensidad / Acidez / Cuerpo, stacked) */
 .product-card__profile {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     margin-top: var(--spacing-xs);
 }
 
 .product-card__profile .profile-bar__label {
-    min-width: 36px;
+    min-width: 56px;
     color: var(--color-texto-suave);
 }
 

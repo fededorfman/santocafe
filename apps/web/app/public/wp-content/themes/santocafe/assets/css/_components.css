@@ -142,7 +142,7 @@
 }
 
 .profile-bar__segment {
-    width: 24px;
+    width: 16px;
     height: 6px;
     border-radius: 3px;
     background: var(--color-borde);

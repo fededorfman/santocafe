@@ -203,9 +203,20 @@
 }
 
 .mini-cart-item__line {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.2;
     font-size: var(--font-size-base);
     font-weight: 700;
     color: var(--color-oscuro);
+}
+
+.mini-cart-item__line-was {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-texto-suave);
+    text-decoration: line-through;
 }
 
 /* Subtotal + shipping + note */

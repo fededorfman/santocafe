@@ -18,6 +18,8 @@ $sca       = sc_get_product_meta( $id, 'sca_score' );
 $pais      = sc_get_product_meta( $id, 'pais' );
 $notas     = sc_get_product_meta( $id, 'notas_cata' );
 $intensidad = (int) sc_get_product_meta( $id, 'intensidad' );
+$acidez     = (int) sc_get_product_meta( $id, 'acidez' );
+$cuerpo     = (int) sc_get_product_meta( $id, 'cuerpo' );
 $cart_url  = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/carrito/' );
 
 // ---- Variations (peso: 250g / 1kg) ----
@@ -41,15 +43,12 @@ $var_1kg_id    = $var_1kg  ? $var_1kg['variation_id']       : $id;
 $price_250_fmt = sc_format_clp( (int) $price_250 );
 $price_1kg_fmt = sc_format_clp( (int) $price_1kg );
 
-// ---- Regular prices + discount % (calculated from price difference) ----
+// ---- Pricing + discount (250g vs regular; 1kg vs the higher of regular or 4×250g) ----
 $reg_250 = $var_250 ? (float) $var_250['display_regular_price'] : (float) $product->get_regular_price();
 $reg_1kg = $var_1kg  ? (float) $var_1kg['display_regular_price']  : $reg_250 * 3.8;
 
-$disc_250 = ( $reg_250 > $price_250 ) ? (int) round( ( $reg_250 - $price_250 ) / $reg_250 * 100 ) : 0;
-$disc_1kg = ( $reg_1kg > $price_1kg ) ? (int) round( ( $reg_1kg - $price_1kg ) / $reg_1kg * 100 ) : 0;
-
-$reg_250_fmt = sc_format_clp( (int) $reg_250 );
-$reg_1kg_fmt = sc_format_clp( (int) $reg_1kg );
+$pr_250 = sc_weight_pricing( $price_250, $reg_250 );
+$pr_1kg = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
 // ---- Add-to-cart URLs ----
 $add_250_url = add_query_arg( [
@@ -131,9 +130,11 @@ $on_sale = $product->is_on_sale();
         <p class="product-card__notes"><?php echo esc_html( $notas ); ?></p>
         <?php endif; ?>
 
-        <?php if ( $intensidad > 0 ) : ?>
+        <?php if ( $intensidad > 0 || $acidez > 0 || $cuerpo > 0 ) : ?>
         <div class="product-card__profile">
-            <?php sc_render_profile_bar( 'INT.', $intensidad ); ?>
+            <?php if ( $intensidad > 0 ) sc_render_profile_bar( 'INT.',    $intensidad ); ?>
+            <?php if ( $acidez > 0 )     sc_render_profile_bar( 'ACIDEZ',  $acidez ); ?>
+            <?php if ( $cuerpo > 0 )     sc_render_profile_bar( 'CUERPO',  $cuerpo ); ?>
         </div>
         <?php endif; ?>
 
@@ -144,24 +145,24 @@ $on_sale = $product->is_on_sale();
             <button class="product-card__weight is-selected"
                     data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
                     data-peso="250g"
-                    data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
-                    data-original="<?php echo esc_attr( $reg_250_fmt ); ?>"
-                    data-discount="<?php echo esc_attr( $disc_250 ); ?>"
+                    data-price="<?php echo esc_attr( $pr_250['price_fmt'] ); ?>"
+                    data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
+                    data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
                     data-add-url="<?php echo esc_url( $add_250_url ); ?>"
                     type="button">
-                <span class="product-card__weight-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                <span class="product-card__weight-price"><?php echo esc_html( $pr_250['price_fmt'] ); ?></span>
                 <span class="product-card__weight-unit">250g</span>
             </button>
             <?php if ( $var_1kg ) : ?>
             <button class="product-card__weight"
                     data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
                     data-peso="1kg"
-                    data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
-                    data-original="<?php echo esc_attr( $reg_1kg_fmt ); ?>"
-                    data-discount="<?php echo esc_attr( $disc_1kg ); ?>"
+                    data-price="<?php echo esc_attr( $pr_1kg['price_fmt'] ); ?>"
+                    data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
+                    data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
                     data-add-url="<?php echo esc_url( $add_1kg_url ); ?>"
                     type="button">
-                <span class="product-card__weight-price"><?php echo esc_html( $price_1kg_fmt ); ?></span>
+                <span class="product-card__weight-price"><?php echo esc_html( $pr_1kg['price_fmt'] ); ?></span>
                 <span class="product-card__weight-unit">1kg</span>
             </button>
             <?php endif; ?>
@@ -176,10 +177,10 @@ $on_sale = $product->is_on_sale();
         <!-- Footer: precio (con descuento) + botón -->
         <div class="product-card__footer">
             <div class="product-card__pricing">
-                <span class="product-card__price js-card-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                <span class="product-card__price js-card-price"><?php echo esc_html( $pr_250['price_fmt'] ); ?></span>
                 <span class="product-card__price-meta">
-                    <span class="product-card__price-was js-card-original"<?php echo $disc_250 ? '' : ' hidden'; ?>><?php echo esc_html( $reg_250_fmt ); ?></span>
-                    <span class="product-card__discount js-card-discount"<?php echo $disc_250 ? '' : ' hidden'; ?>>-<?php echo esc_html( $disc_250 ); ?>%</span>
+                    <span class="product-card__price-was js-card-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                    <span class="product-card__discount js-card-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
                 </span>
             </div>
             <a href="<?php echo esc_url( $add_250_url ); ?>"

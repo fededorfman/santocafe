@@ -31,12 +31,17 @@ if ( $product->is_type( 'variable' ) ) {
     }
 }
 
-$price_250     = $var_250 ? $var_250['display_price']  : (float) $product->get_price();
-$price_1kg     = $var_1kg  ? $var_1kg['display_price']  : $price_250 * 3.8;
+$price_250     = $var_250 ? (float) $var_250['display_price']  : (float) $product->get_price();
+$price_1kg     = $var_1kg  ? (float) $var_1kg['display_price']  : $price_250 * 3.8;
 $var_250_id    = $var_250 ? $var_250['variation_id']   : $id;
 $var_1kg_id    = $var_1kg  ? $var_1kg['variation_id']   : $id;
 $price_250_fmt = sc_format_clp( (int) $price_250 );
 $price_1kg_fmt = sc_format_clp( (int) $price_1kg );
+
+$reg_250 = $var_250 ? (float) $var_250['display_regular_price'] : (float) $product->get_regular_price();
+$reg_1kg = $var_1kg  ? (float) $var_1kg['display_regular_price']  : $reg_250 * 3.8;
+$pr_250  = sc_weight_pricing( $price_250, $reg_250 );
+$pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
 $add_250_url = add_query_arg( [
     'add-to-cart'       => $id,
@@ -141,6 +146,8 @@ $add_1kg_url = add_query_arg( [
         <button class="pill-selector__option is-selected"
                 data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
                 data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
+                data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
+                data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
                 data-peso="250g"
                 data-add-url="<?php echo esc_url( $add_250_url ); ?>"
                 type="button">
@@ -150,6 +157,8 @@ $add_1kg_url = add_query_arg( [
         <button class="pill-selector__option"
                 data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
                 data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
+                data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
+                data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
                 data-peso="1kg"
                 data-add-url="<?php echo esc_url( $add_1kg_url ); ?>"
                 type="button">
@@ -160,7 +169,13 @@ $add_1kg_url = add_query_arg( [
 
     <!-- Actions -->
     <div class="product-modal__actions">
-        <span class="product-modal__price js-modal-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+        <span class="product-modal__pricing">
+            <span class="product-modal__price js-modal-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+            <span class="product-modal__price-meta">
+                <span class="product-modal__price-was js-modal-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                <span class="product-modal__discount js-modal-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
+            </span>
+        </span>
         <a href="<?php echo esc_url( get_permalink( $id ) ); ?>" class="btn btn--outline">
             Ver ficha
         </a>

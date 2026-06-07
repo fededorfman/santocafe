@@ -37,6 +37,14 @@ do_action( 'woocommerce_before_mini_cart' );
             $molienda = $cart_item['molienda'] ?? 'Grano';
             $qty      = (int) $cart_item['quantity'];
             $line     = sc_format_clp( (int) ( (float) $_product->get_price() * $qty ) );
+
+            // Discount vs the "compare-at" price (250g → regular; 1kg → 4×250g).
+            $sc_wp   = sc_product_weight_prices( $product_id );
+            $sc_unit = ( '1kg' === $peso )
+                ? sc_weight_pricing( $sc_wp['p1kg'], $sc_wp['r1kg'], $sc_wp['p250'] )
+                : sc_weight_pricing( $sc_wp['p250'], $sc_wp['r250'] );
+            $line_disc    = $sc_unit['discount'];
+            $line_was_fmt = sc_format_clp( (int) round( $sc_unit['compare'] * $qty ) );
             ?>
             <li class="woocommerce-mini-cart-item mini_cart_item" data-key="<?php echo esc_attr( $cart_item_key ); ?>">
 
@@ -98,7 +106,12 @@ do_action( 'woocommerce_before_mini_cart' );
                                 data-key="<?php echo esc_attr( $cart_item_key ); ?>" type="button"
                                 aria-label="Aumentar cantidad">+</button>
                     </div>
-                    <span class="mini-cart-item__line"><?php echo esc_html( $line ); ?></span>
+                    <span class="mini-cart-item__line">
+                        <?php if ( $line_disc > 0 ) : ?>
+                        <span class="mini-cart-item__line-was"><?php echo esc_html( $line_was_fmt ); ?></span>
+                        <?php endif; ?>
+                        <?php echo esc_html( $line ); ?>
+                    </span>
                 </div>
 
             </li>
