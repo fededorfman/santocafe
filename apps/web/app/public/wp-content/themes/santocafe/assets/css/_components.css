@@ -196,3 +196,31 @@
     border-color: var(--color-oscuro);
     color: #fff;
 }
+
+/* ============================================================
+   DIVIDER — reusable decorative separator:  ——— ☕ ———
+   Base look only. Visibility & spacing are scoped by the parent
+   context (.section-divider, .sc-account, .woocommerce-MyAccount-content).
+   ============================================================ */
+.sc-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: var(--color-separador);
+}
+
+.sc-divider__line {
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+}
+
+.sc-divider__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+}
+
+.sc-divider__icon svg {
+    width: 26px;
+    height: 26px;
+}
