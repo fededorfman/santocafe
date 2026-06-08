@@ -318,6 +318,7 @@
     font-size: var(--font-size-base);
     color: var(--color-texto-suave);
     line-height: 1.75;
+    text-align: justify;
 }
 
 .nosotros__values {
@@ -458,14 +459,64 @@ a.contacto__item-value:hover {
     color: var(--color-dorado);
 }
 
+/* Contact form column — alinea el form al final (derecha) */
+.contacto__form-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
 /* Contact form */
 .contacto__form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
     max-width: 500px;
-    margin: 0 auto;
     width: 100%;
+}
+
+.form-field__req {
+    color: var(--color-dorado);
+}
+
+/* Mensaje de éxito (reemplaza al form tras enviar) */
+.contacto__success {
+    max-width: 500px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(223, 179, 62, 0.35);
+    border-radius: var(--radius-card);
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    text-align: center;
+}
+
+.contacto__success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(223, 179, 62, 0.15);
+    color: var(--color-dorado);
+    margin-bottom: var(--spacing-md);
+}
+
+.contacto__success-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.contacto__success-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: #fff;
+    margin-bottom: var(--spacing-sm);
+}
+
+.contacto__success-text {
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.6;
 }
 
 .form-field {

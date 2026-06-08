@@ -74,30 +74,30 @@ defined('ABSPATH') || exit;
             </div>
 
             <!-- Formulario -->
-            <div>
+            <div class="contacto__form-col">
                 <?php if ( shortcode_exists( 'contact-form-7' ) || shortcode_exists( 'wpforms' ) ) :
                     // Si Contact Form 7 o WPForms está instalado, mostrar el shortcode
                     echo do_shortcode( '[contact-form-7 id="1" title="Contacto"]' );
                 else : ?>
-                <form class="contacto__form" action="#" method="post"
+                <form class="contacto__form js-validate js-contact-form" action="#" method="post" novalidate
                       aria-label="Formulario de contacto">
 
-                    <div class="form-field">
-                        <label for="contact-nombre">Nombre</label>
+                    <div class="form-field validate-required">
+                        <label for="contact-nombre">Nombre <span class="form-field__req" aria-hidden="true">*</span></label>
                         <input type="text" id="contact-nombre" name="nombre"
-                               placeholder="Tu nombre" autocomplete="name">
+                               placeholder="Tu nombre" autocomplete="name" required aria-required="true">
                     </div>
 
-                    <div class="form-field">
-                        <label for="contact-email">Email</label>
+                    <div class="form-field validate-required">
+                        <label for="contact-email">Email <span class="form-field__req" aria-hidden="true">*</span></label>
                         <input type="email" id="contact-email" name="email"
-                               placeholder="tu@email.com" autocomplete="email">
+                               placeholder="tu@email.com" autocomplete="email" required aria-required="true">
                     </div>
 
-                    <div class="form-field">
-                        <label for="contact-mensaje">Mensaje</label>
+                    <div class="form-field validate-required">
+                        <label for="contact-mensaje">Mensaje <span class="form-field__req" aria-hidden="true">*</span></label>
                         <textarea id="contact-mensaje" name="mensaje"
-                                  placeholder="¿En qué te podemos ayudar?"></textarea>
+                                  placeholder="¿En qué te podemos ayudar?" required aria-required="true"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn--primary">
@@ -105,6 +105,14 @@ defined('ABSPATH') || exit;
                     </button>
 
                 </form>
+
+                <div class="contacto__success js-contact-success" role="status" hidden>
+                    <span class="contacto__success-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                    <h3 class="contacto__success-title">¡Mensaje enviado!</h3>
+                    <p class="contacto__success-text">Gracias por escribirnos. Te responderemos a la brevedad.</p>
+                </div>
                 <?php endif; ?>
             </div>
 
