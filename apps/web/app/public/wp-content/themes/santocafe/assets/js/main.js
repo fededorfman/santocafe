@@ -38,6 +38,11 @@
         }
     });
 
+    // Close the drawer when a menu option is chosen (anchor jump or page nav).
+    $drawer.on('click', '.mobile-drawer__nav a', function () {
+        closeDrawer();
+    });
+
     // ============================================================
     // Shipping Banner — close and remember with sessionStorage
     // ============================================================
