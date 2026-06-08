@@ -49,14 +49,6 @@
     padding: var(--spacing-sm) 0;
 }
 
-.shipping-banner--success {
-    background: #2a6b2a;
-}
-
-.shipping-banner--success .shipping-banner__text {
-    color: #fff;
-}
-
 .shipping-banner__close {
     background: none;
     border: none;
@@ -71,7 +63,6 @@
 }
 
 .shipping-banner__close:hover { opacity: 1; }
-.shipping-banner--success .shipping-banner__close { color: #fff; }
 
 /* ---- Site Nav ---- */
 .site-nav {

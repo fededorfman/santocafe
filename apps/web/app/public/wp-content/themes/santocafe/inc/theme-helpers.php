@@ -147,6 +147,27 @@ function sc_get_shipping_gap(): int {
 }
 
 /**
+ * Progress (0–100) towards the free-shipping threshold, for the cart drawer bar.
+ * Returns 100 when the threshold is reached or WooCommerce is not active.
+ *
+ * @return int
+ */
+function sc_get_shipping_progress(): int {
+    if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+        return 100;
+    }
+
+    $min = (int) get_option( 'sc_shipping_free_min', 50000 );
+    if ( $min <= 0 ) {
+        return 100;
+    }
+
+    $subtotal = (int) WC()->cart->get_subtotal();
+
+    return (int) min( 100, max( 0, round( $subtotal / $min * 100 ) ) );
+}
+
+/**
  * Generated origin story — used on the product page when the product has no
  * manual description. Grounded in the product's own meta (país, altitud,
  * notas, proceso, variedad).

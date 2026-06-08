@@ -17,6 +17,24 @@ do_action( 'woocommerce_before_mini_cart' );
 
 <?php if ( WC()->cart && ! WC()->cart->is_empty() ) : ?>
 
+    <?php
+    $sc_gap = function_exists( 'sc_get_shipping_gap' ) ? sc_get_shipping_gap() : 0;
+    $sc_pct = function_exists( 'sc_get_shipping_progress' ) ? sc_get_shipping_progress() : 100;
+    ?>
+    <div class="mini-cart__ship<?php echo 0 === $sc_gap ? ' is-complete' : ''; ?>">
+        <p class="mini-cart__ship-text">
+            <?php if ( $sc_gap > 0 ) : ?>
+                ¡Lleva <strong><?php echo esc_html( sc_format_clp( $sc_gap ) ); ?></strong> más para obtener envío gratis!
+            <?php else : ?>
+                Tiene envío gratis en Región Metropolitana
+            <?php endif; ?>
+        </p>
+        <div class="mini-cart__ship-bar" role="progressbar"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="<?php echo esc_attr( $sc_pct ); ?>">
+            <span class="mini-cart__ship-fill" style="width: <?php echo esc_attr( $sc_pct ); ?>%;"></span>
+        </div>
+    </div>
+
     <ul class="woocommerce-mini-cart cart_list product_list_widget">
         <?php
         do_action( 'woocommerce_before_mini_cart_contents' );
