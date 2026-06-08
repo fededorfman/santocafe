@@ -79,6 +79,7 @@ $modules = [
     'inc/woocommerce.php',
     'inc/product-meta.php',
     'inc/ajax-handlers.php',
+    'inc/seo.php',
 ];
 
 foreach ($modules as $module) {
