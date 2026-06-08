@@ -39,7 +39,7 @@ $moliendas = [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ];
 
         <div class="cart-item__media">
             <a href="<?php echo esc_url( get_permalink( $pid ) ); ?>">
-                <?php echo $product->get_image( 'woocommerce_thumbnail' ); ?>
+                <?php echo $product->get_image( 'woocommerce_thumbnail', [ 'loading' => 'eager' ] ); // eager: re-inserted via AJAX ?>
             </a>
         </div>
 

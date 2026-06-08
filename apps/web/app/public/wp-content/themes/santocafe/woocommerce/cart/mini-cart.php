@@ -49,7 +49,10 @@ do_action( 'woocommerce_before_mini_cart' );
 
             $sc_item_pais      = sc_get_product_meta( $product_id, 'pais' );
             $product_name      = ( $sc_item_pais ? $sc_item_pais . ' - ' : '' ) . get_the_title( $product_id ); // país - nombre (sin "- 250g")
-            $thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail' ), $cart_item, $cart_item_key );
+            // Eager (not lazy): these are re-inserted via AJAX inside the
+            // transformed drawer, where lazy-loading's observer often never
+            // fires and the thumbnail stays blank.
+            $thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail', [ 'loading' => 'eager' ] ), $cart_item, $cart_item_key );
             $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 
             $peso     = $cart_item['variation']['attribute_pa_peso'] ?? '';
