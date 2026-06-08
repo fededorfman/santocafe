@@ -276,6 +276,40 @@
 }
 
 /* ============================================================
+   SECTION DIVIDER  ———  ☕  ———
+   ============================================================ */
+
+.section-divider {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-crema);
+}
+
+.section-divider__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    max-width: 560px;
+    margin: 0 auto;
+    color: var(--color-separador);
+}
+
+.section-divider__line {
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+}
+
+.section-divider__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+}
+
+.section-divider__icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* ============================================================
    NOSOTROS
    ============================================================ */
 
@@ -377,7 +411,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: start;
+    align-items: end;
 }
 
 /* Prevent grid children from overflowing their tracks */
@@ -459,11 +493,10 @@ a.contacto__item-value:hover {
     color: var(--color-dorado);
 }
 
-/* Contact form column — alinea el form al final (derecha) */
+/* Contact form column */
 .contacto__form-col {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
 }
 
 /* Contact form */
@@ -473,6 +506,11 @@ a.contacto__item-value:hover {
     gap: var(--spacing-md);
     max-width: 500px;
     width: 100%;
+}
+
+/* El atributo hidden debe ganarle al display:flex del form */
+.contacto__form[hidden] {
+    display: none;
 }
 
 .form-field__req {
