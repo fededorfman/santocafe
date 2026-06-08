@@ -34,6 +34,8 @@
 
 @media (max-width: 600px) {
     .sc-account__card { flex-basis: 100%; }
+    /* Tighter gap between the stacked login / register cards. */
+    .sc-account { gap: var(--spacing-md); }
 }
 
 /* Highlight the register card when reached via "Regístrate" */
@@ -882,7 +884,9 @@
 @media (max-width: 600px) {
     .sc-account .sc-divider {
         display: flex;
-        flex-basis: 100%;
+        flex-basis: 100%;       /* break onto its own line between the cards */
+        max-width: 440px;       /* …but keep it as wide as the panels */
+        margin: 0 auto;
     }
 }
 

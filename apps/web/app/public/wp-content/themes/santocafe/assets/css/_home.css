@@ -317,7 +317,6 @@
     .features                  { padding: var(--spacing-xl) 0; }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
-    .nosotros                  { padding: var(--spacing-xl) 0; }
     .contacto                  { padding: var(--spacing-xl) 0; }
 }
 
@@ -650,4 +649,10 @@ a.contacto__item-value:hover {
     }
     .nosotros__image { max-height: 360px; object-fit: cover; }
     .contacto__grid  { grid-template-columns: 1fr; gap: var(--spacing-xl); }
+}
+
+@media (max-width: 600px) {
+    /* Lighter vertical padding on the "Nuestra Historia" panel. Placed here
+       (after the base .nosotros rule) so it wins by source order. */
+    .nosotros { padding: var(--spacing-xl) 0; }
 }
