@@ -700,24 +700,98 @@
     color: var(--color-oscuro);
 }
 
-/* Notice / info boxes */
+/* ============================================================
+   Notices (success / error / info) — WooCommerce messages.
+   WC renders these with an absolutely-positioned icon-font ::before
+   that overlaps the text; we reset it into a clean inline badge.
+   ============================================================ */
 .woocommerce-MyAccount-content .woocommerce-info,
 .woocommerce-MyAccount-content .woocommerce-message,
-.woocommerce-MyAccount-content .woocommerce-Message {
+.woocommerce-MyAccount-content .woocommerce-Message,
+.woocommerce-MyAccount-content .woocommerce-error {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     background: var(--color-crema);
     border: 1px solid var(--color-borde);
     border-left: 3px solid var(--color-dorado);
     border-radius: var(--radius-sm);
     padding: var(--spacing-md) var(--spacing-lg);
     font-size: var(--font-size-sm);
+    line-height: 1.4;
     color: var(--color-texto);
-    margin-bottom: var(--spacing-lg);
+    margin: 0 0 var(--spacing-lg);
     list-style: none;
+}
+
+/* The error notice is a <ul> with <li> items. */
+.woocommerce-MyAccount-content .woocommerce-error li {
+    margin: 0;
+    list-style: none;
+}
+
+/* Reset WC's absolute icon-font glyph into a tidy circular badge. */
+.woocommerce-MyAccount-content .woocommerce-info::before,
+.woocommerce-MyAccount-content .woocommerce-message::before,
+.woocommerce-MyAccount-content .woocommerce-Message::before,
+.woocommerce-MyAccount-content .woocommerce-error::before {
+    position: static;
+    top: auto;
+    left: auto;
+    margin: 0;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background: var(--color-dorado);
+}
+
+/* Optional action button (e.g. "Ver pedido") sits at the far right. */
+.woocommerce-MyAccount-content .woocommerce-info .button,
+.woocommerce-MyAccount-content .woocommerce-message .button {
+    margin-left: auto;
+}
+
+/* Success */
+.woocommerce-MyAccount-content .woocommerce-message,
+.woocommerce-MyAccount-content .woocommerce-Message {
+    background: #eef7ed;
+    border-color: #cfe8c9;
+    border-left-color: #2e7d32;
+    color: #285f2b;
+}
+.woocommerce-MyAccount-content .woocommerce-message::before,
+.woocommerce-MyAccount-content .woocommerce-Message::before {
+    content: "\2713"; /* ✓ */
+    background: #2e7d32;
+}
+
+/* Error */
+.woocommerce-MyAccount-content .woocommerce-error {
+    background: #fdf3f2;
+    border-color: #f3c4bf;
+    border-left-color: #c0392b;
+    color: #9e2b21;
+}
+.woocommerce-MyAccount-content .woocommerce-error::before {
+    content: "\0021"; /* ! */
+    background: #c0392b;
+}
+
+/* Info */
+.woocommerce-MyAccount-content .woocommerce-info::before {
+    content: "\0069"; /* i */
+    background: var(--color-dorado);
 }
 
 /* ============================================================
