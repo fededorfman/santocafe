@@ -625,6 +625,7 @@
 
 .product-info-table td {
     color: var(--color-oscuro);
+    font-weight: 700;
 }
 
 /* ============================================================
