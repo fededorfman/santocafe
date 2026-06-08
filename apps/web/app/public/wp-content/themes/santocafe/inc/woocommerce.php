@@ -139,6 +139,7 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 // are stored as WooCommerce options in the DB (Ajustes → Avanzado → Endpoints de la
 // cuenta), because WC caches the query vars before the theme loads. They were set via:
 //   wp option update woocommerce_myaccount_orders_endpoint pedidos
+//   wp option update woocommerce_myaccount_view_order_endpoint orden
 //   wp option update woocommerce_myaccount_edit_address_endpoint direcciones
 //   wp option update woocommerce_myaccount_edit_account_endpoint editar
 //   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password

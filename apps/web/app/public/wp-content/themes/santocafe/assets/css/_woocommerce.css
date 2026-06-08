@@ -999,18 +999,20 @@
 
 /* --- Order detail: header --- */
 .sc-order-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     border-bottom: 1px solid var(--color-borde);
 }
 
+/* "Pedido" + status pill on the same line. */
+.sc-order-head__top {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 2px;
+}
+
 .sc-order-head__kicker {
-    display: block;
     font-size: var(--font-size-xs);
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -1118,6 +1120,14 @@
 .sc-order-item__meta .wc-item-meta { list-style: none; margin: 0; padding: 0; }
 
 /* Order details + totals table */
+/* Narrower table so the price isn't pushed far from the product. */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details {
+    max-width: 620px;
+}
+/* The "Total" header lines up with the right-aligned prices below it. */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details thead th.product-total {
+    text-align: right;
+}
 .woocommerce-account .woocommerce-MyAccount-content table.order_details td.product-total,
 .woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot td {
     text-align: right;
@@ -1139,33 +1149,25 @@
     color: var(--color-oscuro);
 }
 
-/* Customer details (addresses) below the order */
-.woocommerce-customer-details .woocommerce-columns--addresses {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-lg);
+/* Customer details (addresses) below the order — reuse the .sc-address-card
+   look from "Mis direcciones". The card/grid styles already exist; here we
+   just space the section and style the extra phone/email lines. */
+.woocommerce-customer-details {
+    margin-top: var(--spacing-xl);
 }
-.woocommerce-customer-details address {
+.sc-address-card__body address {
     font-style: normal;
     line-height: 1.6;
-    padding: var(--spacing-md);
-    border: 1px solid var(--color-borde);
-    border-radius: var(--radius-card);
-    background: var(--color-crema);
     color: var(--color-texto);
 }
-.woocommerce-customer-details h2,
-.woocommerce-column__title {
-    font-size: var(--font-size-base);
-    color: var(--color-oscuro);
-    margin-bottom: var(--spacing-sm);
+.sc-address-card__line {
+    display: block;
+    color: var(--color-texto-suave);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
 }
 
 @media (max-width: 600px) {
-    .woocommerce-customer-details .woocommerce-columns--addresses {
-        grid-template-columns: 1fr;
-    }
     .sc-order-item__media .sc-order-item__img,
     .sc-order-item__media img { width: 48px; height: 48px; }
 }
