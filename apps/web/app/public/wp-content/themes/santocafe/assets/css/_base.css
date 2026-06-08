@@ -15,6 +15,8 @@ html {
     /* No overflow-x on html: `hidden` breaks wheel scroll and `clip` can force
        overflow-y to clip too (kills vertical scroll). The cart drawer stays
        off-canvas via transform (no horizontal overflow); body clips the rest. */
+    overscroll-behavior: none;   /* no scroll-chaining / rubber-band bounce */
+    touch-action: pan-x pan-y;   /* allow scroll, block pinch / double-tap zoom */
 }
 
 body {
@@ -26,7 +28,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    overscroll-behavior-y: none; /* prevent elastic/rubber-band scroll */
+    overscroll-behavior: none; /* prevent elastic/rubber-band scroll (both axes) */
 }
 
 h1, h2, h3, h4, h5, h6 {
