@@ -673,4 +673,21 @@
         $form.siblings('.js-contact-success').removeAttr('hidden');
     });
 
+    // ============================================================
+    // Disable zoom (desktop): trackpad pinch and Ctrl/Cmd + wheel both
+    // fire a wheel event with ctrlKey = true. Safari pinch fires gesture
+    // events. Mobile pinch is handled by the viewport meta + touch-action.
+    // ============================================================
+    document.addEventListener('wheel', function (e) {
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (type) {
+        document.addEventListener(type, function (e) {
+            e.preventDefault();
+        });
+    });
+
 })(jQuery);
