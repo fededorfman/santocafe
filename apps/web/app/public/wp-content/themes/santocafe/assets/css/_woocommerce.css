@@ -982,6 +982,13 @@
     color: var(--color-texto);
 }
 
+/* Bullet between the date and the total (one-line layout only). */
+.sc-order-card__total::before {
+    content: "·";
+    margin-right: var(--spacing-md);
+    color: var(--color-texto-suave);
+}
+
 .sc-order-card__actions {
     flex-shrink: 0;
     display: flex;
@@ -996,6 +1003,7 @@
         align-items: flex-start;
         gap: var(--spacing-xs);
     }
+    .sc-order-card__total::before { display: none; }
 }
 
 /* On very narrow widths the action drops below the info too. */
