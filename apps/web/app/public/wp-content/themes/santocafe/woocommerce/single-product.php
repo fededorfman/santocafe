@@ -322,35 +322,25 @@ while ( have_posts() ) :
         <!-- ============ Secciones (sin tabs) ============ -->
         <div class="product-detail__sections">
 
-            <!-- 1) Descripción: ficha de origen + foto -->
+            <!-- 1) Descripción: país + historia de origen + foto -->
             <section class="product-section">
-                <h2 class="product-section__title">Descripción</h2>
                 <div class="product-desc__grid">
                     <div class="origin-sheet">
                         <?php if ( $pais ) : ?>
-                        <h3 class="origin-sheet__country"><?php echo esc_html( $pais ); ?></h3>
+                        <h2 class="origin-sheet__country"><?php echo esc_html( $pais ); ?></h2>
                         <?php endif; ?>
+                        <?php if ( $productor ) : ?>
                         <p class="origin-sheet__sub">Finca / Productor Local</p>
-                        <table class="origin-sheet__table">
-                            <tbody>
+                        <?php endif; ?>
+                        <div class="product-detail__description">
                             <?php
-                            $rows = [
-                                'País'      => $pais,
-                                'Región'    => $region,
-                                'Productor' => $productor,
-                                'Altura'    => $altitud ? $altitud . 'm' : '',
-                                'Variedad'  => $variedad,
-                                'Proceso'   => $proceso,
-                            ];
-                            foreach ( $rows as $label => $value ) :
-                                if ( ! $value ) continue; ?>
-                            <tr>
-                                <th><?php echo esc_html( $label ); ?></th>
-                                <td><?php echo esc_html( $value ); ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                            if ( $product->get_description() ) {
+                                echo wp_kses_post( wpautop( $product->get_description() ) );
+                            } else {
+                                echo wp_kses_post( sc_origin_story( (string) $pais, (string) $altitud, (string) $notas, (string) $proceso, (string) $variedad ) );
+                            }
+                            ?>
+                        </div>
                     </div>
                     <?php
                     $sc_gallery     = $product->get_gallery_image_ids();
@@ -375,21 +365,7 @@ while ( have_posts() ) :
             </section>
             <?php endif; ?>
 
-            <!-- 3) El Origen (descripción / historia) -->
-            <section class="product-section product-origin">
-                <h3 class="product-origin__title">El Origen<?php echo $pais ? ', ' . esc_html( $pais ) : ''; ?></h3>
-                <div class="product-detail__description">
-                    <?php
-                    if ( $product->get_description() ) {
-                        echo wp_kses_post( wpautop( $product->get_description() ) );
-                    } else {
-                        echo wp_kses_post( sc_origin_story( (string) $pais, (string) $altitud, (string) $notas, (string) $proceso, (string) $variedad ) );
-                    }
-                    ?>
-                </div>
-            </section>
-
-            <!-- 4) Información adicional -->
+            <!-- 3) Información adicional -->
             <section class="product-section">
                 <h2 class="product-section__title">Información adicional</h2>
                 <table class="product-info-table">
