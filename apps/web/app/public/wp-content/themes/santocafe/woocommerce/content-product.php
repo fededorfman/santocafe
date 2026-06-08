@@ -123,7 +123,7 @@ $on_sale = $product->is_on_sale();
     <div class="product-card__content">
 
         <h3 class="product-card__title">
-            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+            <a href="<?php the_permalink(); ?>"><?php echo esc_html( $pais ? $pais . ' - ' . get_the_title() : get_the_title() ); ?></a>
         </h3>
 
         <?php if ( $notas ) : ?>
@@ -132,9 +132,9 @@ $on_sale = $product->is_on_sale();
 
         <?php if ( $intensidad > 0 || $acidez > 0 || $cuerpo > 0 ) : ?>
         <div class="product-card__profile">
-            <?php if ( $intensidad > 0 ) sc_render_profile_bar( 'INT.',    $intensidad ); ?>
-            <?php if ( $acidez > 0 )     sc_render_profile_bar( 'ACIDEZ',  $acidez ); ?>
-            <?php if ( $cuerpo > 0 )     sc_render_profile_bar( 'CUERPO',  $cuerpo ); ?>
+            <?php if ( $intensidad > 0 ) sc_render_profile_bar( 'INTENSIDAD', $intensidad ); ?>
+            <?php if ( $acidez > 0 )     sc_render_profile_bar( 'ACIDEZ',     $acidez ); ?>
+            <?php if ( $cuerpo > 0 )     sc_render_profile_bar( 'CUERPO',     $cuerpo ); ?>
         </div>
         <?php endif; ?>
 
