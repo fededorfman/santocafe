@@ -144,7 +144,7 @@
 }
 
 .product-card__profile .profile-bar__label {
-    min-width: 76px;
+    min-width: 80px;
     color: var(--color-texto-suave);
 }
 

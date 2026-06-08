@@ -18,7 +18,6 @@ $products = new WP_Query( [
     <div class="container">
 
         <header class="catalog-section__header">
-            <span class="catalog-section__pill">Café de especialidad en Chile</span>
             <h2 class="catalog-section__title">
                 Nuestros <span class="text-dorado">Cafés</span>
             </h2>

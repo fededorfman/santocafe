@@ -492,7 +492,8 @@
    ============================================================ */
 
 .product-detail__sections {
-    margin-top: var(--spacing-2xl);
+    max-width: 800px;
+    margin: var(--spacing-2xl) auto 0;
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-borde);
     display: flex;
