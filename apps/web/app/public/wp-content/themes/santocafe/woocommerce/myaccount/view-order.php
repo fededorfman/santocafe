@@ -13,16 +13,16 @@ $notes = $order->get_customer_order_notes();
 ?>
 
 <div class="sc-order-head">
-    <div class="sc-order-head__main">
+    <div class="sc-order-head__top">
         <span class="sc-order-head__kicker">Pedido</span>
-        <h2 class="sc-order-head__number">#<?php echo esc_html( $order->get_order_number() ); ?></h2>
-        <p class="sc-order-head__date">
-            Realizado el <?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
-        </p>
+        <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
+            <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+        </span>
     </div>
-    <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
-        <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-    </span>
+    <h2 class="sc-order-head__number">#<?php echo esc_html( $order->get_order_number() ); ?></h2>
+    <p class="sc-order-head__date">
+        Realizado el <?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
+    </p>
 </div>
 
 <?php if ( $notes ) : ?>
