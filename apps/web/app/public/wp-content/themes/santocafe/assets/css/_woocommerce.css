@@ -735,10 +735,14 @@
     line-height: 1.4;
 }
 
-@media (max-width: 600px) {
+/* Addresses stack into one column from tablet down. */
+@media (max-width: 1024px) {
     .woocommerce-MyAccount-content .sc-address-cards {
         grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 600px) {
     .sc-form-grid {
         grid-template-columns: 1fr;
     }
@@ -756,7 +760,7 @@
     padding: var(--spacing-2xl) var(--spacing-md);
     border: 1px solid var(--color-borde);
     border-radius: var(--radius-card);
-    background: var(--color-crema);
+    background: var(--color-tarjeta);
 }
 
 .sc-orders-empty__kicker {
@@ -801,6 +805,6 @@
 /* Account details: divider between the "Detalles de la cuenta" and
    "Cambiar contraseña" panels — always shown (panels always stacked). */
 .woocommerce-MyAccount-content .sc-divider {
-    max-width: 600px;
+    max-width: 560px;
     margin: var(--spacing-lg) 0;
 }
