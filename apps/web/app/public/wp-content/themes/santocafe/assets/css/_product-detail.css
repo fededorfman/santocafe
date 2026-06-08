@@ -492,8 +492,7 @@
    ============================================================ */
 
 .product-detail__sections {
-    max-width: 800px;
-    margin: var(--spacing-2xl) auto 0;
+    margin-top: var(--spacing-2xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-borde);
     display: flex;
@@ -537,9 +536,21 @@
 
 .product-desc__photo img {
     width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
     border-radius: var(--radius-card);
     display: block;
     box-shadow: var(--shadow-card);
+}
+
+/* Imágenes dentro del texto de la descripción */
+.product-detail__description img {
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    display: block;
+    margin: var(--spacing-md) auto;
+    border-radius: var(--radius-card);
 }
 
 /* El Origen (historia) */
@@ -702,9 +713,19 @@
         margin: 0 auto;
     }
 
-    /* CTA capped + centered when stacked */
+    /* CTA capped + centered when stacked (the button is inline-flex,
+       so we center it via the form's text-align). */
+    .product-detail__cart-form {
+        text-align: center;
+    }
+
     .product-detail__cta {
         max-width: 500px;
+    }
+
+    /* La descripción completa se limita a 800px y se centra desde 1024px. */
+    .product-detail__sections {
+        max-width: 800px;
         margin-left: auto;
         margin-right: auto;
     }
