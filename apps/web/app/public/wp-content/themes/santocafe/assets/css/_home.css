@@ -141,21 +141,14 @@
     gap: var(--spacing-lg);
 }
 
+/* Frameless cards: centered icon + title + desc, no box (desktop/tablet). */
 .feature-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: var(--spacing-md);
-    padding: var(--spacing-xl) var(--spacing-lg);
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: background var(--transition-base), border-color var(--transition-base);
-}
-
-.feature-card:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(223, 179, 62, 0.25);
+    padding: 0 var(--spacing-sm);
 }
 
 .feature-card__icon {
@@ -168,6 +161,11 @@
     justify-content: center;
     color: var(--color-dorado);
     flex-shrink: 0;
+    transition: background var(--transition-base);
+}
+
+.feature-card:hover .feature-card__icon {
+    background: rgba(223, 179, 62, 0.20);
 }
 
 .feature-card__icon svg {
@@ -285,12 +283,9 @@
     }
 }
 
-@media (max-width: 600px) {
-    .hero__content             { gap: var(--spacing-md); }
-    .features                  { padding: var(--spacing-xl) 0; }
-
-    /* Below 600px the 4 panels become a swipeable horizontal carousel
-       (scroll-snap) so they don't take up so much vertical space. */
+/* Below 800px the 4 panels become a swipeable horizontal carousel
+   (scroll-snap) so they don't take up so much vertical space. */
+@media (max-width: 800px) {
     .features__grid {
         display: flex;
         grid-template-columns: none;
@@ -305,11 +300,8 @@
     .features__grid::-webkit-scrollbar { display: none; } /* Safari/Chrome */
 
     .feature-card {
-        flex: 0 0 82%;                   /* next card peeks in, like a gallery */
+        flex: 0 0 clamp(260px, 75%, 460px); /* next card peeks in, like a gallery */
         scroll-snap-align: center;
-        align-items: center;
-        text-align: center;
-        padding: var(--spacing-lg) var(--spacing-md);
     }
 
     .features__dots {
@@ -318,6 +310,11 @@
         gap: var(--spacing-sm);
         margin-top: var(--spacing-lg);
     }
+}
+
+@media (max-width: 600px) {
+    .hero__content             { gap: var(--spacing-md); }
+    .features                  { padding: var(--spacing-xl) 0; }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
     .nosotros                  { padding: var(--spacing-xl) 0; }
