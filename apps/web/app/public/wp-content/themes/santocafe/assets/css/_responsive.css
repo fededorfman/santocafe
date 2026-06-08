@@ -13,6 +13,9 @@
     .wc-main,
     .site-main       { padding-top: var(--header-height-mob); }
 
+    /* Match the anchor-jump offset to the shorter mobile header. */
+    html { scroll-padding-top: var(--header-height-mob); }
+
     /* Logo centered via absolute positioning */
     .site-nav__inner {
         position: relative;
