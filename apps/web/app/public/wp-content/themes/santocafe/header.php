@@ -14,6 +14,8 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <?php // Tint the mobile browser UI (address/toolbar) to match the header. ?>
+    <meta name="theme-color" content="#1a1310">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <?php wp_head(); ?>
