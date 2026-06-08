@@ -45,9 +45,9 @@ defined('ABSPATH') || exit;
                         </div>
                         <div>
                             <span class="contacto__item-label">WhatsApp</span>
-                            <a href="https://wa.me/56900000000" class="contacto__item-value"
+                            <a href="https://wa.me/56996416308" class="contacto__item-value"
                                target="_blank" rel="noopener">
-                                +56 9 0000 0000
+                                +56 9 9641 6308
                             </a>
                         </div>
                     </div>
@@ -63,9 +63,9 @@ defined('ABSPATH') || exit;
                         </div>
                         <div>
                             <span class="contacto__item-label">Instagram</span>
-                            <a href="https://instagram.com/santocafe" class="contacto__item-value"
+                            <a href="https://instagram.com/santocafespecialtycoffee" class="contacto__item-value"
                                target="_blank" rel="noopener">
-                                @santocafe
+                                @santocafespecialtycoffee
                             </a>
                         </div>
                     </div>
