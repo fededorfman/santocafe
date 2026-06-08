@@ -256,11 +256,6 @@
 @media (max-width: 1024px) {
     .features__grid            { grid-template-columns: repeat(2, 1fr); }
     .catalog-section__grid     { grid-template-columns: repeat(2, 1fr); }
-
-    /* Nuestra historia y Contacto pasan a una columna desde 1024px. */
-    .nosotros__grid            { grid-template-columns: 1fr; }
-    .nosotros__image           { max-height: 360px; object-fit: cover; }
-    .contacto__grid            { grid-template-columns: 1fr; gap: var(--spacing-xl); }
 }
 
 @media (max-width: 1024px) {
@@ -512,4 +507,15 @@ a.contacto__item-value:hover {
 .form-field textarea {
     min-height: 120px;
     resize: vertical;
+}
+
+/* ============================================================
+   Responsive overrides — colocados al final para ganar por orden
+   de fuente a las reglas base de .nosotros__grid / .contacto__grid
+   (que están definidas más arriba en el archivo).
+   ============================================================ */
+@media (max-width: 1024px) {
+    .nosotros__grid  { grid-template-columns: 1fr; }
+    .nosotros__image { max-height: 360px; object-fit: cover; }
+    .contacto__grid  { grid-template-columns: 1fr; gap: var(--spacing-xl); }
 }
