@@ -934,67 +934,85 @@
 .sc-order-status--failed          { background: #fdf3f2; color: #c0392b; }
 .sc-order-status--refunded        { background: #eee; color: #666; }
 
-/* --- Orders list table --- */
-.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td {
-    vertical-align: middle;
+/* --- Orders list: one card per order (no cramped table) --- */
+.sc-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
-.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table tbody tr:hover {
-    background: var(--color-crema);
+.sc-order-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    background: var(--color-tarjeta);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.woocommerce-orders-table__cell-order-number a {
-    font-weight: 600;
+.sc-order-card:hover {
+    border-color: rgba(223, 179, 62, 0.4);
+    box-shadow: var(--shadow-card);
+}
+
+.sc-order-card__info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.sc-order-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 2px;
+}
+
+.sc-order-card__number {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
     color: var(--color-oscuro);
 }
+.sc-order-card__number:hover { color: var(--color-dorado-suave); }
 
-.woocommerce-orders-table__cell-order-actions {
-    text-align: right;
+.sc-order-card__row {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
 }
 
-/* The "Ver" action: compact pill button (overrides the generic .button) */
-.woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions a.button {
-    padding: var(--spacing-xs) var(--spacing-md);
+.sc-order-card__label {
+    flex-shrink: 0;
+    min-width: 48px;
     font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
 }
 
-/* Stack the orders table into cards on mobile */
-@media (max-width: 600px) {
-    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table,
-    .woocommerce-orders-table tbody,
-    .woocommerce-orders-table tr,
-    .woocommerce-orders-table td {
-        display: block;
-        width: 100%;
-    }
-    .woocommerce-orders-table thead { display: none; }
-    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table tr {
-        border-bottom: 1px solid var(--color-borde);
-        padding: var(--spacing-sm) var(--spacing-md);
-    }
-    .woocommerce-orders-table tr:last-child { border-bottom: none; }
-    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+.sc-order-card__actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* On narrow widths the action drops below the info. */
+@media (max-width: 480px) {
+    .sc-order-card {
+        flex-direction: column;
+        align-items: stretch;
         gap: var(--spacing-md);
-        border-top: none;
-        padding: var(--spacing-xs) 0;
-        text-align: right;
     }
-    .woocommerce-orders-table td::before {
-        content: attr(data-title);
-        font-size: var(--font-size-xs);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--color-texto-suave);
-        text-align: left;
-    }
-    .woocommerce-orders-table__cell-order-actions { text-align: left; }
-    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td.woocommerce-orders-table__cell-order-actions a.button {
-        width: auto;
-    }
+    .sc-order-card__actions { flex-direction: row; }
+    .sc-order-card__actions .btn { flex: 1; }
 }
 
 /* --- Order detail: back link --- */
