@@ -225,7 +225,17 @@
     min-width: 0;
 }
 
-@media (max-width: 600px) {
+/* Below 1024px the fixed header switches to its shorter mobile offset,
+   which doesn't account for the shipping banner — add top padding so the
+   "Hola, {nombre}" greeting isn't tucked under the navbar. */
+@media (max-width: 1024px) {
+    .sc-myaccount {
+        padding-top: var(--spacing-xl);
+    }
+}
+
+/* Below 800px the sidebar+content layout stacks into the mobile view. */
+@media (max-width: 800px) {
     .sc-myaccount__layout {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
