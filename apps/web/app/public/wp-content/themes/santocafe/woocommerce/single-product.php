@@ -367,8 +367,10 @@ while ( have_posts() ) :
 
             <!-- 3) Información adicional -->
             <section class="product-section">
-                <h2 class="product-section__title">Información adicional</h2>
                 <table class="product-info-table">
+                    <thead>
+                        <tr><th colspan="2" class="product-info-table__head">Información adicional</th></tr>
+                    </thead>
                     <tbody>
                     <?php
                     $info = [
