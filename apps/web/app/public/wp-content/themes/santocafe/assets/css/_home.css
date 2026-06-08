@@ -302,6 +302,11 @@
     .feature-card {
         flex: 0 0 clamp(260px, 75%, 460px); /* next card peeks in, like a gallery */
         scroll-snap-align: center;
+        /* In gallery mode the cards get their framed look back. */
+        padding: var(--spacing-lg) var(--spacing-md);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: var(--radius-card);
     }
 
     .features__dots {
