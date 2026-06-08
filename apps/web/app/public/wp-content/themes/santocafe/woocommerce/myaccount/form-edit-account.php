@@ -70,6 +70,9 @@ do_action( 'woocommerce_before_edit_account_form' );
 
 </form>
 
+<?php // Decorative separator between the two stacked panels. ?>
+<?php get_template_part( 'template-parts/divider' ); ?>
+
 <?php // Password panel: validated + saved inline via AJAX (sc_change_password),
 	// so wrong/empty inputs show errors on the fields without reloading.
 	// Keeps native WC fields as a no-JS fallback (posts save_account_details). ?>

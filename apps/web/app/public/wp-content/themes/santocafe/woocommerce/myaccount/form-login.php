@@ -65,6 +65,8 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
     </div>
 
     <?php if ( $sc_registration ) : ?>
+    <?php // Decorative separator — only shown when the cards stack on mobile. ?>
+    <?php get_template_part( 'template-parts/divider' ); ?>
     <!-- Register -->
     <div class="sc-account__card" id="sc-register">
         <h2 class="sc-account__title">Crear cuenta</h2>

@@ -780,3 +780,27 @@
     color: var(--color-texto-suave);
     margin-bottom: var(--spacing-lg);
 }
+
+/* ============================================================
+   DIVIDER scoping (base look lives in _components.css)
+   ============================================================ */
+/* Login page: the divider sits between the login & register cards.
+   On desktop the cards are side-by-side, so hide it; show it only
+   when the cards stack into one column (≤600px). */
+.sc-account .sc-divider {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .sc-account .sc-divider {
+        display: flex;
+        flex-basis: 100%;
+    }
+}
+
+/* Account details: divider between the "Detalles de la cuenta" and
+   "Cambiar contraseña" panels — always shown (panels always stacked). */
+.woocommerce-MyAccount-content .sc-divider {
+    max-width: 600px;
+    margin: var(--spacing-lg) 0;
+}
