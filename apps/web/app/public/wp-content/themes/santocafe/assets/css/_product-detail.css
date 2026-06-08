@@ -508,6 +508,10 @@
 }
 
 /* Descripción: ficha de origen (izquierda) + foto (derecha) */
+.product-section--desc {
+    padding-top: var(--spacing-2xl);
+}
+
 .product-desc__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -520,6 +524,7 @@
     font-size: var(--font-size-2xl);
     color: var(--color-oscuro);
     line-height: 1.1;
+    margin-bottom: var(--spacing-md);
 }
 
 .origin-sheet__sub {
@@ -601,26 +606,34 @@
     margin-bottom: var(--spacing-md);
 }
 
-/* Info table */
+/* Info table — centered, rounded, zebra rows */
 .product-info-table {
     width: 100%;
-    max-width: 600px;
-    border-collapse: collapse;
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
 }
 
 .product-info-table th,
 .product-info-table td {
     text-align: left;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-bottom: 1px solid var(--color-borde);
+    padding: var(--spacing-sm) var(--spacing-lg);
     font-size: var(--font-size-sm);
+}
+
+.product-info-table tr:nth-child(odd) {
+    background: var(--color-crema);
 }
 
 .product-info-table th {
     color: var(--color-texto-suave);
     font-weight: 500;
     width: 40%;
-    background: var(--color-crema);
 }
 
 .product-info-table td {

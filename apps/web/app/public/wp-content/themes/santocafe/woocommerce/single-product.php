@@ -323,11 +323,11 @@ while ( have_posts() ) :
         <div class="product-detail__sections">
 
             <!-- 1) Descripción: país + historia de origen + foto -->
-            <section class="product-section">
+            <section class="product-section product-section--desc">
                 <div class="product-desc__grid">
                     <div class="origin-sheet">
                         <?php if ( $pais ) : ?>
-                        <h2 class="origin-sheet__country"><?php echo esc_html( $pais ); ?></h2>
+                        <h2 class="origin-sheet__country">El origen, <?php echo esc_html( $pais ); ?></h2>
                         <?php endif; ?>
                         <?php if ( $productor ) : ?>
                         <p class="origin-sheet__sub">Finca / Productor Local</p>
