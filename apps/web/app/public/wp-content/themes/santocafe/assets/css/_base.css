@@ -11,6 +11,12 @@
 html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
+    /* Dark backdrop: the page top (hero) and bottom (footer) are both dark,
+       so the iOS overscroll "rubber-band" and the landscape notch safe-area
+       read as dark instead of showing the cream body colour as a white gap.
+       (iOS Safari ignores overscroll-behavior, so this is what fixes it there.)
+       The cream <body> still covers the whole document in between. */
+    background-color: var(--color-oscuro);
     /* Offset anchor jumps so the target lands below the fixed header
        instead of underneath it (applies to all in-page #anchor links).
        --sc-header-offset is set by JS to the real header height (which
