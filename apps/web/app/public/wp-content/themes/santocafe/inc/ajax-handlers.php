@@ -125,25 +125,26 @@ function sc_render_part( string $slug ): string {
 }
 
 /**
- * Convert the site's own absolute URLs to root-relative ones.
+ * Make the URLs inside src / srcset / href attributes root-relative.
  *
- * AJAX fragments are rendered with absolute home_url() URLs. When the site is
- * viewed through a proxy with a different host (e.g. Local's Live Link tunnel,
- * served over https from a tunnel hostname), those absolute http://santocafe.local
- * URLs can't be resolved by the visitor's device and product images break
- * (showing the dark placeholder). Root-relative URLs inherit the current
- * request's scheme + host, so they work on the tunnel, on the local host, and
- * in production alike. External URLs are left untouched.
+ * AJAX fragments are rendered with absolute URLs. When the site is viewed
+ * through a proxy with a different host (e.g. Local's Live Link tunnel, served
+ * over https from a tunnel hostname), WordPress can generate those URLs with a
+ * host the visitor's device can't reach, so product images break (showing the
+ * placeholder). Stripping the scheme+host from these attributes makes the URLs
+ * root-relative, so they inherit the current request's host + scheme and work
+ * on the tunnel, on the local host, and in production alike. Only the URL-
+ * bearing attributes are touched (text, xmlns, itemtype, etc. are left alone).
  */
 function sc_relativize_site_urls( string $html ): string {
-    $host = wp_parse_url( home_url(), PHP_URL_HOST );
-    if ( ! $host ) {
-        return $html;
-    }
-
-    return (string) preg_replace(
-        '#https?://' . preg_quote( $host, '#' ) . '(?::\d+)?#i',
-        '',
+    return (string) preg_replace_callback(
+        '#\b(src|srcset|href)="([^"]*)"#i',
+        static function ( array $m ): string {
+            // Drop scheme + host from every URL in the attribute value
+            // (srcset may hold several, comma/space separated).
+            $value = preg_replace( '#https?://[^/\s,"\']+#i', '', $m[2] );
+            return $m[1] . '="' . $value . '"';
+        },
         $html
     );
 }
