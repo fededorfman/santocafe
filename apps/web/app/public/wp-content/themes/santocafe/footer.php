@@ -56,17 +56,17 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                 </ul>
             </div>
 
-            <!-- Col 3: Preparación -->
+            <!-- Col 3: Guías -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Preparación</h4>
+                <h4 class="site-footer__heading">Guías</h4>
                 <ul class="site-footer__links">
                     <?php
                     $sc_guias = [
-                        'cómo-preparar-espresso'          => 'Café para espresso',
-                        'como-preparar-cafe-en-italiana'  => 'Café para italiana',
-                        'como-preparar-cafe-de-filtro'    => 'Café para filtro',
-                        'que-es-el-cafe-de-especialidad'  => 'Qué es el café de especialidad',
-                        'que-significa-el-puntaje-sca'    => 'Qué significa el puntaje SCA',
+                        'como-preparar-espresso'         => 'Cómo preparar espresso',
+                        'como-preparar-cafe-en-italiana' => 'Café en italiana',
+                        'como-preparar-cafe-de-filtro'   => 'Café de filtro (V60)',
+                        'que-es-el-cafe-de-especialidad' => 'Qué es el café de especialidad',
+                        'cafe-lavado-vs-natural'         => 'Lavado vs natural',
                     ];
                     foreach ( $sc_guias as $sc_guia_slug => $sc_guia_label ) :
                         // Link to guide post if it exists; otherwise to /guias/
