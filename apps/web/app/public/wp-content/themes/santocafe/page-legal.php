@@ -16,6 +16,7 @@ get_header();
 
 <main class="site-main page-main">
     <div class="container">
+        <?php get_template_part( 'template-parts/breadcrumbs' ); ?>
         <?php while ( have_posts() ) : the_post(); ?>
         <article class="legal">
             <header class="legal__header">

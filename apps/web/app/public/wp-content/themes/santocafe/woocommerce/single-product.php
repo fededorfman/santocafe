@@ -97,6 +97,8 @@ while ( have_posts() ) :
     <?php do_action( 'woocommerce_before_single_product' ); ?>
     <div class="container">
 
+        <?php get_template_part( 'template-parts/breadcrumbs' ); ?>
+
         <!-- ============ Main grid: Image + Info ============ -->
         <div class="product-detail__grid">
 

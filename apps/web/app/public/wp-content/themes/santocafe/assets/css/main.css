@@ -39,5 +39,11 @@
 /* 12. Legal / policy pages */
 @import url('_legal.css');
 
-/* 13. Responsive */
+/* 13. Breadcrumbs */
+@import url('_breadcrumbs.css');
+
+/* 14. Content / guías hub */
+@import url('_content.css');
+
+/* 15. Responsive */
 @import url('_responsive.css');
