@@ -733,7 +733,7 @@
         var cards     = Array.prototype.slice.call(track.children);
         if (cards.length < 2) return;
 
-        var mq        = window.matchMedia('(max-width: 600px)');
+        var mq        = window.matchMedia('(max-width: 800px)');
         var dots      = [];
         var current   = 0;
         var timer     = null;
