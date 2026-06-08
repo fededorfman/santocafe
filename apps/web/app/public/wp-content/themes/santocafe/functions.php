@@ -72,6 +72,28 @@ add_action('woocommerce_after_main_content', function () {
 });
 
 // ============================================================
+// Rewrite: /guias/ → categoría "guias" (sin prefijo /category/)
+// ============================================================
+add_action( 'init', function (): void {
+    add_rewrite_rule( '^guias/?$', 'index.php?category_name=guias', 'top' );
+    add_rewrite_rule( '^guias/page/([0-9]{1,})/?$', 'index.php?category_name=guias&paged=$matches[1]', 'top' );
+}, 1 );
+
+// Redirigir /category/guias/ → /guias/ (canonical limpio)
+add_action( 'template_redirect', function (): void {
+    if ( is_category( 'guias' ) ) {
+        $paged    = get_query_var( 'paged', 1 );
+        $redirect = $paged > 1
+            ? home_url( "/guias/page/{$paged}/" )
+            : home_url( '/guias/' );
+        if ( home_url( add_query_arg( [] ) ) !== $redirect ) {
+            wp_redirect( $redirect, 301 );
+            exit;
+        }
+    }
+} );
+
+// ============================================================
 // Cargar módulos del tema
 // ============================================================
 $modules = [

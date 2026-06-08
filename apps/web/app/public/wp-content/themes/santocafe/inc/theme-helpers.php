@@ -218,16 +218,6 @@ function sc_render_profile_bar( string $label, int $value, int $max = 5 ): void 
  * Cached statically so it's safe to call multiple times per request.
  */
 function sc_guias_url(): string {
-    static $url = null;
-    if ( null !== $url ) {
-        return $url;
-    }
-    $term = get_category_by_slug( 'guias' );
-    if ( $term ) {
-        $link = get_term_link( $term, 'category' );
-        $url  = is_wp_error( $link ) ? home_url( '/category/guias/' ) : $link;
-    } else {
-        $url = home_url( '/category/guias/' );
-    }
-    return $url;
+    // The rewrite rule in functions.php maps /guias/ → category archive.
+    return home_url( '/guias/' );
 }

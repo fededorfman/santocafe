@@ -55,6 +55,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                 'fallback_cb'    => function () {
                     echo '<ul class="site-nav__menu">
                         <li><a href="' . esc_url( home_url( '/#catalogo' ) ) . '">Tienda</a></li>
+                        <li><a href="' . esc_url( sc_guias_url() ) . '">Guías</a></li>
                         <li><a href="' . esc_url( home_url( '/#nosotros' ) ) . '">Nosotros</a></li>
                         <li><a href="' . esc_url( home_url( '/#contacto' ) ) . '">Contacto</a></li>
                     </ul>';
@@ -107,6 +108,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                 'fallback_cb'    => function () use ( $cart_url, $account_url ) {
                     echo '<ul class="mobile-drawer__menu">
                         <li><a href="' . esc_url( home_url( '/#catalogo' ) ) . '">Tienda</a></li>
+                        <li><a href="' . esc_url( sc_guias_url() ) . '">Guías</a></li>
                         <li><a href="' . esc_url( home_url( '/#nosotros' ) ) . '">Nosotros</a></li>
                         <li><a href="' . esc_url( home_url( '/#contacto' ) ) . '">Contacto</a></li>
                         <li><a href="' . esc_url( $cart_url ) . '" class="js-open-cart-drawer">Carrito de Compras</a></li>
