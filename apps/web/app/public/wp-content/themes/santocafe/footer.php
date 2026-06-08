@@ -68,10 +68,19 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
             <div class="site-footer__col">
                 <h4 class="site-footer__heading">Legal</h4>
                 <ul class="site-footer__links">
-                    <li><a href="#">Aviso legal</a></li>
-                    <li><a href="#">Política de privacidad</a></li>
-                    <li><a href="#">Política de cookies</a></li>
-                    <li><a href="#">Condiciones de venta</a></li>
+                    <?php
+                    $sc_legal_pages = [
+                        'aviso-legal'            => 'Aviso legal',
+                        'politica-de-privacidad' => 'Política de privacidad',
+                        'politica-de-cookies'    => 'Política de cookies',
+                        'condiciones-de-venta'   => 'Condiciones de venta',
+                    ];
+                    foreach ( $sc_legal_pages as $sc_slug => $sc_label ) :
+                        $sc_page = get_page_by_path( $sc_slug );
+                        $sc_url  = $sc_page ? get_permalink( $sc_page ) : home_url( '/' . $sc_slug . '/' );
+                        ?>
+                        <li><a href="<?php echo esc_url( $sc_url ); ?>"><?php echo esc_html( $sc_label ); ?></a></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
