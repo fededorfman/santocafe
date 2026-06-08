@@ -150,8 +150,11 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //   woocommerce_permalinks['product_base'] = '/producto'  +  rewrite flush
 //
 // Shipping (also DB state — Ajustes → Envío):
-//   - Zona "Región Metropolitana de Santiago" (CL:CL-RM) con método
-//     "Envío gratis" (mínimo $50.000).
+//   - Zona "Región Metropolitana de Santiago" (CL:CL-RM) con dos métodos:
+//       · "Envío gratis"  (mínimo $50.000)
+//       · "Tarifa plana"  ($3.990 — placeholder, ajustar al costo real)
+//     Cuando el envío gratis aplica, el filtro woocommerce_package_rates de
+//     abajo oculta la tarifa plana.
 //   - woocommerce_ship_to_destination = 'shipping'  (la dirección de entrega
 //     es el destino por defecto, no la de facturación).
 
@@ -219,6 +222,18 @@ add_filter( 'woocommerce_get_country_locale_default', function ( array $fields )
 
     return $fields;
 } );
+
+// ============================================================
+// Shipping — when free shipping is available (cart ≥ mínimo), hide the
+// flat-rate fallback so the customer only sees "Envío gratis".
+// ============================================================
+add_filter( 'woocommerce_package_rates', function ( array $rates ): array {
+    $free = array_filter(
+        $rates,
+        static fn( $rate ): bool => 'free_shipping' === $rate->get_method_id()
+    );
+    return $free ? $free : $rates;
+}, 100 );
 
 // ============================================================
 // Molienda — persist as cart item data (not a WC variation)
