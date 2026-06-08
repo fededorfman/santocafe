@@ -37,7 +37,8 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-lg);
-    max-width: 620px;
+    /* Left-aligned to the page container's edge (no narrow centered cap), so
+       the title keeps to its two intended lines without wrapping further. */
     /* Push text below the transparent fixed navbar (70px) + breathing room */
     padding-top: calc(70px + var(--spacing-xl));
 }
@@ -319,6 +320,7 @@
 
 @media (max-width: 600px) {
     .hero__content             { gap: var(--spacing-md); }
+    .hero__description         { text-align: justify; }
     .features                  { padding: var(--spacing-xl) 0; }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
