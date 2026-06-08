@@ -29,7 +29,8 @@ do_action( 'woocommerce_before_mini_cart' );
                 continue;
             }
 
-            $product_name      = get_the_title( $product_id ); // parent name (no "- 250g" dup)
+            $sc_item_pais      = sc_get_product_meta( $product_id, 'pais' );
+            $product_name      = ( $sc_item_pais ? $sc_item_pais . ' - ' : '' ) . get_the_title( $product_id ); // país - nombre (sin "- 250g")
             $thumbnail         = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image( 'woocommerce_thumbnail' ), $cart_item, $cart_item_key );
             $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 
