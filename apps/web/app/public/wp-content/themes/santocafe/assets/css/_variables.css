@@ -22,8 +22,8 @@
     --color-badge-bg:       rgba(26, 19, 16, 0.85);
 
     /* --- Tipografía --- */
-    --font-heading: 'Playfair Display', Georgia, serif;
-    --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body:    'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-size-base:  16px;
     --font-size-sm:    14px;
     --font-size-xs:    12px;
