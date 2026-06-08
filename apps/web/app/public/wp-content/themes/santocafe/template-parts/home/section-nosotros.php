@@ -5,7 +5,7 @@ $values = [
     [ 'text' => 'Selección directa de los mejores orígenes del mundo' ],
     [ 'text' => 'Solo café de especialidad: puntaje SCA de 82 puntos como mínimo' ],
     [ 'text' => 'Tueste lo más reciente posible para máxima frescura en taza' ],
-    [ 'text' => 'Envío en zona metropolitana de Santiago en 24-48 horas hábiles' ],
+    [ 'text' => 'Envío en Región Metropolitana de Santiago en 24-48 horas hábiles' ],
 ];
 ?>
 
