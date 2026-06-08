@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
                 </h2>
                 <p class="contacto__desc">
                     Estamos para ayudarte. Ya sea por un pedido, una duda sobre nuestros
-                    cafés o simplemente para charlar sobre especialidad — escribinos.
+                    cafés o simplemente para charlar sobre especialidad, escribinos.
                 </p>
 
                 <div class="contacto__items">
