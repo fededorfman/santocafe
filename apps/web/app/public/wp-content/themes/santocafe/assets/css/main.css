@@ -36,5 +36,8 @@
 /* 11. Cart drawer (mini-cart) */
 @import url('_cart-drawer.css');
 
-/* 12. Responsive */
+/* 12. Legal / policy pages */
+@import url('_legal.css');
+
+/* 13. Responsive */
 @import url('_responsive.css');
