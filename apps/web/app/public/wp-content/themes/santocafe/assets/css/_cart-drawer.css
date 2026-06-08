@@ -97,6 +97,47 @@
     padding: var(--spacing-xl) var(--spacing-md);
 }
 
+/* ---- Free-shipping progress (top of the mini-cart) ---- */
+.mini-cart__ship {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.mini-cart__ship-text {
+    margin: 0 0 var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    color: var(--color-oscuro);
+}
+
+.mini-cart__ship-text strong {
+    font-weight: 700;
+    color: var(--color-dorado-suave);
+}
+
+.mini-cart__ship-bar {
+    position: relative;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-beige);
+    overflow: hidden;
+}
+
+.mini-cart__ship-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-dorado);
+    transition: width var(--transition-base);
+}
+
+/* Goal reached: full dorado bar + confident text. */
+.mini-cart__ship.is-complete .mini-cart__ship-text {
+    color: var(--color-dorado-suave);
+    font-weight: 600;
+}
+
 /* ============================================================
    Mini-cart contents
    ============================================================ */

@@ -21,7 +21,7 @@ if ( $has && $gap > 0 ) : ?>
         </div>
     </div>
 <?php elseif ( $has && $gap === 0 ) : ?>
-    <div class="shipping-banner shipping-banner--success js-shipping-banner">
+    <div class="shipping-banner js-shipping-banner">
         <div class="container">
             <p class="shipping-banner__text">¡Tenés <strong>envío gratis</strong> en la Región Metropolitana de Santiago!</p>
             <button class="shipping-banner__close js-close-banner" aria-label="Cerrar aviso">✕</button>
