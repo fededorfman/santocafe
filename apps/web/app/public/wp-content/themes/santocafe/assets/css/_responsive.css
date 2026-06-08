@@ -44,7 +44,10 @@
 /* === Mobile (≤ 600px) === */
 @media (max-width: 600px) {
 
-    .container { padding-inline: var(--spacing-md); }
+    .container {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    }
 
     /* Footer: 1 columna */
     .site-footer__grid {
