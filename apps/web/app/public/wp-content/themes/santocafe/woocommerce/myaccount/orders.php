@@ -20,27 +20,19 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
         ?>
             <div class="sc-order-card sc-order-card--status-<?php echo esc_attr( $order->get_status() ); ?>">
                 <div class="sc-order-card__info">
-                    <div class="sc-order-card__head">
-                        <a class="sc-order-card__number" href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
-                            #<?php echo esc_html( $order->get_order_number() ); ?>
-                        </a>
-                        <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
-                            <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-                        </span>
-                    </div>
-                    <div class="sc-order-card__row">
-                        <span class="sc-order-card__label">Fecha</span>
-                        <time datetime="<?php echo esc_attr( $order->get_date_created()->date( 'c' ) ); ?>"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></time>
-                    </div>
-                    <div class="sc-order-card__row">
-                        <span class="sc-order-card__label">Total</span>
-                        <span>
-                            <?php
-                            /* translators: 1: order total 2: item count */
-                            echo wp_kses_post( sprintf( _n( '%1$s · %2$s artículo', '%1$s · %2$s artículos', $item_count, 'santocafe' ), $order->get_formatted_order_total(), $item_count ) );
-                            ?>
-                        </span>
-                    </div>
+                    <a class="sc-order-card__number" href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
+                        #<?php echo esc_html( $order->get_order_number() ); ?>
+                    </a>
+                    <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
+                        <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+                    </span>
+                    <time class="sc-order-card__date" datetime="<?php echo esc_attr( $order->get_date_created()->date( 'c' ) ); ?>"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></time>
+                    <span class="sc-order-card__total">
+                        <?php
+                        /* translators: 1: order total 2: item count */
+                        echo wp_kses_post( sprintf( _n( '%1$s · %2$s artículo', '%1$s · %2$s artículos', $item_count, 'santocafe' ), $order->get_formatted_order_total(), $item_count ) );
+                        ?>
+                    </span>
                 </div>
 
                 <?php if ( ! empty( $actions ) ) : ?>

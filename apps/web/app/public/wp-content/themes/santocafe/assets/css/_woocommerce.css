@@ -958,18 +958,14 @@
     box-shadow: var(--shadow-card);
 }
 
+/* Desktop (≥1025px): everything on one line. */
 .sc-order-card__info {
     min-width: 0;
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.sc-order-card__head {
-    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: 2px;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
 }
 
 .sc-order-card__number {
@@ -980,21 +976,10 @@
 }
 .sc-order-card__number:hover { color: var(--color-dorado-suave); }
 
-.sc-order-card__row {
-    display: flex;
-    gap: var(--spacing-sm);
+.sc-order-card__date,
+.sc-order-card__total {
     font-size: var(--font-size-sm);
     color: var(--color-texto);
-}
-
-.sc-order-card__label {
-    flex-shrink: 0;
-    min-width: 48px;
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-texto-suave);
 }
 
 .sc-order-card__actions {
@@ -1004,7 +989,16 @@
     gap: var(--spacing-xs);
 }
 
-/* On narrow widths the action drops below the info. */
+/* Tablet/mobile (≤1024px): stack the values one below the other. */
+@media (max-width: 1024px) {
+    .sc-order-card__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
+
+/* On very narrow widths the action drops below the info too. */
 @media (max-width: 480px) {
     .sc-order-card {
         flex-direction: column;
