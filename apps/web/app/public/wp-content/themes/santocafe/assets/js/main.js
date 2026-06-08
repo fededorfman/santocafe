@@ -695,4 +695,117 @@
         });
     });
 
+    // ============================================================
+    // Features carousel (mobile ≤600px)
+    // The 4 benefit panels become a swipeable, looping horizontal
+    // gallery with dot pagination. On larger screens it stays a grid
+    // and this code stays dormant.
+    // ============================================================
+    (function initFeaturesCarousel() {
+        var track    = document.querySelector('.js-features-carousel');
+        var dotsWrap = document.querySelector('.js-features-dots');
+        if (!track || !dotsWrap) return;
+
+        var cards     = Array.prototype.slice.call(track.children);
+        if (cards.length < 2) return;
+
+        var mq        = window.matchMedia('(max-width: 600px)');
+        var dots      = [];
+        var current   = 0;
+        var timer     = null;
+        var scrollRAF = null;
+        var AUTOPLAY  = 4500;
+
+        function scrollToCard(i) {
+            var card = cards[i];
+            if (!card) return;
+            var left = card.offsetLeft - (track.clientWidth - card.clientWidth) / 2;
+            track.scrollTo({ left: left, behavior: 'smooth' });
+        }
+
+        function setActive(i) {
+            current = i;
+            for (var d = 0; d < dots.length; d++) {
+                dots[d].classList.toggle('is-active', d === i);
+                dots[d].setAttribute('aria-selected', d === i ? 'true' : 'false');
+            }
+        }
+
+        function nearestCard() {
+            var center  = track.scrollLeft + track.clientWidth / 2;
+            var nearest = 0, min = Infinity;
+            for (var i = 0; i < cards.length; i++) {
+                var c = cards[i].offsetLeft + cards[i].clientWidth / 2;
+                var dist = Math.abs(c - center);
+                if (dist < min) { min = dist; nearest = i; }
+            }
+            return nearest;
+        }
+
+        function onScroll() {
+            if (scrollRAF) cancelAnimationFrame(scrollRAF);
+            scrollRAF = requestAnimationFrame(function () {
+                setActive(nearestCard());
+            });
+        }
+
+        function startAutoplay() {
+            stopAutoplay();
+            if (!mq.matches) return;
+            timer = setInterval(function () {
+                scrollToCard((current + 1) % cards.length); // wraps → infinite
+            }, AUTOPLAY);
+        }
+        function stopAutoplay() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        function buildDots() {
+            dotsWrap.innerHTML = '';
+            dots = cards.map(function (_, i) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'features__dot';
+                b.setAttribute('role', 'tab');
+                b.setAttribute('aria-label', 'Ir al beneficio ' + (i + 1));
+                b.addEventListener('click', function () {
+                    stopAutoplay();
+                    scrollToCard(i);
+                    startAutoplay();
+                });
+                dotsWrap.appendChild(b);
+                return b;
+            });
+            setActive(0);
+        }
+
+        var bound = false;
+        function enable() {
+            buildDots();
+            if (!bound) {
+                track.addEventListener('scroll', onScroll, { passive: true });
+                track.addEventListener('touchstart', stopAutoplay, { passive: true });
+                track.addEventListener('touchend', startAutoplay, { passive: true });
+                bound = true;
+            }
+            track.scrollTo({ left: 0 });
+            setActive(0);
+            startAutoplay();
+        }
+        function disable() {
+            stopAutoplay();
+            dotsWrap.innerHTML = '';
+            dots = [];
+        }
+
+        function apply() { mq.matches ? enable() : disable(); }
+
+        apply();
+        if (mq.addEventListener) {
+            mq.addEventListener('change', apply);
+        } else if (mq.addListener) {
+            mq.addListener(apply); // Safari < 14
+        }
+    })();
+
 })(jQuery);

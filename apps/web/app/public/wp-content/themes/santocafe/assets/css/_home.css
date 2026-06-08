@@ -175,6 +175,27 @@
     height: 26px;
 }
 
+/* Carousel dots — hidden by default, shown only in the mobile carousel. */
+.features__dots {
+    display: none;
+}
+
+.features__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    transition: width var(--transition-base), background var(--transition-base);
+}
+
+.features__dot.is-active {
+    width: 22px;
+    background: var(--color-dorado);
+}
+
 .feature-card__title {
     font-family: var(--font-body);
     font-size: var(--font-size-base);
@@ -267,8 +288,36 @@
 @media (max-width: 600px) {
     .hero__content             { gap: var(--spacing-md); }
     .features                  { padding: var(--spacing-xl) 0; }
-    .features__grid            { grid-template-columns: 1fr; gap: var(--spacing-md); }
-    .feature-card              { padding: var(--spacing-lg) var(--spacing-md); }
+
+    /* Below 600px the 4 panels become a swipeable horizontal carousel
+       (scroll-snap) so they don't take up so much vertical space. */
+    .features__grid {
+        display: flex;
+        grid-template-columns: none;
+        gap: var(--spacing-md);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: var(--spacing-md);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;           /* Firefox */
+        padding-bottom: var(--spacing-xs);
+    }
+    .features__grid::-webkit-scrollbar { display: none; } /* Safari/Chrome */
+
+    .feature-card {
+        flex: 0 0 82%;                   /* next card peeks in, like a gallery */
+        scroll-snap-align: center;
+        align-items: center;
+        text-align: center;
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .features__dots {
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-lg);
+    }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
     .nosotros                  { padding: var(--spacing-xl) 0; }
