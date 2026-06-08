@@ -40,7 +40,9 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
                                 <time datetime="<?php echo esc_attr( $order->get_date_created()->date( 'c' ) ); ?>"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></time>
 
                             <?php elseif ( 'order-status' === $column_id ) : ?>
-                                <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+                                <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
+                                    <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+                                </span>
 
                             <?php elseif ( 'order-total' === $column_id ) : ?>
                                 <?php

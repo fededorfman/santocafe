@@ -896,3 +896,276 @@
     max-width: 560px;
     margin: var(--spacing-lg) 0;
 }
+
+/* ============================================================
+   ORDERS — list, status pills, and order detail
+   ============================================================ */
+
+/* --- Status pill (shared by the list + the detail header) --- */
+.sc-order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--color-beige);
+    color: var(--color-texto-suave);
+}
+
+.sc-order-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.sc-order-status--completed       { background: #eef7ed; color: #2e7d32; }
+.sc-order-status--processing      { background: rgba(223, 179, 62, 0.18); color: var(--color-dorado-hover); }
+.sc-order-status--pending,
+.sc-order-status--on-hold         { background: #fbf3e0; color: #9a7b1f; }
+.sc-order-status--cancelled,
+.sc-order-status--failed          { background: #fdf3f2; color: #c0392b; }
+.sc-order-status--refunded        { background: #eee; color: #666; }
+
+/* --- Orders list table --- */
+.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td {
+    vertical-align: middle;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table tbody tr:hover {
+    background: var(--color-crema);
+}
+
+.woocommerce-orders-table__cell-order-number a {
+    font-weight: 600;
+    color: var(--color-oscuro);
+}
+
+.woocommerce-orders-table__cell-order-actions {
+    text-align: right;
+}
+
+/* The "Ver" action: compact pill button (overrides the generic .button) */
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table__cell-order-actions a.button {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-xs);
+}
+
+/* Stack the orders table into cards on mobile */
+@media (max-width: 600px) {
+    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table,
+    .woocommerce-orders-table tbody,
+    .woocommerce-orders-table tr,
+    .woocommerce-orders-table td {
+        display: block;
+        width: 100%;
+    }
+    .woocommerce-orders-table thead { display: none; }
+    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table tr {
+        border-bottom: 1px solid var(--color-borde);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    .woocommerce-orders-table tr:last-child { border-bottom: none; }
+    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-md);
+        border-top: none;
+        padding: var(--spacing-xs) 0;
+        text-align: right;
+    }
+    .woocommerce-orders-table td::before {
+        content: attr(data-title);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--color-texto-suave);
+        text-align: left;
+    }
+    .woocommerce-orders-table__cell-order-actions { text-align: left; }
+    .woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table td.woocommerce-orders-table__cell-order-actions a.button {
+        width: auto;
+    }
+}
+
+/* --- Order detail: header --- */
+.sc-order-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.sc-order-head__kicker {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+}
+
+.sc-order-head__number {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    line-height: 1.1;
+    margin: 2px 0;
+}
+
+.sc-order-head__date {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    margin: 0;
+}
+
+/* --- Order detail: updates / notes --- */
+.sc-order-updates {
+    margin-bottom: var(--spacing-xl);
+}
+.sc-order-updates__title {
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-md);
+}
+.sc-order-updates__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid var(--color-borde);
+}
+.sc-order-update {
+    position: relative;
+    padding: 0 0 var(--spacing-md) var(--spacing-lg);
+}
+.sc-order-update::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-dorado);
+}
+.sc-order-update__date {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    margin-bottom: 2px;
+}
+.sc-order-update__text p { margin: 0; }
+
+/* --- Order detail: items table with thumbnails --- */
+.sc-order-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.sc-order-item__media {
+    flex-shrink: 0;
+}
+
+.sc-order-item__media .sc-order-item__img,
+.sc-order-item__media img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--color-beige);
+    display: block;
+}
+
+.sc-order-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sc-order-item__name {
+    font-weight: 600;
+    color: var(--color-oscuro);
+    line-height: 1.3;
+}
+.sc-order-item__name a { color: inherit; }
+.sc-order-item__name a:hover { color: var(--color-dorado-suave); }
+
+.sc-order-item__qty {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+}
+
+.sc-order-item__meta {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+}
+.sc-order-item__meta p { margin: 0; }
+.sc-order-item__meta .wc-item-meta { list-style: none; margin: 0; padding: 0; }
+
+/* Order details + totals table */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details td.product-total,
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot td {
+    text-align: right;
+    white-space: nowrap;
+}
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot th {
+    text-align: right;
+    text-transform: none;
+    letter-spacing: 0;
+    background: transparent;
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+/* Emphasise the final "Total" row */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot tr:last-child th,
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot tr:last-child td {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+
+/* Customer details (addresses) below the order */
+.woocommerce-customer-details .woocommerce-columns--addresses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+.woocommerce-customer-details address {
+    font-style: normal;
+    line-height: 1.6;
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    background: var(--color-crema);
+    color: var(--color-texto);
+}
+.woocommerce-customer-details h2,
+.woocommerce-column__title {
+    font-size: var(--font-size-base);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-sm);
+}
+
+@media (max-width: 600px) {
+    .woocommerce-customer-details .woocommerce-columns--addresses {
+        grid-template-columns: 1fr;
+    }
+    .sc-order-item__media .sc-order-item__img,
+    .sc-order-item__media img { width: 48px; height: 48px; }
+}
