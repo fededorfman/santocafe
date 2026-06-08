@@ -125,6 +125,30 @@ function sc_render_part( string $slug ): string {
 }
 
 /**
+ * Convert the site's own absolute URLs to root-relative ones.
+ *
+ * AJAX fragments are rendered with absolute home_url() URLs. When the site is
+ * viewed through a proxy with a different host (e.g. Local's Live Link tunnel,
+ * served over https from a tunnel hostname), those absolute http://santocafe.local
+ * URLs can't be resolved by the visitor's device and product images break
+ * (showing the dark placeholder). Root-relative URLs inherit the current
+ * request's scheme + host, so they work on the tunnel, on the local host, and
+ * in production alike. External URLs are left untouched.
+ */
+function sc_relativize_site_urls( string $html ): string {
+    $host = wp_parse_url( home_url(), PHP_URL_HOST );
+    if ( ! $host ) {
+        return $html;
+    }
+
+    return (string) preg_replace(
+        '#https?://' . preg_quote( $host, '#' ) . '(?::\d+)?#i',
+        '',
+        $html
+    );
+}
+
+/**
  * Build the full set of cart fragments (badge, mini-cart drawer, banner,
  * cart-page items + totals). All wrapper-included → applied with replaceWith.
  * Shared by sc_add_to_cart and sc_update_cart so drawer and cart page stay
@@ -145,7 +169,9 @@ function sc_get_cart_fragments(): array {
         . sc_render_part( 'template-parts/cart/cart-totals' )
         . '</aside>';
 
-    return $fragments;
+    // Make the site's own URLs root-relative so AJAX-rendered images/links
+    // survive being viewed through a different host (Live Link tunnel, etc.).
+    return array_map( 'sc_relativize_site_urls', $fragments );
 }
 
 // ============================================================

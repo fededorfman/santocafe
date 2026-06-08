@@ -20,7 +20,7 @@ $catalog_url = home_url( '/#catalogo' );
         El café está triste porque tu carrito está vacío.<br>
         Descubrí nuestros orígenes de especialidad.
     </p>
-    <a href="<?php echo esc_url( $catalog_url ); ?>" class="btn btn--primary btn--lg">
+    <a href="<?php echo esc_url( $catalog_url ); ?>" class="btn btn--primary btn--lg js-cart-drawer-close">
         Ver nuestros cafés
     </a>
 

@@ -176,7 +176,7 @@
     object-fit: cover;
     border-radius: var(--radius-sm);
     display: block;
-    background: var(--color-oscuro);
+    background: var(--color-beige); /* light placeholder while the image loads */
 }
 
 .mini-cart-item__head {
