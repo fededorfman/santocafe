@@ -12,8 +12,11 @@ html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
     /* Offset anchor jumps so the target lands below the fixed header
-       instead of underneath it (applies to all in-page #anchor links). */
-    scroll-padding-top: var(--header-height);
+       instead of underneath it (applies to all in-page #anchor links).
+       --sc-header-offset is set by JS to the real header height (which
+       varies by breakpoint and whether the shipping banner is showing);
+       the token is the no-JS fallback. */
+    scroll-padding-top: var(--sc-header-offset, var(--header-height));
     -webkit-text-size-adjust: 100%;
     /* No overflow-x on html: `hidden` breaks wheel scroll and `clip` can force
        overflow-y to clip too (kills vertical scroll). The cart drawer stays

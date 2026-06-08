@@ -696,6 +696,30 @@
     });
 
     // ============================================================
+    // Anchor-scroll offset: keep --sc-header-offset in sync with the real
+    // fixed-header height so #anchor jumps land below it. The header height
+    // changes by breakpoint and when the shipping banner shows/hides.
+    // ============================================================
+    (function syncHeaderOffset() {
+        var header = document.querySelector('.js-site-header');
+        if (!header) return;
+
+        function update() {
+            document.documentElement.style.setProperty(
+                '--sc-header-offset', header.offsetHeight + 'px'
+            );
+        }
+
+        update();
+        window.addEventListener('load', update);
+        window.addEventListener('resize', update);
+        window.addEventListener('orientationchange', update);
+        // Banner dismissed (slideUp) or cart fragments re-rendered → re-measure.
+        $(document).on('click', '.js-close-banner', function () { setTimeout(update, 260); });
+        $(document.body).on('wc_fragments_refreshed wc_fragments_loaded added_to_cart', update);
+    })();
+
+    // ============================================================
     // Features carousel (mobile ≤600px)
     // The 4 benefit panels become a swipeable, looping horizontal
     // gallery with dot pagination. On larger screens it stays a grid
