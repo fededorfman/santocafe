@@ -148,6 +148,12 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 // The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
 // Productos → base personalizada). Set to /producto via:
 //   woocommerce_permalinks['product_base'] = '/producto'  +  rewrite flush
+//
+// Shipping (also DB state — Ajustes → Envío):
+//   - Zona "Región Metropolitana de Santiago" (CL:CL-RM) con método
+//     "Envío gratis" (mínimo $50.000).
+//   - woocommerce_ship_to_destination = 'shipping'  (la dirección de entrega
+//     es el destino por defecto, no la de facturación).
 
 add_action( 'template_redirect', function (): void {
     if ( function_exists( 'is_account_page' ) && is_account_page()
