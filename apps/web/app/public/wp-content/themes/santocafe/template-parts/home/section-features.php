@@ -41,7 +41,7 @@ $features = [
 
 <section class="features" id="beneficios" aria-label="Nuestros beneficios">
     <div class="container">
-        <div class="features__grid">
+        <div class="features__grid js-features-carousel">
             <?php foreach ( $features as $feature ) : ?>
             <div class="feature-card">
                 <div class="feature-card__icon" aria-hidden="true">
@@ -52,5 +52,7 @@ $features = [
             </div>
             <?php endforeach; ?>
         </div>
+        <?php // Dots are injected by JS on mobile, where the grid becomes a carousel. ?>
+        <div class="features__dots js-features-dots" role="tablist" aria-label="Navegación de beneficios"></div>
     </div>
 </section>
