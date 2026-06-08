@@ -997,19 +997,32 @@
     }
 }
 
-/* --- Order detail: header --- */
+/* --- Order detail: back link --- */
+.sc-order-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    transition: color var(--transition-fast);
+}
+.sc-order-back:hover { color: var(--color-dorado-suave); }
+.sc-order-back svg { flex-shrink: 0; }
+
+/* --- Order detail: header (status above "Pedido") --- */
 .sc-order-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     padding-bottom: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     border-bottom: 1px solid var(--color-borde);
 }
 
-/* "Pedido" + status pill on the same line. */
-.sc-order-head__top {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: 2px;
+.sc-order-head__status {
+    margin-bottom: var(--spacing-sm);
 }
 
 .sc-order-head__kicker {
@@ -1032,6 +1045,25 @@
     font-size: var(--font-size-sm);
     color: var(--color-texto-suave);
     margin: 0;
+}
+
+/* --- Order detail: body layout ---
+   Desktop: order details (left) + addresses (right) in two columns.
+   Tablet/mobile (≤1024px): single column (addresses drop below). */
+@media (min-width: 1025px) {
+    .sc-order-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: var(--spacing-xl);
+        align-items: start;
+    }
+    .sc-order-body .woocommerce-customer-details {
+        margin-top: 0;
+    }
+    /* Stack billing/shipping vertically inside the narrow right column. */
+    .sc-order-body .woocommerce-customer-details .sc-address-cards {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* --- Order detail: updates / notes --- */

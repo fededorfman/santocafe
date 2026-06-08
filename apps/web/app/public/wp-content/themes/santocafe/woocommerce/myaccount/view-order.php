@@ -12,13 +12,18 @@ defined( 'ABSPATH' ) || exit;
 $notes = $order->get_customer_order_notes();
 ?>
 
+<a class="sc-order-back" href="<?php echo esc_url( wc_get_account_endpoint_url( 'orders' ) ); ?>">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Volver a mis pedidos
+</a>
+
 <div class="sc-order-head">
-    <div class="sc-order-head__top">
-        <span class="sc-order-head__kicker">Pedido</span>
-        <span class="sc-order-status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
-            <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-        </span>
-    </div>
+    <span class="sc-order-status sc-order-head__status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
+        <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
+    </span>
+    <span class="sc-order-head__kicker">Pedido</span>
     <h2 class="sc-order-head__number">#<?php echo esc_html( $order->get_order_number() ); ?></h2>
     <p class="sc-order-head__date">
         Realizado el <?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?>
@@ -43,4 +48,6 @@ $notes = $order->get_customer_order_notes();
     </section>
 <?php endif; ?>
 
-<?php do_action( 'woocommerce_view_order', $order_id ); ?>
+<div class="sc-order-body">
+    <?php do_action( 'woocommerce_view_order', $order_id ); ?>
+</div>
