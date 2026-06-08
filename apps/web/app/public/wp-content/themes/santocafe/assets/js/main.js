@@ -507,7 +507,7 @@
     // To use elsewhere: add class `js-validate` to the form. Done.
     // ============================================================
     var FormValidate = {
-        ROW: '.form-row, .woocommerce-form-row, .sc-form-row',
+        ROW: '.form-row, .woocommerce-form-row, .sc-form-row, .form-field',
         EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         PHONE_RE: /^[\d\s\-+().]{6,}$/,
 
@@ -653,5 +653,24 @@
     };
 
     PasswordForm.init();
+
+    // ============================================================
+    // Contact form — validate (via FormValidate) then, on success,
+    // replace the form with a thank-you message (no page reload).
+    // ============================================================
+    $(document).on('submit', 'form.js-contact-form', function (e) {
+        // FormValidate (js-validate) already ran and marked invalid fields.
+        e.preventDefault();
+        var $form = $(this);
+
+        // If FormValidate flagged any field, stop here (errors are shown).
+        if ($form.find('.sc-field--error').length) {
+            return;
+        }
+
+        // Valid → swap the form for the success message.
+        $form.attr('hidden', true);
+        $form.siblings('.js-contact-success').removeAttr('hidden');
+    });
 
 })(jQuery);
