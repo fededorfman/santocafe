@@ -33,7 +33,7 @@ add_action('wp_enqueue_scripts', function () {
     // Google Fonts
     wp_enqueue_style(
         'santocafe-fonts',
-        'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap',
+        'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap',
         [],
         null
     );
