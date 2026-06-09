@@ -440,6 +440,56 @@
 }
 
 /* ============================================================
+   GUÍAS (home preview)
+   ============================================================ */
+
+.home-guias {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-beige);
+}
+
+.home-guias__header {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto var(--spacing-2xl);
+}
+
+.home-guias__kicker {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+    margin-bottom: var(--spacing-sm);
+}
+
+.home-guias__title {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    line-height: 1.2;
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-sm);
+}
+
+.home-guias__desc {
+    font-size: var(--font-size-base);
+    color: var(--color-texto-suave);
+    line-height: 1.6;
+}
+
+.home-guias__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.home-guias__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+}
+
+/* ============================================================
    CONTACTO
    ============================================================ */
 
@@ -662,6 +712,8 @@ a.contacto__item-value:hover {
         margin: 0 auto;
     }
     .nosotros__image { max-height: 360px; object-fit: cover; }
+    /* Guías: 4 → 2 columnas en tablet */
+    .home-guias__grid { grid-template-columns: repeat(2, 1fr); }
     .contacto__grid  { grid-template-columns: 1fr; gap: var(--spacing-xl); }
     /* Center form card in the single-column layout */
     .contacto__form-col { align-items: center; }
@@ -677,4 +729,7 @@ a.contacto__item-value:hover {
     /* Lighter vertical padding on the "Nuestra Historia" panel. Placed here
        (after the base .nosotros rule) so it wins by source order. */
     .nosotros { padding: var(--spacing-xl) 0; }
+    /* Guías: 2 → 1 columna en mobile */
+    .home-guias__grid { grid-template-columns: 1fr; }
+    .home-guias { padding: var(--spacing-xl) 0; }
 }
