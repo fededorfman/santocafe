@@ -275,6 +275,10 @@
    (full responsive in _responsive.css; fast overrides here)
    ============================================================ */
 
+@media (max-width: 1200px) {
+    .catalog-section__grid     { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 1024px) {
     .features__grid            { grid-template-columns: repeat(2, 1fr); }
     .catalog-section__grid     { grid-template-columns: repeat(2, 1fr); }

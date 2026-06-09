@@ -104,12 +104,8 @@ $sc_flag_url  = $sc_flag_file
             ?>
         </a>
 
-        <?php if ( $pais || $sca ) : ?>
+        <?php if ( $sca ) : ?>
         <div class="product-card__badges">
-            <?php if ( $pais ) : ?>
-            <span class="sca-badge"><?php echo esc_html( $pais ); ?></span>
-            <?php endif; ?>
-            <?php if ( $sca ) : ?>
             <span class="sca-badge sca-badge--gold">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -118,13 +114,6 @@ $sc_flag_url  = $sc_flag_file
                 </svg>
                 SCA <?php echo esc_html( $sca ); ?>
             </span>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
-
-        <?php if ( $sc_flag_url ) : ?>
-        <div class="product-card__flag" aria-hidden="true">
-            <img src="<?php echo esc_url( $sc_flag_url ); ?>" alt="" width="44" height="30">
         </div>
         <?php endif; ?>
 
@@ -153,8 +142,13 @@ $sc_flag_url  = $sc_flag_file
         <h3 class="product-card__title">
             <a href="<?php the_permalink(); ?>">
                 <?php if ( $pais ) : ?>
-                    <span class="product-card__pais"><?php echo esc_html( $pais ); ?></span>
-                    <?php echo esc_html( ' - ' . get_the_title() ); ?>
+                    <span class="product-card__pais">
+                        <?php if ( $sc_flag_url ) : ?>
+                        <img class="product-card__flag-inline" src="<?php echo esc_url( $sc_flag_url ); ?>"
+                             alt="" width="18" height="12" aria-hidden="true">
+                        <?php endif; ?>
+                        <?php echo esc_html( $pais ); ?>
+                    </span><?php echo esc_html( ' - ' . get_the_title() ); ?>
                 <?php else : ?>
                     <?php the_title(); ?>
                 <?php endif; ?>
