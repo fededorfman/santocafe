@@ -585,6 +585,10 @@
     object-fit: cover;
     display: block;
     border-radius: var(--radius-card);
+    /* Prevent the browser from starting a native image-drag on mousedown */
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
 }
 
 /* Thumbnails strip */

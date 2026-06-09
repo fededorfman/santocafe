@@ -908,10 +908,18 @@
             startAuto();
         }, { passive: true });
 
-        // Mouse drag
+        // Mouse drag — preventDefault stops the browser's native image-drag
+        // from hijacking the pointer before we can measure the delta.
         track.addEventListener('mousedown', function (e) {
+            e.preventDefault();
             onDragStart(e.clientX);
             stopAuto();
+        });
+
+        // Belt-and-suspenders: also cancel any dragstart that bubbles up from
+        // the <img> elements inside the track.
+        track.addEventListener('dragstart', function (e) {
+            e.preventDefault();
         });
         document.addEventListener('mouseup', function (e) {
             if (dragStartX === null) return;
