@@ -771,6 +771,13 @@
     gap: var(--spacing-lg);
 }
 
+@media (min-width: 1281px) {
+    .related-products__grid {
+        grid-template-columns: repeat(3, minmax(0, 320px));
+        justify-content: center;
+    }
+}
+
 /* ============================================================
    Responsive
    ============================================================ */
