@@ -100,6 +100,11 @@
     font-weight: 600;
 }
 
+.sc-article__body img,
+.sc-article__body .wp-block-image img {
+    border-radius: var(--radius-card);
+}
+
 .sc-article__body blockquote {
     margin: var(--spacing-xl) 0;
     padding: var(--spacing-md) var(--spacing-lg);
