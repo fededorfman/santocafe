@@ -832,4 +832,98 @@
         }
     })();
 
+    // ============================================================
+    // Product description gallery (pdesc-gallery)
+    // Auto-advances, supports drag/swipe, thumbnail navigation.
+    // ============================================================
+    (function initPdescGallery() {
+        var gallery = document.querySelector('[data-pdesc-gallery]');
+        if (!gallery) return;
+
+        var track  = gallery.querySelector('[data-gallery-track]');
+        var slides = Array.from(gallery.querySelectorAll('.pdesc-gallery__slide'));
+        var thumbs = Array.from(gallery.querySelectorAll('[data-gallery-thumb]'));
+        if (slides.length < 2) return; // single image — no carousel needed
+
+        var current  = 0;
+        var timer    = null;
+        var INTERVAL = 4500; // ms between auto-advances
+
+        function goTo(index) {
+            slides[current].classList.remove('is-active');
+            slides[current].setAttribute('aria-hidden', 'true');
+            if (thumbs[current]) {
+                thumbs[current].classList.remove('is-active');
+                thumbs[current].setAttribute('aria-selected', 'false');
+            }
+
+            current = (index + slides.length) % slides.length;
+
+            slides[current].classList.add('is-active');
+            slides[current].setAttribute('aria-hidden', 'false');
+            if (thumbs[current]) {
+                thumbs[current].classList.add('is-active');
+                thumbs[current].setAttribute('aria-selected', 'true');
+            }
+        }
+
+        function startAuto() {
+            stopAuto();
+            timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
+        }
+        function stopAuto() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+        function resetAuto() { stopAuto(); startAuto(); }
+
+        // Thumbnail clicks
+        thumbs.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                goTo(parseInt(btn.getAttribute('data-gallery-thumb'), 10));
+                resetAuto();
+            });
+        });
+
+        // Drag / swipe (mouse + touch)
+        var dragStartX = null;
+        var THRESHOLD  = 50; // px
+
+        function onDragStart(x) { dragStartX = x; }
+        function onDragEnd(x) {
+            if (dragStartX === null) return;
+            var delta = x - dragStartX;
+            dragStartX = null;
+            if (Math.abs(delta) < THRESHOLD) return;
+            goTo(delta < 0 ? current + 1 : current - 1);
+            resetAuto();
+        }
+
+        // Touch
+        track.addEventListener('touchstart', function (e) {
+            onDragStart(e.touches[0].clientX);
+            stopAuto();
+        }, { passive: true });
+        track.addEventListener('touchend', function (e) {
+            onDragEnd(e.changedTouches[0].clientX);
+            startAuto();
+        }, { passive: true });
+
+        // Mouse drag
+        track.addEventListener('mousedown', function (e) {
+            onDragStart(e.clientX);
+            stopAuto();
+        });
+        document.addEventListener('mouseup', function (e) {
+            if (dragStartX === null) return;
+            onDragEnd(e.clientX);
+            startAuto();
+        });
+
+        // Pause on hover
+        gallery.addEventListener('mouseenter', stopAuto);
+        gallery.addEventListener('mouseleave', startAuto);
+
+        startAuto();
+    })();
+
 })(jQuery);

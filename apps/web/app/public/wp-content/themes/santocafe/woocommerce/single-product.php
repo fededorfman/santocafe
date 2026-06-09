@@ -345,14 +345,53 @@ while ( have_posts() ) :
                         </div>
                     </div>
                     <?php
-                    $sc_gallery     = $product->get_gallery_image_ids();
-                    $sc_desc_img_id = ! empty( $sc_gallery ) ? (int) $sc_gallery[0] : get_post_thumbnail_id( $id );
-                    $sc_desc_img    = $sc_desc_img_id ? wp_get_attachment_image_url( $sc_desc_img_id, 'large' ) : '';
+                    // Gallery images (WC gallery, excludes the cover/featured image)
+                    $sc_gallery = $product->get_gallery_image_ids();
+                    if ( ! empty( $sc_gallery ) ) :
+                        $sc_product_title = get_the_title();
                     ?>
-                    <?php if ( $sc_desc_img ) : ?>
                     <div class="product-desc__photo">
-                        <img src="<?php echo esc_url( $sc_desc_img ); ?>" alt="<?php echo esc_attr( 'Origen de ' . get_the_title() ); ?>" loading="lazy">
-                    </div>
+                        <div class="pdesc-gallery<?php echo count( $sc_gallery ) > 1 ? ' pdesc-gallery--multi' : ''; ?>"
+                             data-pdesc-gallery>
+
+                            <!-- Track -->
+                            <div class="pdesc-gallery__track" data-gallery-track>
+                                <?php foreach ( $sc_gallery as $sc_gi => $sc_img_id ) :
+                                    $sc_img_url   = wp_get_attachment_image_url( $sc_img_id, 'large' );
+                                    $sc_img_alt   = get_post_meta( $sc_img_id, '_wp_attachment_image_alt', true )
+                                        ?: esc_attr( $sc_product_title . ' — imagen ' . ( $sc_gi + 1 ) );
+                                    if ( ! $sc_img_url ) continue;
+                                ?>
+                                <div class="pdesc-gallery__slide<?php echo 0 === $sc_gi ? ' is-active' : ''; ?>"
+                                     aria-hidden="<?php echo 0 === $sc_gi ? 'false' : 'true'; ?>">
+                                    <img src="<?php echo esc_url( $sc_img_url ); ?>"
+                                         alt="<?php echo esc_attr( $sc_img_alt ); ?>"
+                                         loading="<?php echo 0 === $sc_gi ? 'eager' : 'lazy'; ?>">
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <?php if ( count( $sc_gallery ) > 1 ) : ?>
+                            <!-- Thumbnails -->
+                            <div class="pdesc-gallery__thumbs" role="tablist" aria-label="Galería de imágenes">
+                                <?php foreach ( $sc_gallery as $sc_gi => $sc_img_id ) :
+                                    $sc_thumb_url = wp_get_attachment_image_url( $sc_img_id, 'thumbnail' );
+                                    if ( ! $sc_thumb_url ) continue;
+                                ?>
+                                <button class="pdesc-gallery__thumb<?php echo 0 === $sc_gi ? ' is-active' : ''; ?>"
+                                        data-gallery-thumb="<?php echo esc_attr( $sc_gi ); ?>"
+                                        role="tab"
+                                        aria-selected="<?php echo 0 === $sc_gi ? 'true' : 'false'; ?>"
+                                        aria-label="Imagen <?php echo esc_attr( $sc_gi + 1 ); ?>">
+                                    <img src="<?php echo esc_url( $sc_thumb_url ); ?>"
+                                         alt="" loading="lazy" aria-hidden="true">
+                                </button>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+
+                        </div><!-- /.pdesc-gallery -->
+                    </div><!-- /.product-desc__photo -->
                     <?php endif; ?>
                 </div>
             </section>
