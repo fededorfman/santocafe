@@ -53,6 +53,9 @@
     top: var(--spacing-sm);
     left: var(--spacing-sm);
     z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
 /* Country name inside the badge — rendered in gold */
