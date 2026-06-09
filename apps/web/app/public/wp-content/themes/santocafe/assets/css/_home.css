@@ -541,13 +541,17 @@ a.contacto__item-value:hover {
     flex-direction: column;
 }
 
-/* Contact form */
+/* Contact form — light card on the dark section */
 .contacto__form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
     max-width: 500px;
     width: 100%;
+    background: var(--color-crema);
+    border-radius: var(--radius-card);
+    padding: var(--spacing-xl);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 /* El atributo hidden debe ganarle al display:flex del form */
@@ -610,7 +614,7 @@ a.contacto__item-value:hover {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--color-texto-suave);
 }
 
 .form-field input,
@@ -619,25 +623,26 @@ a.contacto__item-value:hover {
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #fff;
+    border: 1px solid var(--color-borde);
     border-radius: var(--radius-sm);
     padding: var(--spacing-sm) var(--spacing-md);
-    color: #fff;
+    color: var(--color-oscuro);
     font-size: var(--font-size-sm);
-    transition: border-color var(--transition-fast), background var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     outline: none;
 }
 
 .form-field input::placeholder,
 .form-field textarea::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: var(--color-texto-suave);
+    opacity: 0.6;
 }
 
 .form-field input:focus,
 .form-field textarea:focus {
-    border-color: rgba(223, 179, 62, 0.5);
-    background: rgba(255, 255, 255, 0.09);
+    border-color: var(--color-dorado);
+    box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.15);
 }
 
 .form-field textarea {
@@ -658,6 +663,14 @@ a.contacto__item-value:hover {
     }
     .nosotros__image { max-height: 360px; object-fit: cover; }
     .contacto__grid  { grid-template-columns: 1fr; gap: var(--spacing-xl); }
+    /* Center form card in the single-column layout */
+    .contacto__form-col { align-items: center; }
+    /* Pad the card with the same horizontal rhythm as the container */
+    .contacto__form,
+    .contacto__success {
+        max-width: 100%;
+        padding-inline: var(--spacing-lg);
+    }
 }
 
 @media (max-width: 600px) {
