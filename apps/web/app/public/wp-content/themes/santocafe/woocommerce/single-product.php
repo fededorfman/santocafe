@@ -30,23 +30,6 @@ while ( have_posts() ) :
     $acidez     = (int) sc_get_product_meta( $id, 'acidez' );
     $cuerpo     = (int) sc_get_product_meta( $id, 'cuerpo' );
 
-    // ---- Flag (país → SVG) ----
-    $sc_flag_map = [
-        'colombia'   => 'colombia_bandera.svg',
-        'perú'       => 'peru_bandera.svg',
-        'peru'       => 'peru_bandera.svg',
-        'bolivia'    => 'bolivia_bandera.svg',
-        'brasil'     => 'brasil_bandera.svg',
-        'brazil'     => 'brasil_bandera.svg',
-        'guatemala'  => 'guatemala_bandera.svg',
-        'costa rica' => 'costa_rica_bandera.svg',
-    ];
-    $sc_flag_key  = mb_strtolower( trim( (string) $pais ) );
-    $sc_flag_file = $sc_flag_map[ $sc_flag_key ] ?? null;
-    $sc_flag_url  = $sc_flag_file
-        ? get_template_directory_uri() . '/assets/images/banderas/' . $sc_flag_file
-        : null;
-
     // ---- Variations (peso: 250g / 1kg) ----
     $var_250 = null;
     $var_1kg  = null;
@@ -138,13 +121,6 @@ while ( have_posts() ) :
                             <line x1="8" y1="11" x2="14" y2="11"/>
                         </svg>
                     </button>
-                    <?php if ( $sc_flag_url ) : ?>
-                    <div class="product-detail__flag" aria-hidden="true">
-                        <img src="<?php echo esc_url( $sc_flag_url ); ?>"
-                             alt=""
-                             width="54" height="36">
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
 
