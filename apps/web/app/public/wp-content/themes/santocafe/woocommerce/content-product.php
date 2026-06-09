@@ -138,8 +138,6 @@ $on_sale = $product->is_on_sale();
         </div>
         <?php endif; ?>
 
-        <hr class="product-card__divider">
-
         <!-- Formato / precio selector (250g / 1kg) -->
         <div class="product-card__weights" data-product-id="<?php echo esc_attr( $id ); ?>">
             <button class="product-card__weight is-selected"
