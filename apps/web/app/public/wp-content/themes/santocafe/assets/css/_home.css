@@ -668,7 +668,7 @@ a.contacto__item-value:hover {
     /* Pad the card with the same horizontal rhythm as the container */
     .contacto__form,
     .contacto__success {
-        max-width: 100%;
+        max-width: 500px;
         padding-inline: var(--spacing-lg);
     }
 }
