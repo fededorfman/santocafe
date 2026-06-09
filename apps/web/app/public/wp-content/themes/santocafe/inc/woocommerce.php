@@ -266,6 +266,18 @@ add_action( 'woocommerce_checkout_create_order_line_item', function ( \WC_Order_
 }, 10, 3 );
 
 // ============================================================
+// Session & cookie durations
+// — Auth cookie: 1 week (no "Recordarme") / 3 months (con "Recordarme")
+// — WooCommerce guest session (carrito): 30 días
+// ============================================================
+add_filter( 'auth_cookie_expiration', function ( int $seconds, int $user_id, bool $remember ): int {
+    return $remember ? 3 * MONTH_IN_SECONDS : WEEK_IN_SECONDS;
+}, 10, 3 );
+
+add_filter( 'wc_session_expiration', fn() => 30 * DAY_IN_SECONDS );
+add_filter( 'wc_session_expiring',   fn() => 30 * DAY_IN_SECONDS - HOUR_IN_SECONDS );
+
+// ============================================================
 // Body classes
 // ============================================================
 add_filter( 'body_class', function ( array $classes ): array {
