@@ -60,7 +60,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
             <div class="site-footer__col">
                 <h4 class="site-footer__heading">Guías</h4>
                 <ul class="site-footer__links">
-                    <li><a href="<?php echo esc_url( sc_guias_url() ); ?>">Ver todas las guías</a></li>
+                    <li><a href="<?php echo esc_url( sc_guias_url() ); ?>">Nuestras guías</a></li>
                     <?php
                     $sc_guias = [
                         'como-preparar-espresso'         => 'Cómo preparar espresso',
