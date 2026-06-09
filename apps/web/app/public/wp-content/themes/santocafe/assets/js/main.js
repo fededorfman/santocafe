@@ -44,25 +44,6 @@
     });
 
     // ============================================================
-    // Shipping Banner — close and remember with sessionStorage
-    // ============================================================
-    var BANNER_KEY = 'sc_banner_closed';
-
-    if (sessionStorage.getItem(BANNER_KEY)) {
-        $('.js-shipping-banner').hide();
-    }
-
-    $(document).on('click', '.js-close-banner', function () {
-        $(this).closest('.js-shipping-banner').slideUp(200);
-        sessionStorage.setItem(BANNER_KEY, '1');
-    });
-
-    // Clear banner state when cart changes (new item added → recalculate)
-    $(document.body).on('added_to_cart', function () {
-        sessionStorage.removeItem(BANNER_KEY);
-    });
-
-    // ============================================================
     // Cart Badge — sync via WooCommerce fragments
     // ============================================================
     $(document.body).on('wc_fragments_refreshed wc_fragments_loaded', function () {
@@ -363,7 +344,6 @@
         $.post(SC.ajaxUrl, $.extend({ action: 'sc_update_cart', nonce: SC.nonce }, data))
             .done(function (res) {
                 if (res && res.success) {
-                    sessionStorage.removeItem('sc_banner_closed');
                     applyFragments(res.data.fragments);
                 }
             })
@@ -442,7 +422,6 @@
         $.post(SC.ajaxUrl, $.extend({ action: 'sc_add_to_cart', nonce: SC.nonce }, data))
             .done(function (res) {
                 if (res && res.success) {
-                    sessionStorage.removeItem('sc_banner_closed');
                     applyFragments(res.data.fragments);
                     openCartDrawer();
                 }
@@ -714,8 +693,7 @@
         window.addEventListener('load', update);
         window.addEventListener('resize', update);
         window.addEventListener('orientationchange', update);
-        // Banner dismissed (slideUp) or cart fragments re-rendered → re-measure.
-        $(document).on('click', '.js-close-banner', function () { setTimeout(update, 260); });
+        // Cart fragments re-rendered → re-measure.
         $(document.body).on('wc_fragments_refreshed wc_fragments_loaded added_to_cart', update);
     })();
 
