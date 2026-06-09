@@ -162,6 +162,11 @@ $on_sale = $product->is_on_sale();
                     data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
                     data-add-url="<?php echo esc_url( $add_1kg_url ); ?>"
                     type="button">
+                <?php if ( $pr_1kg['discount'] > 0 ) : ?>
+                <span class="product-card__weight-badge" aria-hidden="true">
+                    -<?php echo esc_html( $pr_1kg['discount'] ); ?>%
+                </span>
+                <?php endif; ?>
                 <span class="product-card__weight-price"><?php echo esc_html( $pr_1kg['price_fmt'] ); ?></span>
                 <span class="product-card__weight-unit">1kg</span>
             </button>
