@@ -67,6 +67,23 @@ $add_1kg_url = add_query_arg( [
 
 // ---- On sale ----
 $on_sale = $product->is_on_sale();
+
+// ---- Country flag ----
+$sc_flag_map = [
+    'colombia'   => 'colombia_bandera.svg',
+    'perú'       => 'peru_bandera.svg',
+    'peru'       => 'peru_bandera.svg',
+    'bolivia'    => 'bolivia_bandera.svg',
+    'brasil'     => 'brasil_bandera.svg',
+    'brazil'     => 'brasil_bandera.svg',
+    'guatemala'  => 'guatemala_bandera.svg',
+    'costa rica' => 'costa_rica_bandera.svg',
+];
+$sc_flag_key  = mb_strtolower( trim( (string) $pais ) );
+$sc_flag_file = $sc_flag_map[ $sc_flag_key ] ?? null;
+$sc_flag_url  = $sc_flag_file
+    ? get_template_directory_uri() . '/assets/images/banderas/' . $sc_flag_file
+    : null;
 ?>
 
 <article <?php wc_product_class( 'product-card', $product ); ?>>
@@ -92,11 +109,17 @@ $on_sale = $product->is_on_sale();
             <span class="sca-badge">
                 <?php
                 $badge_parts = [];
-                if ( $pais )  $badge_parts[] = esc_html( $pais );
+                if ( $pais )  $badge_parts[] = '<span class="product-card__pais">' . esc_html( $pais ) . '</span>';
                 if ( $sca )   $badge_parts[] = 'SCA ' . esc_html( $sca );
                 echo implode( ' · ', $badge_parts );
                 ?>
             </span>
+        </div>
+        <?php endif; ?>
+
+        <?php if ( $sc_flag_url ) : ?>
+        <div class="product-card__flag" aria-hidden="true">
+            <img src="<?php echo esc_url( $sc_flag_url ); ?>" alt="" width="44" height="30">
         </div>
         <?php endif; ?>
 
