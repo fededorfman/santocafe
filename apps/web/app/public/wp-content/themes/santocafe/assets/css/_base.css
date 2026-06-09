@@ -1,0 +1,80 @@
+/* ============================================================
+   Reset y estilos base
+   ============================================================ */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+    /* Dark backdrop: the page top (hero) and bottom (footer) are both dark,
+       so the iOS overscroll "rubber-band" and the landscape notch safe-area
+       read as dark instead of showing the cream body colour as a white gap.
+       (iOS Safari ignores overscroll-behavior, so this is what fixes it there.)
+       The cream <body> still covers the whole document in between. */
+    background-color: var(--color-oscuro);
+    /* Offset anchor jumps so the target lands below the fixed header
+       instead of underneath it (applies to all in-page #anchor links).
+       --sc-header-offset is set by JS to the real header height (which
+       varies by breakpoint and whether the shipping banner is showing);
+       the token is the no-JS fallback. */
+    scroll-padding-top: var(--sc-header-offset, var(--header-height));
+    -webkit-text-size-adjust: 100%;
+    /* No overflow-x on html: `hidden` breaks wheel scroll and `clip` can force
+       overflow-y to clip too (kills vertical scroll). The cart drawer stays
+       off-canvas via transform (no horizontal overflow); body clips the rest. */
+    overscroll-behavior: none;   /* no scroll-chaining / rubber-band bounce */
+    touch-action: pan-x pan-y;   /* allow scroll, block pinch / double-tap zoom */
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-texto);
+    background-color: var(--color-crema);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    overscroll-behavior: none; /* prevent elastic/rubber-band scroll (both axes) */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}

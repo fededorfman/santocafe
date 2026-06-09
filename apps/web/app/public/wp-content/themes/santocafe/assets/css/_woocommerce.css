@@ -1,0 +1,1225 @@
+/* ============================================================
+   WooCommerce — My Account (login / register / lost password)
+   ============================================================ */
+
+.sc-account {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--spacing-2xl);
+    padding: var(--spacing-xl) 0 var(--spacing-2xl);
+}
+
+/* Two fields side by side (Nombre + Apellido) */
+.sc-account__row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+/* 2 columns on desktop/tablet (login left, register right); wraps to 1 on mobile.
+   A single card (lost-password) stays centered and narrow. */
+.sc-account__card {
+    flex: 1 1 300px;
+    max-width: 440px;
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-xl);
+}
+
+@media (max-width: 600px) {
+    .sc-account__card { flex-basis: 100%; }
+    /* Tighter gap between the stacked login / register cards. */
+    .sc-account { gap: var(--spacing-md); }
+}
+
+/* Highlight the register card when reached via "Regístrate" */
+.sc-account__card:target {
+    border-color: var(--color-dorado);
+    box-shadow: 0 0 0 2px rgba(223, 179, 62, 0.25), var(--shadow-card);
+}
+
+.sc-account__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-account__sub {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Form rows */
+.sc-account .woocommerce-form-row,
+.sc-account .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-account label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-texto-suave);
+}
+
+.sc-account input[type="text"],
+.sc-account input[type="email"],
+.sc-account input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    background: var(--color-crema);
+    color: var(--color-texto);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.sc-account input:focus {
+    border-color: var(--color-dorado);
+}
+
+/* Remember-me checkbox row (horizontal) */
+.sc-account__remember {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-account__remember input { width: auto; }
+
+.sc-account__link {
+    display: inline-block;
+    margin-top: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-dorado-suave);
+    transition: color var(--transition-fast);
+}
+
+.sc-account__link:hover { color: var(--color-dorado); }
+
+.sc-account .btn { margin-top: var(--spacing-xs); }
+
+/* Remove WooCommerce's default border box inside login/register forms */
+.sc-account .woocommerce-form-login,
+.sc-account .woocommerce-form-register,
+.woocommerce form.login,
+.woocommerce form.register {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+/* "¿No tienes cuenta? Regístrate" — under the title, mobile only, no separator */
+.sc-account__switch {
+    display: none;
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+.sc-account__switch a {
+    color: var(--color-dorado-suave);
+    font-weight: 600;
+}
+
+.sc-account__switch a:hover { color: var(--color-dorado); }
+
+@media (max-width: 600px) {
+    .sc-account__switch { display: block; }
+}
+
+/* Password hint */
+.sc-account__hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: 11px;
+    color: var(--color-texto-suave);
+    line-height: 1.4;
+}
+
+/* Privacy notice on register form — small and muted */
+.sc-account .woocommerce-privacy-policy-text,
+.sc-account .woocommerce-privacy-policy-text p {
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--color-texto-suave);
+    margin: var(--spacing-sm) 0 0;
+}
+
+/* ============================================================
+   My Account — logged in (greeting + 2-column layout)
+   ============================================================ */
+
+.sc-myaccount {
+    padding: 0;
+}
+
+.sc-myaccount__greeting {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-lg);
+}
+
+.sc-myaccount__layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+/* Navigation (left column) */
+.woocommerce-MyAccount-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.woocommerce-MyAccount-navigation li {
+    border-bottom: none;
+}
+
+.woocommerce-MyAccount-navigation a {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.woocommerce-MyAccount-navigation a:hover,
+.woocommerce-MyAccount-navigation .is-active a {
+    color: var(--color-oscuro);
+    background: var(--color-crema);
+    font-weight: 600;
+}
+
+/* Content (right column) */
+.woocommerce-MyAccount-content {
+    min-width: 0;
+}
+
+/* Below 1024px the fixed header switches to its shorter mobile offset,
+   which doesn't account for the shipping banner — add top padding so the
+   "Hola, {nombre}" greeting isn't tucked under the navbar. */
+@media (max-width: 1024px) {
+    .sc-myaccount {
+        padding-top: var(--spacing-xl);
+    }
+}
+
+/* Below 800px the sidebar+content layout stacks into the mobile view. */
+@media (max-width: 800px) {
+    .sc-myaccount__layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    .woocommerce-MyAccount-navigation ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--color-borde);
+        padding-bottom: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+/* ============================================================
+   My Account content — section styles (orders, addresses, edit)
+   Prefixed with .woocommerce-account (body class) to override the
+   default woocommerce-general stylesheet, which wins on specificity.
+   ============================================================ */
+
+.woocommerce-MyAccount-content p {
+    color: var(--color-texto-suave);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.woocommerce-MyAccount-content h2,
+.woocommerce-MyAccount-content h3,
+.woocommerce-MyAccount-content legend {
+    font-family: var(--font-heading);
+    color: var(--color-oscuro);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Buttons → theme pill style (anchors + submits) */
+.woocommerce-account .woocommerce-MyAccount-content a.button,
+.woocommerce-account .woocommerce-MyAccount-content button.button,
+.woocommerce-account .woocommerce-MyAccount-content input.button,
+.woocommerce-account .woocommerce-MyAccount-content button[type="submit"],
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-xl);
+    border: 2px solid var(--color-dorado);
+    border-radius: var(--radius-pill);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content a.button:hover,
+.woocommerce-account .woocommerce-MyAccount-content button.button:hover,
+.woocommerce-account .woocommerce-MyAccount-content input.button:hover,
+.woocommerce-account .woocommerce-MyAccount-content button[type="submit"]:hover,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Button:hover {
+    background: var(--color-dorado-hover);
+    border-color: var(--color-dorado-hover);
+    color: var(--color-oscuro);
+}
+
+/* Tables (orders) */
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table,
+.woocommerce-account .woocommerce-MyAccount-content table.woocommerce-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table th {
+    text-align: left;
+    background: var(--color-crema);
+    color: var(--color-texto-suave);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.04em;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table td {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--color-borde);
+    color: var(--color-texto);
+}
+
+/* Forms (edit account / addresses) */
+.woocommerce-MyAccount-content form {
+    max-width: 560px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content input.input-text,
+.woocommerce-account .woocommerce-MyAccount-content input[type="text"],
+.woocommerce-account .woocommerce-MyAccount-content input[type="email"],
+.woocommerce-account .woocommerce-MyAccount-content input[type="password"],
+.woocommerce-account .woocommerce-MyAccount-content input[type="tel"],
+.woocommerce-account .woocommerce-MyAccount-content select,
+.woocommerce-account .woocommerce-MyAccount-content .select2-selection,
+.woocommerce-account .woocommerce-MyAccount-content textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    background: var(--color-crema);
+    color: var(--color-texto);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content input:focus,
+.woocommerce-account .woocommerce-MyAccount-content select:focus,
+.woocommerce-account .woocommerce-MyAccount-content textarea:focus {
+    border-color: var(--color-dorado);
+}
+
+.woocommerce-MyAccount-content .form-row,
+.woocommerce-MyAccount-content .woocommerce-form-row {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Field hint text (e.g. "Así será como se mostrará tu nombre…") */
+.woocommerce-MyAccount-content .form-row span em,
+.woocommerce-MyAccount-content em,
+.woocommerce-MyAccount-content small {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    font-style: normal;
+    line-height: 1.4;
+}
+
+/* Fieldset (e.g. "Cambio de contraseña") — drop the default box */
+.woocommerce-MyAccount-content fieldset {
+    border: 0;
+    padding: 0;
+    margin: var(--spacing-lg) 0 0;
+}
+
+.woocommerce-MyAccount-content legend {
+    padding: 0;
+}
+
+/* ---- Addresses overview (my-address.php) ---- */
+.sc-address-intro {
+    margin-bottom: var(--spacing-lg);
+}
+
+.woocommerce-MyAccount-content .sc-address-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin: 0;
+}
+
+.sc-address-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-lg);
+}
+
+.sc-address-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-address-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-crema);
+    color: var(--color-dorado-suave);
+    flex-shrink: 0;
+}
+
+.woocommerce-MyAccount-content .sc-address-card__title {
+    margin: 0;
+    font-size: var(--font-size-base);
+}
+
+.sc-address-card__body {
+    flex: 1;
+    margin-bottom: var(--spacing-lg);
+}
+
+.sc-address-card__body address {
+    font-style: normal;
+    color: var(--color-texto);
+    line-height: 1.7;
+}
+
+.sc-address-card__empty-text {
+    color: var(--color-texto-suave);
+    font-style: italic;
+    margin: 0;
+}
+
+/* Edit/Add action — outline pill, distinct from primary buttons */
+.woocommerce-MyAccount-content a.sc-address-card__edit {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px var(--spacing-lg);
+    border: 2px solid var(--color-dorado);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-address-card__edit:hover {
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+/* ============================================================
+   Reusable account form layout — white card + single column.
+   Used by editar dirección y detalles de la cuenta. Add `sc-form`
+   to the <form>, wrap fields in `.sc-form-grid` (give the pairs you
+   want side by side the `sc-name-col` class), and put the buttons in
+   `.sc-form-actions`.
+   ============================================================ */
+.sc-form {
+    max-width: 600px;
+}
+
+/* Stacked panels (e.g. perfil + cambiar contraseña) keep some air between them. */
+.woocommerce-MyAccount-content form.sc-form + form.sc-form {
+    margin-top: var(--spacing-lg);
+}
+
+/* Read-only / informative field (e.g. el email no editable). */
+.sc-form-readonly__label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-texto-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.sc-form-readonly__value {
+    display: block;
+    color: var(--color-texto);
+    font-size: var(--font-size-sm);
+}
+
+/* Inline hint under a field (e.g. requisitos de la contraseña). */
+.sc-form-hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    line-height: 1.4;
+}
+
+/* Inline feedback inside a card (e.g. resultado del cambio de contraseña). */
+.sc-form-feedback {
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    margin-bottom: var(--spacing-md);
+}
+
+.sc-form-feedback.is-success {
+    background: #eef7ed;
+    border: 1px solid #cfe8c9;
+    color: #2e7d32;
+}
+
+.sc-form-feedback.is-error {
+    background: #fdf3f2;
+    border: 1px solid #f3c4bf;
+    color: #c0392b;
+}
+
+/* Password visibility toggle — WooCommerce wraps the input in .password-input
+   and adds a .show-password-input button; we render it as an eye icon inside
+   the field (the show/hide behaviour is handled by WooCommerce's own JS). */
+.woocommerce-MyAccount-content .password-input {
+    position: relative;
+    display: block;
+}
+
+.woocommerce-MyAccount-content .password-input .input-text {
+    padding-right: 44px;
+}
+
+.woocommerce-MyAccount-content .show-password-input {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c1d11' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content .show-password-input::after {
+    content: none;
+}
+
+.woocommerce-MyAccount-content .show-password-input:hover {
+    opacity: 0.85;
+}
+
+.woocommerce-MyAccount-content .show-password-input.display-password {
+    opacity: 0.85;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c1d11' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/%3E%3Cline x1='1' y1='1' x2='23' y2='23'/%3E%3C/svg%3E");
+}
+
+/* Cerrar sesión — botón al final de Detalles de la cuenta. */
+.sc-account-logout {
+    max-width: 600px;
+    margin-top: var(--spacing-lg);
+}
+
+.woocommerce-MyAccount-content a.sc-account-logout__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 10px var(--spacing-xl);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-account-logout__btn:hover {
+    border-color: #c0392b;
+    color: #c0392b;
+}
+
+.sc-form-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.sc-form-back:hover {
+    color: var(--color-dorado-suave);
+}
+
+.sc-form-card {
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-xl);
+}
+
+.woocommerce-MyAccount-content .sc-form-card__title {
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Single column by default; pairs marked .sc-name-col share a row. */
+.sc-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.sc-form-grid > .form-row {
+    grid-column: 1 / -1; /* full width by default */
+    margin-bottom: 0;
+}
+
+.sc-form-grid > .form-row.sc-name-col {
+    grid-column: span 1; /* e.g. nombres / apellidos side by side */
+}
+
+/* Fieldset (cambio de contraseña) sits inside the card with its own gap. */
+.sc-form-card fieldset {
+    margin-top: var(--spacing-lg);
+}
+
+.sc-form-card fieldset .sc-form-grid,
+.sc-form-card fieldset > .form-row:first-of-type {
+    margin-top: var(--spacing-md);
+}
+
+/* Actions — room from the last input; Cancelar left, Guardar right. */
+.sc-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0 0;
+}
+
+/* Single primary button → align to the right. */
+.sc-form-actions--end {
+    justify-content: flex-end;
+}
+
+.woocommerce-MyAccount-content a.sc-form-cancel {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content a.sc-form-cancel:hover {
+    color: var(--color-oscuro);
+}
+
+/* ============================================================
+   Notices (success / error / info) — WooCommerce messages.
+   WC renders these with an absolutely-positioned icon-font ::before
+   that overlaps the text; we reset it into a clean inline badge.
+   ============================================================ */
+.woocommerce-MyAccount-content .woocommerce-info,
+.woocommerce-MyAccount-content .woocommerce-message,
+.woocommerce-MyAccount-content .woocommerce-Message,
+.woocommerce-MyAccount-content .woocommerce-error {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    background: var(--color-crema);
+    border: 1px solid var(--color-borde);
+    border-left: 3px solid var(--color-dorado);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    color: var(--color-texto);
+    margin: 0 0 var(--spacing-lg);
+    list-style: none;
+}
+
+/* The error notice is a <ul> with <li> items. */
+.woocommerce-MyAccount-content .woocommerce-error li {
+    margin: 0;
+    list-style: none;
+}
+
+/* Reset WC's absolute icon-font glyph into a tidy circular badge. */
+.woocommerce-MyAccount-content .woocommerce-info::before,
+.woocommerce-MyAccount-content .woocommerce-message::before,
+.woocommerce-MyAccount-content .woocommerce-Message::before,
+.woocommerce-MyAccount-content .woocommerce-error::before {
+    position: static;
+    top: auto;
+    left: auto;
+    margin: 0;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background: var(--color-dorado);
+}
+
+/* Optional action button (e.g. "Ver pedido") sits at the far right. */
+.woocommerce-MyAccount-content .woocommerce-info .button,
+.woocommerce-MyAccount-content .woocommerce-message .button {
+    margin-left: auto;
+}
+
+/* Success */
+.woocommerce-MyAccount-content .woocommerce-message,
+.woocommerce-MyAccount-content .woocommerce-Message {
+    background: #eef7ed;
+    border-color: #cfe8c9;
+    border-left-color: #2e7d32;
+    color: #285f2b;
+}
+.woocommerce-MyAccount-content .woocommerce-message::before,
+.woocommerce-MyAccount-content .woocommerce-Message::before {
+    content: "\2713"; /* ✓ */
+    background: #2e7d32;
+}
+
+/* Error */
+.woocommerce-MyAccount-content .woocommerce-error {
+    background: #fdf3f2;
+    border-color: #f3c4bf;
+    border-left-color: #c0392b;
+    color: #9e2b21;
+}
+.woocommerce-MyAccount-content .woocommerce-error::before {
+    content: "\0021"; /* ! */
+    background: #c0392b;
+}
+
+/* Info */
+.woocommerce-MyAccount-content .woocommerce-info::before {
+    content: "\0069"; /* i */
+    background: var(--color-dorado);
+}
+
+/* ============================================================
+   FormValidate — reusable per-field error state.
+   Marked by main.js (FormValidate) on any form.js-validate after
+   pressing submit. Works on WooCommerce .form-row fields and any
+   .sc-form-row / .woocommerce-form-row wrapper.
+   ============================================================ */
+.sc-field--error input,
+.sc-field--error select,
+.sc-field--error textarea,
+.sc-field--error .select2-selection,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error input,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error select,
+.woocommerce-account .woocommerce-MyAccount-content .sc-field--error textarea {
+    border-color: #c0392b;
+    background: #fdf3f2;
+}
+
+.sc-field__error {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: #c0392b;
+    line-height: 1.4;
+}
+
+/* Addresses stack into one column from tablet down. */
+@media (max-width: 1024px) {
+    .woocommerce-MyAccount-content .sc-address-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .sc-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .sc-form-grid > .form-row.sc-name-col {
+        grid-column: 1 / -1;
+    }
+    .sc-form-actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* Orders — calm empty state */
+.sc-orders-empty {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-md);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    background: var(--color-tarjeta);
+}
+
+.sc-orders-empty__kicker {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+    margin-bottom: var(--spacing-sm);
+}
+
+.sc-orders-empty__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-sm);
+}
+
+.sc-orders-empty__text {
+    color: var(--color-texto-suave);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================================
+   DIVIDER scoping (base look lives in _components.css)
+   ============================================================ */
+/* Login page: the divider sits between the login & register cards.
+   On desktop the cards are side-by-side, so hide it; show it only
+   when the cards stack into one column (≤600px). */
+.sc-account .sc-divider {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .sc-account .sc-divider {
+        display: flex;
+        flex-basis: 100%;       /* break onto its own line between the cards */
+        max-width: 440px;       /* …but keep it as wide as the panels */
+        margin: 0 auto;
+    }
+}
+
+/* Account details: divider between the "Detalles de la cuenta" and
+   "Cambiar contraseña" panels — always shown (panels always stacked). */
+.woocommerce-MyAccount-content .sc-divider {
+    max-width: 560px;
+    margin: var(--spacing-lg) 0;
+}
+
+/* ============================================================
+   ORDERS — list, status pills, and order detail
+   ============================================================ */
+
+/* --- Status pill (shared by the list + the detail header) --- */
+.sc-order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--color-beige);
+    color: var(--color-texto-suave);
+}
+
+.sc-order-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.sc-order-status--completed       { background: #eef7ed; color: #2e7d32; }
+.sc-order-status--processing      { background: rgba(223, 179, 62, 0.18); color: var(--color-dorado-hover); }
+.sc-order-status--pending,
+.sc-order-status--on-hold         { background: #fbf3e0; color: #9a7b1f; }
+.sc-order-status--cancelled,
+.sc-order-status--failed          { background: #fdf3f2; color: #c0392b; }
+.sc-order-status--refunded        { background: #eee; color: #666; }
+
+/* --- Orders list: one card per order (no cramped table) --- */
+.sc-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.sc-order-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    background: var(--color-tarjeta);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-order-card:hover {
+    border-color: rgba(223, 179, 62, 0.4);
+    box-shadow: var(--shadow-card);
+}
+
+/* Desktop (≥1025px): everything on one line. */
+.sc-order-card__info {
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
+}
+
+.sc-order-card__number {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+.sc-order-card__number:hover { color: var(--color-dorado-suave); }
+
+.sc-order-card__date,
+.sc-order-card__total {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
+}
+
+/* Bullet between the date and the total (one-line layout only). */
+.sc-order-card__total::before {
+    content: "·";
+    margin-right: var(--spacing-md);
+    color: var(--color-texto-suave);
+}
+
+.sc-order-card__actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+/* Tablet/mobile (≤1024px): stack the values one below the other. */
+@media (max-width: 1024px) {
+    .sc-order-card__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    .sc-order-card__total::before { display: none; }
+}
+
+/* On very narrow widths the action drops below the info too. */
+@media (max-width: 480px) {
+    .sc-order-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-md);
+    }
+    .sc-order-card__actions { flex-direction: row; }
+    .sc-order-card__actions .btn { flex: 1; }
+}
+
+/* --- Order detail: back link --- */
+.sc-order-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    transition: color var(--transition-fast);
+}
+.sc-order-back:hover { color: var(--color-dorado-suave); }
+.sc-order-back svg { flex-shrink: 0; }
+
+/* --- Order detail: header (status above "Pedido") --- */
+.sc-order-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.sc-order-head__status {
+    margin-bottom: var(--spacing-sm);
+}
+
+.sc-order-head__kicker {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+}
+
+.sc-order-head__number {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    line-height: 1.1;
+    margin: 2px 0;
+}
+
+.sc-order-head__date {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    margin: 0;
+}
+
+/* --- Order detail: body layout ---
+   Desktop: order details (left) + addresses (right) in two columns.
+   Tablet/mobile (≤1024px): single column (addresses drop below). */
+@media (min-width: 1025px) {
+    .sc-order-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: var(--spacing-xl);
+        align-items: start;
+    }
+    .sc-order-body .woocommerce-customer-details {
+        margin-top: 0;
+    }
+    /* Stack billing/shipping vertically inside the narrow right column. */
+    .sc-order-body .woocommerce-customer-details .sc-address-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Order detail: updates / notes --- */
+.sc-order-updates {
+    margin-bottom: var(--spacing-xl);
+}
+.sc-order-updates__title {
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-md);
+}
+.sc-order-updates__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid var(--color-borde);
+}
+.sc-order-update {
+    position: relative;
+    padding: 0 0 var(--spacing-md) var(--spacing-lg);
+}
+.sc-order-update::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-dorado);
+}
+.sc-order-update__date {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    margin-bottom: 2px;
+}
+.sc-order-update__text p { margin: 0; }
+
+/* --- Order detail: items table with thumbnails --- */
+.sc-order-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.sc-order-item__media {
+    flex-shrink: 0;
+}
+
+.sc-order-item__media .sc-order-item__img,
+.sc-order-item__media img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--color-beige);
+    display: block;
+}
+
+.sc-order-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sc-order-item__name {
+    font-weight: 600;
+    color: var(--color-oscuro);
+    line-height: 1.3;
+}
+.sc-order-item__name a { color: inherit; }
+.sc-order-item__name a:hover { color: var(--color-dorado-suave); }
+
+.sc-order-item__qty {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+}
+
+.sc-order-item__meta {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+}
+.sc-order-item__meta p { margin: 0; }
+.sc-order-item__meta .wc-item-meta { list-style: none; margin: 0; padding: 0; }
+
+/* Order details + totals table */
+/* Narrower table so the price isn't pushed far from the product. */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details {
+    max-width: 620px;
+}
+/* The "Total" header lines up with the right-aligned prices below it. */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details thead th.product-total {
+    text-align: right;
+}
+.woocommerce-account .woocommerce-MyAccount-content table.order_details td.product-total,
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot td {
+    text-align: right;
+    white-space: nowrap;
+}
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot th {
+    text-align: right;
+    text-transform: none;
+    letter-spacing: 0;
+    background: transparent;
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+/* Emphasise the final "Total" row */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot tr:last-child th,
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot tr:last-child td {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+
+/* Customer details (addresses) below the order — reuse the .sc-address-card
+   look from "Mis direcciones". The card/grid styles already exist; here we
+   just space the section and style the extra phone/email lines. */
+.woocommerce-customer-details {
+    margin-top: var(--spacing-xl);
+}
+.sc-address-card__body address {
+    font-style: normal;
+    line-height: 1.6;
+    color: var(--color-texto);
+}
+.sc-address-card__line {
+    display: block;
+    color: var(--color-texto-suave);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+@media (max-width: 600px) {
+    .sc-order-item__media .sc-order-item__img,
+    .sc-order-item__media img { width: 48px; height: 48px; }
+}

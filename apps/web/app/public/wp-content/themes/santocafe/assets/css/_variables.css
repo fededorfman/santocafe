@@ -1,0 +1,71 @@
+/* ============================================================
+   Santo Café — Tokens de Diseño
+   TODOS los valores de diseño se definen aquí.
+   Nunca hardcodear colores, fuentes o espaciados fuera de este archivo.
+   ============================================================ */
+
+:root {
+    /* --- Colores principales --- */
+    --color-oscuro:         #1a1310;   /* Texto, header, footer */
+    --color-dorado:         #dfb33e;   /* CTA principal, acento */
+    --color-dorado-hover:   #b08d4a;
+    --color-dorado-suave:   #c5a059;   /* Highlights, títulos */
+    --color-crema:          #fcfaf7;   /* Fondo body */
+
+    /* --- Colores de tarjetas y UI --- */
+    --color-tarjeta:        #ffffff;
+    --color-beige:          #f3ece1;   /* Beige arena suave (botones de formato) */
+    --color-separador:      #cdbfa4;   /* Tan tenue (separadores decorativos) */
+    --color-borde:          #e5e5e5;
+    --color-texto:          #1a1310;
+    --color-texto-suave:    #555555;
+    --color-badge-bg:       rgba(26, 19, 16, 0.85);
+
+    /* --- Tipografía --- */
+    --font-heading: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body:    'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-size-base:  16px;
+    --font-size-sm:    14px;
+    --font-size-xs:    12px;
+    --font-size-lg:    18px;
+    --font-size-xl:    24px;
+    --font-size-2xl:   32px;
+    --font-size-3xl:   48px;
+    --line-height-base: 1.6;
+
+    /* --- Espaciado --- */
+    --spacing-xs:   4px;
+    --spacing-sm:   8px;
+    --spacing-md:   16px;
+    --spacing-lg:   24px;
+    --spacing-xl:   48px;
+    --spacing-2xl:  80px;
+    --spacing-3xl:  120px;
+
+    /* --- Formas --- */
+    --radius-pill:   30px;
+    --radius-card:   12px;
+    --radius-sm:     6px;
+    --radius-xs:     4px;
+
+    /* --- Sombras --- */
+    --shadow-card:   0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover:  0 8px 24px rgba(0, 0, 0, 0.14);
+    --shadow-modal:  0 20px 60px rgba(0, 0, 0, 0.4);
+
+    /* --- Transiciones --- */
+    --transition-fast:   150ms ease;
+    --transition-base:   250ms ease;
+    --transition-slow:   400ms ease;
+
+    /* --- Layout --- */
+    --max-width:         1400px;
+    --header-height:     118px;
+    --header-height-mob: 64px;
+
+    /* --- Breakpoints (solo documentados — usar en media queries) ---
+       mobile:  ≤600px
+       tablet:  601px – 1024px
+       desktop: ≥1025px
+    --- */
+}

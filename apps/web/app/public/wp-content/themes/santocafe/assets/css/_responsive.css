@@ -1,0 +1,63 @@
+/* ============================================================
+   Responsive — ajustes por breakpoint
+   ============================================================ */
+
+/* === Tablet / Mobile (≤ 1024px): navbar hamburger mode === */
+@media (max-width: 1024px) {
+
+    /* Header: mostrar hamburger, ocultar menú horizontal */
+    .site-nav__menu      { display: none; }
+    .site-nav__hamburger { display: flex; }
+
+    .site-nav        { height: var(--header-height-mob); }
+    .wc-main,
+    .site-main       { padding-top: var(--header-height-mob); }
+
+    /* No-JS fallback for the shorter mobile header (JS overrides this with
+       the real measured height via --sc-header-offset). */
+    html { scroll-padding-top: var(--sc-header-offset, var(--header-height-mob)); }
+
+    /* Logo centered via absolute positioning */
+    .site-nav__inner {
+        position: relative;
+    }
+
+    .site-nav__logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Keep actions z-index above the absolute logo */
+    .site-nav__actions {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Footer: 2 columnas */
+    .site-footer__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+}
+
+/* === Mobile (≤ 600px) === */
+@media (max-width: 600px) {
+
+    .container {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    }
+
+    /* Footer: 1 columna */
+    .site-footer__grid {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-xl) 0;
+    }
+
+    .site-footer__bottom-inner {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+}

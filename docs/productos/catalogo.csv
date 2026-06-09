@@ -1,0 +1,9 @@
+SKU,Título,Variedad,Tipo,Notas de cata,Precio 250gr,Precio 1kg,SCA,Destacado,País de Origen,Ciudad/Región,Altitud,Proceso
+1,Macondo,Caturra,100% Arábica,"Miel, Uvas, Caña de Azucar",15500,49600,84,FALSE,Colombia,,1800,Lavado
+2,Camino Inca,"Paches, Typica y Catimar",100% Arábica,"Chocolate oscuro, cereales dulces, hojas de caña y acidez delicada",15500,49600,83,FALSE,Perú,,1820,Lavado
+3,Cielo Andino,"Castillo, Colombia, Caturra",100% Arábica,"Chocolate blanco, lima",15500,49600,85,FALSE,Colombia,,,Lavado y Fermentado 20hrs
+4,Santo Yungas,Catual Rojo,100% Arábica,"Miel, Canela, Durazno",15500,49600,84,FALSE,Bolivia,"Caranavi, Yungas",1541,Lavado
+5,Santo Ouro Doce,Catuai Amarillo,100% Arábica,"Frutos amarillos, achocolatado y caramelo",14490,46590,83,FALSE,Brasil,,1350,Natural
+6,Santo Sereno,"Bourbon, Caturra y Sarchimor",100% Arábica,"Azúcar morena, manzana roja y camomila",16590,52990,85,FALSE,Guatemala,,2000,Lavado
+7,Santo Equilibrio,Blend Caturra y Castillo,100% Arábica,"Almendras, frutas cítricas como ciruela y naranja, caramelo y azúcar morena",15500,49590,84,FALSE,Colombia,,,Lavado
+8,Los Santos,Caturra - Catuai,100% Arábica,"Mora, Maracuyá, Caramelo y Chocolate dulce",17590,56490,84.75,FALSE,Costa Rica,,1500,Lavado

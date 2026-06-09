@@ -1,0 +1,314 @@
+/* ============================================================
+   Product Card — usado en home, shop y cualquier loop de WC
+   ============================================================ */
+
+.product-card {
+    background: var(--color-tarjeta);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.product-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* ---- Image zone ---- */
+.product-card__image-zone {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--color-oscuro);
+}
+
+.product-card__image-link {
+    display: block;
+    height: 100%;
+}
+
+.product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-card__image {
+    transform: scale(1.04);
+}
+
+.product-card__image--placeholder {
+    background: linear-gradient(135deg, #2a1f1a 0%, #1a1310 100%);
+    height: 100%;
+}
+
+/* Badges (top-left of image zone) */
+.product-card__badges {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* Country name in title — rendered in gold */
+.product-card__pais {
+    color: var(--color-dorado);
+}
+
+/* Inline flag next to country name in the title */
+.product-card__flag-inline {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 2px;
+    margin-right: 4px;
+    flex-shrink: 0;
+    position: relative;
+    top: -1px;
+}
+
+/* Info button (top-right) */
+.product-card__info-btn {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(26, 19, 16, 0.72);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+    backdrop-filter: blur(4px);
+}
+
+.product-card__info-btn:hover {
+    background: rgba(26, 19, 16, 0.95);
+}
+
+/* Sale badge (diagonal ribbon) */
+.product-card__offer-badge {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    left: var(--spacing-sm);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    z-index: 2;
+}
+
+/* ---- Content zone ---- */
+.product-card__content {
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+/* Title */
+.product-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.product-card__title a {
+    color: var(--color-oscuro);
+    transition: color var(--transition-fast);
+}
+
+.product-card__title a:hover {
+    color: var(--color-dorado-suave);
+}
+
+/* Tasting notes */
+.product-card__notes {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+    min-height: 42px;
+}
+
+/* Profile bars in card (Intensidad / Acidez / Cuerpo, stacked) */
+.product-card__profile {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: var(--spacing-xs);
+}
+
+.product-card__profile .profile-bar__label {
+    min-width: 80px;
+    color: var(--color-texto-suave);
+}
+
+/* Divider above the buying area */
+.product-card__divider {
+    border: 0;
+    border-top: 1px solid var(--color-borde);
+    margin: var(--spacing-md) 0;
+}
+
+/* Format selector (250g / 1kg) — two card-style buttons */
+.product-card__weights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+    /* Room for the discount badge that protrudes above the 1kg button */
+    padding-top: 10px;
+}
+
+.product-card__weight {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: var(--spacing-md) var(--spacing-sm);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-card);
+    background: var(--color-beige);
+    color: var(--color-oscuro);
+    cursor: pointer;
+    text-align: center;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Discount badge — centered on the top edge, half in / half out */
+.product-card__weight-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+.product-card__weight:hover {
+    border-color: var(--color-dorado);
+}
+
+.product-card__weight.is-selected {
+    background: var(--color-tarjeta);
+    border-color: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+.product-card__weight-price {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.product-card__weight-unit {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-texto-suave);
+}
+
+/* Molienda note (plain label, not a link) */
+.product-card__molienda {
+    font-size: var(--font-size-xs);
+    color: var(--color-texto-suave);
+    margin: var(--spacing-sm) 0 0;
+}
+
+.product-card__molienda-note {
+    font-style: italic;
+}
+
+/* Footer: price (with discount) + add button */
+.product-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-top: auto;
+    padding-top: var(--spacing-md);
+}
+
+.product-card__pricing {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.product-card__price {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-oscuro);
+    line-height: 1;
+}
+
+.product-card__price-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.product-card__price-meta:empty {
+    display: none;
+}
+
+.product-card__price-was {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    text-decoration: line-through;
+}
+
+.product-card__discount {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-oscuro);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    line-height: 1.3;
+}
+
+.product-card__add {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
+}
+
+.product-card__add svg {
+    width: 14px;
+    height: 14px;
+}

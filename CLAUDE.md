@@ -10,6 +10,18 @@ Santo Café is a specialty coffee management system for an Argentine company. It
 - `apps/web` — Public website with WooCommerce (future)
 - `packages/shared` — Shared TypeScript types and utilities (not yet implemented)
 
+## Branch Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Source of truth — base for all long-lived branches |
+| `prod` | Production-ready code only |
+| `qa` | Staging / QA testing |
+| `dev` | **Active development — always work here** |
+
+**Flow:** feature branches off `dev` → PR into `dev` → promote to `qa` → promote to `prod`.  
+Never commit directly to `prod` or `qa`.
+
 ## Development Commands
 
 **Start everything (order matters):**
@@ -67,6 +79,37 @@ Copy `.env.example` to `.env` before starting. Key variables:
 | Marrón Oscuro | `#2C1D11` | Primary text, dark backgrounds |
 | Beige Arena | `#E6DCC3` | Secondary backgrounds |
 | Blanco Crema | `#FAF7F2` | Reading backgrounds |
+
+## Web Pública (apps/web)
+
+WordPress + WooCommerce. País: Chile. Moneda: CLP.  
+Spec completa: `docs/web/especificaciones-web.md`  
+Notas operativas y pendientes: `docs/web/notas-operativas.md`
+
+Paleta propia (distinta al backoffice): dorado `#dfb33e`, oscuro `#1a1310`, crema `#fcfaf7`.  
+Tipografía: Playfair Display (headings) + Inter (cuerpo).  
+Pasarela de pago: Flow (integración con SII Chile).
+
+## Productos Reales
+
+8 cafés de especialidad. Catálogo completo en `docs/productos/catalogo.csv`.
+
+| SKU | Nombre | Origen | SCA | Proceso |
+|-----|--------|--------|-----|---------|
+| 1 | Macondo | Colombia | 84 | Lavado |
+| 2 | Camino Inca | Perú | 83 | Lavado |
+| 3 | Cielo Andino | Colombia | 85 | Lavado y Fermentado |
+| 4 | Santo Yungas | Bolivia | 84 | Lavado |
+| 5 | Santo Ouro Doce | Brasil | 83 | Natural |
+| 6 | Santo Sereno | Guatemala | 85 | Lavado |
+| 7 | Santo Equilibrio | Colombia | 84 | Lavado |
+| 8 | Los Santos | Costa Rica | 84.75 | Lavado |
+
+Presentaciones: 250gr y 1kg. Moliendas: Grano, Espresso, Italiana, Filtro.
+
+## Logo
+
+`assets/logos/logo.png` — fuente. Copiado a `apps/backoffice/public/logo.png`.
 
 ## Planned Modules
 

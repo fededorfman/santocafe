@@ -1,0 +1,53 @@
+/* ============================================================
+   Breadcrumbs — Santo Café
+   ============================================================ */
+
+.sc-breadcrumbs {
+    padding: 12px 0 8px;
+    font-size: 0.8125rem;        /* 13px */
+    color: var(--sc-text-muted, #9e8e7a);
+    line-height: 1.4;
+}
+
+.sc-breadcrumbs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 0;
+}
+
+.sc-breadcrumbs__item {
+    display: flex;
+    align-items: center;
+}
+
+.sc-breadcrumbs__link {
+    color: var(--sc-text-muted, #9e8e7a);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.sc-breadcrumbs__link:hover {
+    color: var(--sc-cobre, #8C6239);
+    text-decoration: underline;
+}
+
+.sc-breadcrumbs__sep {
+    margin: 0 5px;
+    opacity: 0.5;
+    font-size: 0.75rem;
+}
+
+.sc-breadcrumbs__item--current .sc-breadcrumbs__label {
+    color: var(--sc-text, #2C1D11);
+    font-weight: 500;
+}
+
+/* Inside wc-main wrapper */
+.wc-main .sc-breadcrumbs {
+    padding-left: 0;
+    padding-right: 0;
+}

@@ -1,0 +1,68 @@
+# ============================================================
+# WordPress — NO commitear el core ni archivos generados
+# Solo se trackean: tema custom, plugins custom, conf del servidor
+# ============================================================
+
+# WordPress core
+/app/public/wp-admin/
+/app/public/wp-includes/
+/app/public/index.php
+/app/public/license.txt
+/app/public/readme.html
+/app/public/wp-activate.php
+/app/public/wp-blog-header.php
+/app/public/wp-comments-post.php
+/app/public/wp-config-sample.php
+/app/public/wp-cron.php
+/app/public/wp-links-opml.php
+/app/public/wp-load.php
+/app/public/wp-login.php
+/app/public/wp-mail.php
+/app/public/wp-settings.php
+/app/public/wp-signup.php
+/app/public/wp-trackback.php
+/app/public/xmlrpc.php
+/app/public/.htaccess
+/app/public/local-xdebuginfo.php
+
+# wp-config — tiene credenciales, nunca al repo
+/app/public/wp-config.php
+
+# wp-content: ignorar todo excepto nuestros custom themes y plugins
+/app/public/wp-content/uploads/
+/app/public/wp-content/cache/
+/app/public/wp-content/upgrade/
+/app/public/wp-content/backup-db/
+/app/public/wp-content/blogs.dir/
+/app/public/wp-content/advanced-cache.php
+/app/public/wp-content/wp-cache-config.php
+/app/public/wp-content/languages/
+/app/public/wp-content/index.php
+
+# Themes: ignorar los defaults de WordPress
+/app/public/wp-content/themes/twentytwentytwo/
+/app/public/wp-content/themes/twentytwentythree/
+/app/public/wp-content/themes/twentytwentyfour/
+/app/public/wp-content/themes/twentytwentyfive/
+/app/public/wp-content/themes/index.php
+
+# Plugins: ignorar plugins instalados de WordPress.org
+# (se reinstalan con wp-plugins.txt o composer)
+# Los plugins custom sc-* SÍ se trackean
+/app/public/wp-content/plugins/index.php
+/app/public/wp-content/plugins/[^s]*/
+/app/public/wp-content/plugins/s[^c]*/
+
+# Base de datos — dumps con credenciales/hashes, no al repo
+/app/sql/
+
+# Logs
+/logs/
+
+# Local by Flywheel
+/.local-version
+/app/public/.well-known/
+
+# OS
+.DS_Store
+Thumbs.db
