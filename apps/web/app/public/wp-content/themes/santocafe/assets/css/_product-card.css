@@ -160,9 +160,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-sm);
+    /* Room for the discount badge that protrudes above the 1kg button */
+    padding-top: 10px;
 }
 
 .product-card__weight {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -176,6 +179,24 @@
     cursor: pointer;
     text-align: center;
     transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Discount badge — centered on the top edge, half in / half out */
+.product-card__weight-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1.5;
 }
 
 .product-card__weight:hover {
