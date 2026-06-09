@@ -2,10 +2,10 @@
 defined('ABSPATH') || exit;
 
 $values = [
-    [ 'text' => 'Selección directa de los mejores orígenes del mundo' ],
-    [ 'text' => 'Solo café de especialidad: puntaje SCA de 82 puntos como mínimo' ],
-    [ 'text' => 'Tueste lo más reciente posible para máxima frescura en taza' ],
-    [ 'text' => 'Envío en Región Metropolitana de Santiago en 24-48 horas hábiles' ],
+    [ 'text' => '<strong>Trato directo</strong> con los mejores orígenes del mundo.' ],
+    [ 'text' => 'Cafés de especialidad con <strong>+82 puntos SCA</strong>.' ],
+    [ 'text' => '<strong>Tueste reciente</strong> para una máxima frescura.' ],
+    [ 'text' => 'Envíos en la Región Metropolitana de Santiago en <strong>24-48 horas hábiles</strong>.' ],
 ];
 ?>
 
@@ -22,16 +22,16 @@ $values = [
                 </h2>
                 <div class="nosotros__body">
                     <p>
-                        Santo Café nació de la convicción de que un buen café puede transformar
-                        el inicio del día. Nos comprometemos con la calidad y la trazabilidad:
-                        conocemos el origen de cada grano que llega a tu taza.
+                        Santo Café nació con una certeza: un gran café tiene el poder de transformar
+                        tu día. Nos comprometemos con la calidad y la trazabilidad, asegurándonos
+                        de conocer la historia y el origen de cada grano que elijes.
                     </p>
                     <p>
-                        Trabajamos directamente con productores de Colombia, Perú, Bolivia,
-                        Brasil, Guatemala y Costa Rica, y seleccionamos únicamente cafés de
-                        especialidad con un puntaje SCA de 82 puntos como mínimo. Elegimos
-                        siempre el tueste más reciente posible para que la frescura llegue
-                        intacta a tu taza.
+                        Trabajamos mano a mano con productores de Colombia, Perú, Bolivia,
+                        Brasil, Guatemala y Costa Rica. Seleccionamos exclusivamente cafés de
+                        especialidad con un <strong>puntaje SCA mínimo de 82 puntos</strong>
+                        y optamos siempre por un tueste reciente. Así, garantizamos que la
+                        frescura y los descriptores únicos del grano lleguen intactos a tu mesa.
                     </p>
                 </div>
 
@@ -43,7 +43,7 @@ $values = [
                              aria-hidden="true">
                             <polyline points="20 6 9 17 4 12"/>
                         </svg>
-                        <span><?php echo esc_html( $value['text'] ); ?></span>
+                        <span><?php echo wp_kses( $value['text'], [ 'strong' => [] ] ); ?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -52,9 +52,9 @@ $values = [
             <!-- Imagen -->
             <div class="nosotros__image-wrap">
                 <img class="nosotros__image"
-                     src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/sobre-nosotros.png' ); ?>"
                      alt="Café de especialidad de Santo Café"
-                     width="800" height="600"
+                     width="800" height="800"
                      loading="lazy">
             </div>
 
