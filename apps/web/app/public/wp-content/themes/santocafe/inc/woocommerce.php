@@ -184,6 +184,34 @@ add_action( 'template_redirect', function (): void {
     }
 } );
 
+// Tras la compra: llevar al detalle del pedido en "Mi cuenta" (/cuenta/orden/{id})
+// en vez de la página genérica de "pedido recibido". Solo si el usuario está
+// logueado y es el dueño del pedido — los invitados (guest checkout activado) no
+// tienen vista de cuenta, así que se quedan en order-received, su única
+// confirmación. Flow ya completó el pago antes de esta página y no engancha
+// woocommerce_thankyou, así que el redirect no interfiere con el cobro.
+add_action( 'template_redirect', function (): void {
+    if ( ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url( 'order-received' ) ) {
+        return;
+    }
+
+    global $wp;
+    $order_id = absint( $wp->query_vars['order-received'] ?? 0 );
+    if ( ! $order_id ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    if ( ! $order
+        || ! is_user_logged_in()
+        || (int) $order->get_customer_id() !== get_current_user_id() ) {
+        return;
+    }
+
+    wp_safe_redirect( wc_get_endpoint_url( 'view-order', $order_id, wc_get_page_permalink( 'myaccount' ) ) );
+    exit;
+} );
+
 // ============================================================
 // Address fields — reorder + relabel (My Account + checkout)
 // Order: Nombres, Apellidos, País, Región, Ciudad, Dirección,
