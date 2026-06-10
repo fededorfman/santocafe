@@ -172,11 +172,13 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password
 //   wp rewrite flush
 //
-// El endpoint de "pedido recibido" del checkout también es opción de BD, cambiado
-// de 'order-received' a 'orden' → la URL final es /checkout/orden/{id}. La CLAVE
-// del query var sigue siendo 'order-received', así que is_wc_endpoint_url(
-// 'order-received') (usado en el redirect post-compra de arriba) no se ve afectado:
-//   wp option update woocommerce_checkout_order_received_endpoint orden
+// OJO — colisión de slugs: los endpoints de WooCommerce comparten un namespace
+// global por slug. El "pedido recibido" del checkout NO puede usar el slug 'orden'
+// porque ya lo usa view-order (/cuenta/orden) → ambos resuelven ambiguo y rompen
+// la vista de pedido de la cuenta (ERR_TOO_MANY_REDIRECTS). Quedó en su default
+// 'order-received'. Si se quiere personalizar, usar un slug DISTINTO de 'orden'
+// (ej. 'recibido' / 'confirmacion'):
+//   wp option update woocommerce_checkout_order_received_endpoint recibido
 //   wp rewrite flush
 //
 // The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
@@ -207,7 +209,10 @@ add_action( 'template_redirect', function (): void {
 // confirmación. Flow ya completó el pago antes de esta página y no engancha
 // woocommerce_thankyou, así que el redirect no interfiere con el cobro.
 add_action( 'template_redirect', function (): void {
-    if ( ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url( 'order-received' ) ) {
+    // is_order_received_page() exige estar en la PÁGINA de checkout (no solo
+    // que exista el query var), así que nunca se dispara en /cuenta/orden ni
+    // puede entrar en un loop de redirección.
+    if ( ! function_exists( 'is_order_received_page' ) || ! is_order_received_page() ) {
         return;
     }
 
