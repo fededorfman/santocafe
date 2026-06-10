@@ -172,13 +172,13 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password
 //   wp rewrite flush
 //
+// El "pedido recibido" del checkout es 'gracias' → /checkout/gracias/{id}.
 // OJO — colisión de slugs: los endpoints de WooCommerce comparten un namespace
-// global por slug. El "pedido recibido" del checkout NO puede usar el slug 'orden'
-// porque ya lo usa view-order (/cuenta/orden) → ambos resuelven ambiguo y rompen
-// la vista de pedido de la cuenta (ERR_TOO_MANY_REDIRECTS). Quedó en su default
-// 'order-received'. Si se quiere personalizar, usar un slug DISTINTO de 'orden'
-// (ej. 'recibido' / 'confirmacion'):
-//   wp option update woocommerce_checkout_order_received_endpoint recibido
+// global por slug, así que NO puede coincidir con 'orden' (view-order, /cuenta/orden)
+// o rompe la vista de pedido de la cuenta (ERR_TOO_MANY_REDIRECTS). La CLAVE del
+// query var sigue siendo 'order-received'. Se setea en DOS pasos (WC fija los
+// endpoints al init, por eso el flush va aparte):
+//   wp option update woocommerce_checkout_order_received_endpoint gracias
 //   wp rewrite flush
 //
 // The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
