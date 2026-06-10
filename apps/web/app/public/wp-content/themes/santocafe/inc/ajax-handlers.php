@@ -257,8 +257,12 @@ function sc_ajax_change_password(): void {
     wp_set_auth_cookie( $user->ID, true );
 
     wp_send_json_success( [
-        'message' => 'Tu contraseña se actualizó correctamente.',
-        'nonce'   => wp_create_nonce( 'sc_nonce' ),
+        'message'    => 'Tu contraseña se actualizó correctamente.',
+        'nonce'      => wp_create_nonce( 'sc_nonce' ),
+        // El link de logout de la página quedó con un nonce viejo (la sesión
+        // rotó); devolvemos uno fresco para que "Cerrar sesión" no pida
+        // confirmación de WordPress.
+        'logout_url' => wc_logout_url( home_url() ),
     ] );
 }
 

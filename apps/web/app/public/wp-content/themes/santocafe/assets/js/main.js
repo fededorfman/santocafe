@@ -623,8 +623,12 @@
                 if (res && res.success) {
                     // Cambiar la contraseña rota la sesión y el nonce anterior:
                     // el server devuelve uno fresco para que un segundo cambio
-                    // (u otra acción AJAX) no falle con 403.
+                    // (u otra acción AJAX) no falle con 403. También refrescamos
+                    // el link de "Cerrar sesión", cuyo nonce quedó obsoleto.
                     if (res.data && res.data.nonce) { SC.nonce = res.data.nonce; }
+                    if (res.data && res.data.logout_url) {
+                        $('.js-logout-link').attr('href', res.data.logout_url);
+                    }
                     $cur.val(''); $p1.val(''); $p2.val('');
                     $feedback.removeClass('is-error').addClass('is-success')
                         .text((res.data && res.data.message) || 'Contraseña actualizada.').removeAttr('hidden');

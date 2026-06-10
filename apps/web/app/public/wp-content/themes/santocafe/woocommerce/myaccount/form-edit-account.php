@@ -113,7 +113,7 @@ do_action( 'woocommerce_before_edit_account_form' );
 </form>
 
 <div class="sc-account-logout">
-	<a href="<?php echo esc_url( wc_logout_url( home_url() ) ); ?>" class="sc-account-logout__btn">Cerrar sesión</a>
+	<a href="<?php echo esc_url( wc_logout_url( home_url() ) ); ?>" class="sc-account-logout__btn js-logout-link">Cerrar sesión</a>
 </div>
 
 <?php do_action( 'woocommerce_after_edit_account_form' ); ?>
