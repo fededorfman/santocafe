@@ -120,6 +120,15 @@ add_action( 'woocommerce_created_customer', function ( int $customer_id ): void 
     }
 } );
 
+// Vincular pedidos hechos como invitado a la cuenta recién creada cuando coincide
+// el email. Así un comprador que se registra después de comprar (desde la
+// invitación de la página de "pedido recibido") ve ese pedido en su historial.
+add_action( 'woocommerce_created_customer', function ( int $customer_id ): void {
+    if ( function_exists( 'wc_update_new_customer_past_orders' ) ) {
+        wc_update_new_customer_past_orders( $customer_id );
+    }
+}, 20 );
+
 // Notices: don't print them above the login/register forms — the templates
 // print them inside the relevant form instead.
 add_action( 'init', function (): void {

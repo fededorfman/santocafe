@@ -1141,6 +1141,112 @@
 }
 .sc-order-update__text p { margin: 0; }
 
+/* ============================================================
+   Thank-you / "pedido recibido" — mismo look que la vista de
+   pedido en Mi cuenta, con hero de confirmación e invitación.
+   ============================================================ */
+.sc-thankyou {
+    max-width: 860px;
+    margin-inline: auto;
+}
+
+.sc-thankyou__hero {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.sc-thankyou__icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eef7ed;
+    color: #2e7d32;
+}
+
+.sc-thankyou__hero--failed .sc-thankyou__icon {
+    background: #fdf3f2;
+    color: #c0392b;
+}
+
+.sc-thankyou__title {
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.sc-thankyou__lead {
+    font-size: var(--font-size-base);
+    color: var(--color-texto);
+    line-height: 1.6;
+    max-width: 46ch;
+    margin: 0 auto;
+}
+
+.sc-thankyou__lead strong { color: var(--color-oscuro); }
+
+.sc-thankyou__actions {
+    margin-top: var(--spacing-lg);
+}
+
+/* Invitación a crear cuenta (compra como invitado) */
+.sc-account-invite {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid rgba(223, 179, 62, 0.4);
+    border-radius: var(--radius-card);
+    background: rgba(223, 179, 62, 0.08);
+}
+
+.sc-account-invite__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+}
+
+.sc-account-invite__body {
+    flex: 1;
+    min-width: 200px;
+}
+
+.sc-account-invite__title {
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+    margin: 0 0 4px;
+}
+
+.sc-account-invite__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
+    line-height: 1.55;
+    margin: 0;
+}
+
+.sc-account-invite__cta {
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .sc-account-invite {
+        justify-content: center;
+        text-align: center;
+    }
+    .sc-account-invite__cta { width: 100%; }
+}
+
 /* --- Order detail: items table with thumbnails --- */
 .sc-order-item {
     display: flex;

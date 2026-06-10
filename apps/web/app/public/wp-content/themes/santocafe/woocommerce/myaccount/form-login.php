@@ -105,8 +105,14 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <p class="woocommerce-form-row form-row">
                 <label for="reg_email">Email</label>
+                <?php
+                // Prefill: POST (reintento) o ?reg_email= (invitación desde "pedido recibido").
+                $sc_reg_email = ! empty( $_POST['email'] )
+                    ? wp_unslash( $_POST['email'] )
+                    : ( ! empty( $_GET['reg_email'] ) ? sanitize_email( wp_unslash( $_GET['reg_email'] ) ) : '' );
+                ?>
                 <input type="email" name="email" id="reg_email" autocomplete="email" spellcheck="false"
-                       value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>"
+                       value="<?php echo esc_attr( $sc_reg_email ); ?>"
                        required aria-required="true" />
             </p>
 
