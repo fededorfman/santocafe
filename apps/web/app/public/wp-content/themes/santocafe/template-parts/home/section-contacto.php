@@ -45,9 +45,9 @@ defined('ABSPATH') || exit;
                         </div>
                         <div>
                             <span class="contacto__item-label">WhatsApp</span>
-                            <a href="https://wa.me/56996416308" class="contacto__item-value"
+                            <a href="https://wa.me/56951414791" class="contacto__item-value"
                                target="_blank" rel="noopener">
-                                +56 9 9641 6308
+                                +56 9 5141 4791
                             </a>
                         </div>
                     </div>

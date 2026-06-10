@@ -36,7 +36,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                             <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
                         </svg>
                     </a>
-                    <a href="https://wa.me/56996416308"
+                    <a href="https://wa.me/56951414791"
                        class="social-icon" aria-label="Contactar por WhatsApp"
                        rel="noopener noreferrer" target="_blank">
                         <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">

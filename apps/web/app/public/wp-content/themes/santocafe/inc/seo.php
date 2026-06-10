@@ -24,9 +24,9 @@ function sc_seo_cfg(): array {
 		'site_name'  => 'Santo Café',
 		'tagline'    => 'Café de especialidad online en Chile · Envío en Santiago',
 		'email'      => 'hola@santocafe.cl',
-		'phone'      => '+56996416308',
+		'phone'      => '+56951414791',
 		'instagram'  => 'https://www.instagram.com/santocafespecialtycoffee/',
-		'whatsapp'   => 'https://wa.me/56996416308',
+		'whatsapp'   => 'https://wa.me/56951414791',
 		// Default OG image — replace assets/images/og-default.jpg with a
 		// branded 1200×630 PNG/JPG when available. Fallback: hero photo.
 		'og_image'   => file_exists( get_template_directory() . '/assets/images/og-default.jpg' )
