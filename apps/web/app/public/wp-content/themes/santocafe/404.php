@@ -16,7 +16,7 @@ $catalog_url = home_url( '/#catalogo' );
         <section class="error-404">
 
             <div class="error-404__image" aria-hidden="true">
-                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/404.webp' ); ?>"
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/404.png' ); ?>"
                      alt="" width="200" height="200" loading="eager">
             </div>
 
