@@ -7,6 +7,12 @@
  *
  * Safe to re-run: checks by slug before inserting.
  */
+// Solo CLI: evita que se dispare por URL (vive bajo el web root).
+if ( PHP_SAPI !== 'cli' ) {
+    http_response_code( 403 );
+    exit( 'Este script solo puede ejecutarse por CLI.' );
+}
+
 define( 'WP_USE_THEMES', false );
 require __DIR__ . '/../../../../wp-load.php';
 
