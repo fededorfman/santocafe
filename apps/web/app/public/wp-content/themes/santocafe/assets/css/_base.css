@@ -29,6 +29,8 @@ html {
        off-canvas via transform (no horizontal overflow); body clips the rest. */
     overscroll-behavior: none;   /* no scroll-chaining / rubber-band bounce */
     touch-action: pan-x pan-y;   /* allow scroll, block pinch / double-tap zoom */
+    /* Sin flash gris de iOS al tocar; los controles tienen estados :active propios */
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -77,6 +79,20 @@ button {
     cursor: pointer;
     border: none;
     background: none;
+}
+
+/* ============================================================
+   Precios — dígitos tabulares para que los montos no cambien
+   de ancho al actualizarse por AJAX (250g↔1kg, carrito, totales)
+   ============================================================ */
+.product-card__price,
+.product-card__price-was,
+.product-card__weight-price,
+.product-detail__price,
+.cart-item__total,
+.mini-cart-item__line,
+.woocommerce-Price-amount {
+    font-variant-numeric: tabular-nums;
 }
 
 /* ============================================================

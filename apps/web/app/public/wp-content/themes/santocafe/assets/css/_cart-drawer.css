@@ -77,6 +77,7 @@
     flex: 1;
     min-height: 0; /* allow the body to shrink and scroll (flexbox gotcha) */
     overflow-y: auto;
+    overscroll-behavior: contain; /* no scroll-chaining hacia la página */
     -webkit-overflow-scrolling: touch;
     padding: var(--spacing-md) var(--spacing-lg);
 }

@@ -189,6 +189,7 @@
     z-index: 2000;
     transition: left var(--transition-base);
     overflow-y: auto;
+    overscroll-behavior: contain; /* no scroll-chaining hacia la página */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -344,7 +345,8 @@
 
 .site-footer__links a {
     font-size: var(--font-size-sm);
-    color: rgba(255, 255, 255, 0.55);
+    /* ≥4.5:1 sobre --color-oscuro (AA) */
+    color: rgba(255, 255, 255, 0.72);
     transition: color var(--transition-fast);
 }
 
@@ -360,10 +362,11 @@
     align-items: center;
     justify-content: space-between;
     font-size: var(--font-size-xs);
-    color: rgba(255, 255, 255, 0.3);
+    /* ≥4.5:1 sobre --color-oscuro (AA) */
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .site-footer__bottom-tagline {
-    color: rgba(223, 179, 62, 0.6);
+    color: rgba(223, 179, 62, 0.85);
     font-style: italic;
 }

@@ -702,6 +702,14 @@ a.contacto__item-value:hover {
     opacity: 0.6;
 }
 
+/* Inputs ≥16px en mobile (evita auto-zoom de iOS y mejora legibilidad) */
+@media (max-width: 600px) {
+    .form-field input,
+    .form-field textarea {
+        font-size: 16px;
+    }
+}
+
 .form-field input:focus,
 .form-field textarea:focus {
     border-color: var(--color-dorado);

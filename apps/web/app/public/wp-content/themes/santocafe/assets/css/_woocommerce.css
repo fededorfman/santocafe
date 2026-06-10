@@ -379,6 +379,22 @@
     box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.18);
 }
 
+/* Inputs ≥16px en mobile (evita auto-zoom de iOS y mejora legibilidad) */
+@media (max-width: 600px) {
+    .sc-account input[type="text"],
+    .sc-account input[type="email"],
+    .sc-account input[type="password"],
+    .woocommerce-account .woocommerce-MyAccount-content input.input-text,
+    .woocommerce-account .woocommerce-MyAccount-content input[type="text"],
+    .woocommerce-account .woocommerce-MyAccount-content input[type="email"],
+    .woocommerce-account .woocommerce-MyAccount-content input[type="password"],
+    .woocommerce-account .woocommerce-MyAccount-content input[type="tel"],
+    .woocommerce-account .woocommerce-MyAccount-content select,
+    .woocommerce-account .woocommerce-MyAccount-content textarea {
+        font-size: 16px;
+    }
+}
+
 .woocommerce-MyAccount-content .form-row,
 .woocommerce-MyAccount-content .woocommerce-form-row {
     margin-bottom: var(--spacing-md);
