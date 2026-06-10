@@ -242,7 +242,11 @@ add_filter( 'woocommerce_package_rates', function ( array $rates ): array {
 // 1. Save molienda when item is added to cart
 add_filter( 'woocommerce_add_cart_item_data', function ( array $data, int $product_id, int $variation_id ): array {
     if ( ! empty( $_POST['molienda'] ) ) {
-        $data['molienda'] = sanitize_text_field( wp_unslash( $_POST['molienda'] ) );
+        $molienda = sanitize_text_field( wp_unslash( $_POST['molienda'] ) );
+        // Solo valores permitidos (un POST forjado no puede inyectar otra cosa)
+        if ( in_array( $molienda, [ 'Grano', 'Espresso', 'Italiana', 'Filtro' ], true ) ) {
+            $data['molienda'] = $molienda;
+        }
     }
     return $data;
 }, 10, 3 );

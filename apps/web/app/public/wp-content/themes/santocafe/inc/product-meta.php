@@ -162,6 +162,13 @@ add_action( 'woocommerce_process_product_meta', function ( int $post_id ): void 
         return;
     }
 
+    // Defensa en profundidad: verificar el nonce que WC emite en la pantalla
+    // de producto (el core ya lo valida antes de disparar este hook).
+    if ( ! isset( $_POST['woocommerce_meta_nonce'] )
+        || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) {
+        return;
+    }
+
     $text_fields = [
         '_sc_pais', '_sc_region', '_sc_productor',
         '_sc_variedad', '_sc_proceso',
