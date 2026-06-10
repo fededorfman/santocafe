@@ -172,6 +172,13 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //   wp option update woocommerce_myaccount_lost_password_endpoint recuperar-password
 //   wp rewrite flush
 //
+// El endpoint de "pedido recibido" del checkout también es opción de BD, cambiado
+// de 'order-received' a 'orden' → la URL final es /checkout/orden/{id}. La CLAVE
+// del query var sigue siendo 'order-received', así que is_wc_endpoint_url(
+// 'order-received') (usado en el redirect post-compra de arriba) no se ve afectado:
+//   wp option update woocommerce_checkout_order_received_endpoint orden
+//   wp rewrite flush
+//
 // The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
 // Productos → base personalizada). Set to /producto via:
 //   woocommerce_permalinks['product_base'] = '/producto'  +  rewrite flush
