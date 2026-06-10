@@ -102,6 +102,7 @@ $modules = [
     'inc/product-meta.php',
     'inc/ajax-handlers.php',
     'inc/seo.php',
+    'inc/security.php',
 ];
 
 foreach ($modules as $module) {
