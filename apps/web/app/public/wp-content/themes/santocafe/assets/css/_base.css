@@ -78,3 +78,50 @@ button {
     border: none;
     background: none;
 }
+
+/* ============================================================
+   Skip link — primer elemento enfocable; oculto hasta recibir
+   focus por teclado, entonces aparece sobre el header.
+   ============================================================ */
+.skip-link {
+    position: fixed;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 9999;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transform: translateY(calc(-100% - var(--spacing-lg)));
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   Focus visible — anillo dorado para navegación por teclado.
+   Los inputs con tratamiento propio (borde dorado + glow) lo
+   suprimen con su outline: none puntual.
+   ============================================================ */
+:focus-visible {
+    outline: 2px solid var(--color-dorado);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   Reduced motion — colapsa animaciones y transiciones para
+   usuarios con sensibilidad al movimiento (vestibular, etc.)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}

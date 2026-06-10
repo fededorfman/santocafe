@@ -23,6 +23,8 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
 <header class="site-header js-site-header">
 
     <div class="js-banner-slot">
@@ -94,7 +96,8 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
         </div>
     </nav>
 
-    <div id="mobile-drawer" class="mobile-drawer js-mobile-drawer" aria-hidden="true">
+    <div id="mobile-drawer" class="mobile-drawer js-mobile-drawer" role="dialog"
+         aria-modal="true" aria-label="Menú de navegación" aria-hidden="true">
         <div class="mobile-drawer__header">
             <span class="mobile-drawer__title">Menú</span>
             <button class="mobile-drawer__close js-menu-toggle" aria-label="Cerrar menú">✕</button>
@@ -125,7 +128,8 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 </header>
 
 <!-- Cart drawer (mini-cart, slides from the right) -->
-<aside class="cart-drawer js-cart-drawer" aria-hidden="true" aria-label="Carrito de compras">
+<aside class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true"
+       aria-hidden="true" aria-label="Carrito de compras">
     <div class="cart-drawer__header">
         <span class="cart-drawer__title">Tu carrito</span>
         <button class="cart-drawer__close js-cart-drawer-close" aria-label="Cerrar carrito">✕</button>

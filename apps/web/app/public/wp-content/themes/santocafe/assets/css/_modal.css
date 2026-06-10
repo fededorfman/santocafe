@@ -94,6 +94,13 @@
     background: rgba(0, 0, 0, 0.22);
 }
 
+/* Hit area 44px sin cambiar lo visual */
+.product-modal__close::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+}
+
 .product-modal__close svg {
     width: 16px;
     height: 16px;

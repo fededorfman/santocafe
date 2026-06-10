@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 get_header();
 ?>
 
-<main class="site-main page-main">
+<main class="site-main page-main" id="main">
     <div class="container">
         <?php get_template_part( 'template-parts/breadcrumbs' ); ?>
         <?php while ( have_posts() ) : the_post(); ?>

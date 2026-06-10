@@ -12,7 +12,8 @@
     transition: box-shadow var(--transition-base), transform var(--transition-base);
 }
 
-.product-card:hover {
+.product-card:hover,
+.product-card:focus-within {
     box-shadow: var(--shadow-hover);
     transform: translateY(-2px);
 }
@@ -96,6 +97,13 @@
 
 .product-card__info-btn:hover {
     background: rgba(26, 19, 16, 0.95);
+}
+
+/* Hit area 44px sin cambiar lo visual */
+.product-card__info-btn::after {
+    content: '';
+    position: absolute;
+    inset: -7px;
 }
 
 /* Sale badge (diagonal ribbon) */

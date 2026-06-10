@@ -5,6 +5,9 @@
 (function ($) {
     'use strict';
 
+    // Autoplay (carousels/galleries) stays off for users who prefer reduced motion.
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     // ============================================================
     // Mobile Drawer
     // ============================================================
@@ -753,7 +756,7 @@
 
         function startAutoplay() {
             stopAutoplay();
-            if (!mq.matches) return;
+            if (!mq.matches || reducedMotion.matches) return;
             timer = setInterval(function () {
                 scrollToCard((current + 1) % cards.length); // wraps → infinite
             }, AUTOPLAY);
@@ -847,6 +850,7 @@
 
         function startAuto() {
             stopAuto();
+            if (reducedMotion.matches) return;
             timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
         }
         function stopAuto() {

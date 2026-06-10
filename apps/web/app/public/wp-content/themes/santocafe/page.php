@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 get_header();
 ?>
 
-<main class="site-main page-main">
+<main class="site-main page-main" id="main">
     <div class="container">
         <?php
         while ( have_posts() ) :

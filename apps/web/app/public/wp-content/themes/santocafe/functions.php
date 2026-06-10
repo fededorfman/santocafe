@@ -65,7 +65,7 @@ remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wra
 remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
 
 add_action('woocommerce_before_main_content', function () {
-    echo '<main class="wc-main">';
+    echo '<main class="wc-main" id="main">';
 });
 add_action('woocommerce_after_main_content', function () {
     echo '</main>';

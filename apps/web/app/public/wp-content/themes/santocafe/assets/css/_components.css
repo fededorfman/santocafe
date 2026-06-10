@@ -28,6 +28,24 @@
 
 .btn:active { transform: scale(0.97); }
 
+/* Loading: mantiene el label visible y suma un spinner al lado.
+   El JS agrega .is-loading + disabled durante el request AJAX. */
+.btn.is-loading {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.btn.is-loading::after {
+    content: '';
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
 .btn--primary {
     background: var(--color-dorado);
     color: var(--color-oscuro);
@@ -185,7 +203,8 @@
     line-height: 1.4;
 }
 
-.pill-selector__option:hover {
+.pill-selector__option:hover,
+.pill-selector__option:focus-visible {
     border-color: var(--color-oscuro);
     color: var(--color-oscuro);
 }

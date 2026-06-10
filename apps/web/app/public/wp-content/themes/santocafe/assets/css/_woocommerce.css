@@ -92,6 +92,7 @@
 
 .sc-account input:focus {
     border-color: var(--color-dorado);
+    box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.18);
 }
 
 /* Remember-me checkbox row (horizontal) */
@@ -375,6 +376,7 @@
 .woocommerce-account .woocommerce-MyAccount-content select:focus,
 .woocommerce-account .woocommerce-MyAccount-content textarea:focus {
     border-color: var(--color-dorado);
+    box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.18);
 }
 
 .woocommerce-MyAccount-content .form-row,

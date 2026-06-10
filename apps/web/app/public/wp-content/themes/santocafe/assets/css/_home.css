@@ -182,6 +182,7 @@
 }
 
 .features__dot {
+    position: relative;
     width: 8px;
     height: 8px;
     padding: 0;
@@ -190,6 +191,13 @@
     background: rgba(255, 255, 255, 0.25);
     cursor: pointer;
     transition: width var(--transition-base), background var(--transition-base);
+}
+
+/* Hit area ampliada sin cambiar lo visual */
+.features__dot::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
 }
 
 .features__dot.is-active {
@@ -319,7 +327,8 @@
     .features__dots {
         display: flex;
         justify-content: center;
-        gap: var(--spacing-sm);
+        /* Gap ≥ hit area de los dots (24px) para que no se solapen */
+        gap: var(--spacing-md);
         margin-top: var(--spacing-lg);
     }
 }

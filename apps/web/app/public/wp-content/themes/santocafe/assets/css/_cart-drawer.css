@@ -52,6 +52,7 @@
 }
 
 .cart-drawer__close {
+    position: relative;
     background: none;
     border: none;
     cursor: pointer;
@@ -63,6 +64,13 @@
 }
 
 .cart-drawer__close:hover { color: var(--color-oscuro); }
+
+/* Hit area 44px sin cambiar lo visual */
+.cart-drawer__close::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+}
 
 /* ---- Body (mini-cart) ---- */
 .cart-drawer__body {
@@ -204,6 +212,7 @@
 
 /* Remove button — same look as the cart page (.cart-item__remove) */
 .mini-cart-item__remove {
+    position: relative;
     background: none;
     border: none;
     cursor: pointer;
@@ -216,6 +225,13 @@
 }
 
 .mini-cart-item__remove:hover { color: #c0392b; }
+
+/* Hit area ampliada sin cambiar lo visual */
+.mini-cart-item__remove::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+}
 
 /* Molienda pills (compact) */
 .mini-cart-item__molienda .pill-selector__option {
@@ -233,8 +249,8 @@
 
 /* Compact qty-picker (similar height to the molienda pills) */
 .qty-picker--sm .qty-picker__btn {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     font-size: var(--font-size-base);
 }
 

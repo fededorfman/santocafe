@@ -155,11 +155,15 @@
 .site-nav__hamburger {
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
     padding: var(--spacing-sm);
+    min-width: 44px;
+    min-height: 44px;
     color: #fff;
     flex-shrink: 0;
     z-index: 1; /* above absolutely-positioned logo */
@@ -291,6 +295,7 @@
 }
 
 .social-icon {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -305,6 +310,13 @@
 .social-icon:hover {
     background: var(--color-dorado);
     color: var(--color-oscuro);
+}
+
+/* Hit area 44px sin cambiar lo visual */
+.social-icon::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
 }
 
 .site-footer__heading {
