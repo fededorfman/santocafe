@@ -126,6 +126,24 @@ add_action( 'init', function (): void {
     remove_action( 'woocommerce_before_customer_login_form', 'woocommerce_output_all_notices', 10 );
 } );
 
+// Login: mensaje genérico para no revelar si el email existe (anti-enumeración).
+// Se engancha en 'authenticate' (post wp_authenticate_*, prioridad > 20) porque
+// los errores de enumeración los devuelve wp_signon, no el filtro de WooCommerce.
+// Cubre tanto el login de la tienda como el de wp-admin. Los errores de campo
+// vacío (empty_username/empty_password) se dejan pasar: son ayuda, no enumeración.
+add_filter( 'authenticate', function ( $user ) {
+    if ( is_wp_error( $user ) ) {
+        $enum = [ 'invalid_username', 'invalid_email', 'incorrect_password' ];
+        if ( array_intersect( (array) $user->get_error_codes(), $enum ) ) {
+            return new WP_Error(
+                'sc_login_failed',
+                'Email o contraseña incorrectos. Revisá los datos e intentá de nuevo.'
+            );
+        }
+    }
+    return $user;
+}, 30 );
+
 // My Account: drop "Escritorio" (dashboard), Descargas y Cerrar sesión del menú
 // (el logout vive ahora como botón al final de "Detalles de la cuenta").
 add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
