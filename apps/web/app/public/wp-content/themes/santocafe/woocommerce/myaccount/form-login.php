@@ -32,14 +32,14 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <p class="woocommerce-form-row form-row">
                 <label for="username">Email</label>
-                <input type="email" name="username" id="username" autocomplete="email"
+                <input type="email" name="username" id="username" autocomplete="email" spellcheck="false"
                        value="<?php echo ( ! empty( $_POST['username'] ) && is_string( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>"
                        required aria-required="true" />
             </p>
 
             <p class="woocommerce-form-row form-row">
                 <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" autocomplete="current-password"
+                <input type="password" name="password" id="password" autocomplete="current-password" spellcheck="false"
                        required aria-required="true" />
             </p>
 
@@ -105,7 +105,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <p class="woocommerce-form-row form-row">
                 <label for="reg_email">Email</label>
-                <input type="email" name="email" id="reg_email" autocomplete="email"
+                <input type="email" name="email" id="reg_email" autocomplete="email" spellcheck="false"
                        value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>"
                        required aria-required="true" />
             </p>
@@ -113,7 +113,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
             <p class="woocommerce-form-row form-row">
                 <label for="reg_password">Contraseña</label>
-                <input type="password" name="password" id="reg_password" autocomplete="new-password"
+                <input type="password" name="password" id="reg_password" autocomplete="new-password" spellcheck="false"
                        minlength="8" required aria-required="true" />
                 <small class="sc-account__hint">Mínimo 8 caracteres, con al menos una letra y un número.</small>
             </p>

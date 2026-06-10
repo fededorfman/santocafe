@@ -5,7 +5,7 @@ $values = [
     [ 'text' => '<strong>Trato directo</strong> con los mejores orígenes del mundo.' ],
     [ 'text' => 'Cafés de especialidad con <strong>+82 puntos SCA</strong>.' ],
     [ 'text' => '<strong>Tueste reciente</strong> para una máxima frescura.' ],
-    [ 'text' => 'Envíos en la Región Metropolitana de Santiago en <strong>24-48 horas hábiles</strong>.' ],
+    [ 'text' => 'Envíos en la Región Metropolitana de Santiago en <strong>24-48&nbsp;horas hábiles</strong>.' ],
 ];
 ?>
 

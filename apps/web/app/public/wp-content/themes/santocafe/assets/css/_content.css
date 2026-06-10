@@ -78,7 +78,10 @@
     margin: var(--spacing-xl) 0 var(--spacing-sm);
 }
 
-.sc-article__body p { margin-bottom: var(--spacing-md); }
+.sc-article__body p {
+    margin-bottom: var(--spacing-md);
+    text-wrap: pretty; /* evita viudas en texto largo */
+}
 
 .sc-article__body ul,
 .sc-article__body ol {

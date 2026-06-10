@@ -355,15 +355,17 @@ while ( have_posts() ) :
                             <!-- Track -->
                             <div class="pdesc-gallery__track" data-gallery-track>
                                 <?php foreach ( $sc_gallery as $sc_gi => $sc_img_id ) :
-                                    $sc_img_url   = wp_get_attachment_image_url( $sc_img_id, 'large' );
+                                    $sc_img_src   = wp_get_attachment_image_src( $sc_img_id, 'large' );
                                     $sc_img_alt   = get_post_meta( $sc_img_id, '_wp_attachment_image_alt', true )
                                         ?: esc_attr( $sc_product_title . ' — imagen ' . ( $sc_gi + 1 ) );
-                                    if ( ! $sc_img_url ) continue;
+                                    if ( ! $sc_img_src ) continue;
                                 ?>
                                 <div class="pdesc-gallery__slide<?php echo 0 === $sc_gi ? ' is-active' : ''; ?>"
                                      aria-hidden="<?php echo 0 === $sc_gi ? 'false' : 'true'; ?>">
-                                    <img src="<?php echo esc_url( $sc_img_url ); ?>"
+                                    <img src="<?php echo esc_url( $sc_img_src[0] ); ?>"
                                          alt="<?php echo esc_attr( $sc_img_alt ); ?>"
+                                         width="<?php echo esc_attr( $sc_img_src[1] ); ?>"
+                                         height="<?php echo esc_attr( $sc_img_src[2] ); ?>"
                                          loading="<?php echo 0 === $sc_gi ? 'eager' : 'lazy'; ?>">
                                 </div>
                                 <?php endforeach; ?>
@@ -373,16 +375,18 @@ while ( have_posts() ) :
                             <!-- Thumbnails -->
                             <div class="pdesc-gallery__thumbs" role="tablist" aria-label="Galería de imágenes">
                                 <?php foreach ( $sc_gallery as $sc_gi => $sc_img_id ) :
-                                    $sc_thumb_url = wp_get_attachment_image_url( $sc_img_id, 'thumbnail' );
-                                    if ( ! $sc_thumb_url ) continue;
+                                    $sc_thumb_src = wp_get_attachment_image_src( $sc_img_id, 'thumbnail' );
+                                    if ( ! $sc_thumb_src ) continue;
                                 ?>
                                 <button class="pdesc-gallery__thumb<?php echo 0 === $sc_gi ? ' is-active' : ''; ?>"
                                         data-gallery-thumb="<?php echo esc_attr( $sc_gi ); ?>"
                                         role="tab"
                                         aria-selected="<?php echo 0 === $sc_gi ? 'true' : 'false'; ?>"
                                         aria-label="Imagen <?php echo esc_attr( $sc_gi + 1 ); ?>">
-                                    <img src="<?php echo esc_url( $sc_thumb_url ); ?>"
-                                         alt="" loading="lazy" aria-hidden="true">
+                                    <img src="<?php echo esc_url( $sc_thumb_src[0] ); ?>"
+                                         alt="" width="<?php echo esc_attr( $sc_thumb_src[1] ); ?>"
+                                         height="<?php echo esc_attr( $sc_thumb_src[2] ); ?>"
+                                         loading="lazy" aria-hidden="true">
                                 </button>
                                 <?php endforeach; ?>
                             </div>

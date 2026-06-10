@@ -85,19 +85,19 @@ defined('ABSPATH') || exit;
                     <div class="form-field validate-required">
                         <label for="contact-nombre">Nombre <span class="form-field__req" aria-hidden="true">*</span></label>
                         <input type="text" id="contact-nombre" name="nombre"
-                               placeholder="Tu nombre" autocomplete="name" required aria-required="true">
+                               placeholder="Tu nombre…" autocomplete="name" required aria-required="true">
                     </div>
 
                     <div class="form-field validate-required">
                         <label for="contact-email">Email <span class="form-field__req" aria-hidden="true">*</span></label>
                         <input type="email" id="contact-email" name="email"
-                               placeholder="tu@email.com" autocomplete="email" required aria-required="true">
+                               placeholder="tu@email.com" autocomplete="email" spellcheck="false" required aria-required="true">
                     </div>
 
                     <div class="form-field validate-required">
                         <label for="contact-mensaje">Mensaje <span class="form-field__req" aria-hidden="true">*</span></label>
                         <textarea id="contact-mensaje" name="mensaje"
-                                  placeholder="¿En qué te podemos ayudar?" required aria-required="true"></textarea>
+                                  placeholder="Contanos en qué te podemos ayudar…" required aria-required="true"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn--primary">

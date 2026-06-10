@@ -49,6 +49,7 @@
 
 .legal__body p {
     margin-bottom: var(--spacing-md);
+    text-wrap: pretty; /* evita viudas en texto largo */
 }
 
 .legal__body ul,
