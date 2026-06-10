@@ -246,10 +246,20 @@ function sc_ajax_change_password(): void {
 
     // wp_set_password invalidates the session — re-authenticate so the user
     // stays logged in after changing their own password.
+    // Capturamos la nueva cookie en $_COOKIE para que, en este mismo request,
+    // wp_create_nonce() genere un nonce atado a la sesión NUEVA. Sin esto, el
+    // nonce viejo que tiene el JS queda inválido y un segundo cambio sin
+    // refrescar devuelve 403 (check_ajax_referer falla).
+    add_action( 'set_logged_in_cookie', function ( $logged_in_cookie ) {
+        $_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
+    } );
     wp_set_current_user( $user->ID );
     wp_set_auth_cookie( $user->ID, true );
 
-    wp_send_json_success( [ 'message' => 'Tu contraseña se actualizó correctamente.' ] );
+    wp_send_json_success( [
+        'message' => 'Tu contraseña se actualizó correctamente.',
+        'nonce'   => wp_create_nonce( 'sc_nonce' ),
+    ] );
 }
 
 add_action( 'wp_ajax_sc_change_password', 'sc_ajax_change_password' );
