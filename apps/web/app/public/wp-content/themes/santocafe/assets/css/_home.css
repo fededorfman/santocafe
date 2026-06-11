@@ -771,6 +771,35 @@ a.contacto__item-value:hover {
     color: var(--color-oscuro);
 }
 
+.reviews__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    color: var(--color-texto-suave);
+}
+
+.reviews__rating-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--color-dorado);
+}
+
+.reviews__rating-stars svg {
+    width: 18px;
+    height: 18px;
+}
+
+.reviews__rating-score {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+}
+
+.reviews__rating-count {
+    font-size: var(--font-size-sm);
+}
+
 /* Pista que se desplaza; el contenido va duplicado, así -50% loopea sin saltos.
    El gap entre tarjetas lo aporta el margin-right de cada tarjeta (no flex gap)
    para que el punto de corte del loop sea exacto. */
