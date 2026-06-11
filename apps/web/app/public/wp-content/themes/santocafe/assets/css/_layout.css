@@ -95,14 +95,12 @@
     display: block;
 }
 
-.site-nav__brand-name {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-    letter-spacing: 0.01em;
-    line-height: 1;
+/* Wordmark a la derecha del isologo (reemplaza el texto "Santo Café").
+   Selector con 2 clases para ganarle a `.site-nav__logo img` (height: 52px). */
+.site-nav__logo .site-nav__brand-img {
+    height: 26px;
+    width: auto;
+    display: block;
 }
 
 .site-nav__menu {

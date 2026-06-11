@@ -46,7 +46,9 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                 <img src="<?php echo esc_url( $logo_url ); ?>"
                      alt="<?php bloginfo( 'name' ); ?>"
                      width="120" height="52">
-                <span class="site-nav__brand-name">Santo Café</span>
+                <img class="site-nav__brand-img"
+                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo_santocafe.png' ); ?>"
+                     alt="" width="656" height="291">
             </a>
 
             <?php

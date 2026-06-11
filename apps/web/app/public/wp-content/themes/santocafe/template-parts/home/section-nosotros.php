@@ -52,7 +52,7 @@ $values = [
             <!-- Imagen -->
             <div class="nosotros__image-wrap">
                 <img class="nosotros__image"
-                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/sobre-nosotros.png' ); ?>"
+                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/sobre-nosotros.jpg' ); ?>"
                      alt="Café de especialidad de Santo Café"
                      width="800" height="800"
                      loading="lazy">
