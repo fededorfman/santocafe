@@ -56,11 +56,11 @@ $sc_render_reviews = static function ( array $items, bool $hidden = false ) use 
 <section class="reviews" aria-label="Reseñas de clientes">
     <div class="container reviews__head">
         <span class="reviews__label">Reseñas</span>
-        <h2 class="reviews__title">Lo que dicen quienes ya lo probaron</h2>
+        <h2 class="reviews__title">Lo que nos llena de orgullo</h2>
         <div class="reviews__rating" aria-label="Calificación 4.9 de 5 sobre más de 100 reseñas">
+            <span class="reviews__rating-score">4.9</span>
             <span class="reviews__rating-stars" aria-hidden="true"><?php echo $sc_stars; // SVG estático ?></span>
-            <span class="reviews__rating-score">4.9/5</span>
-            <span class="reviews__rating-count">· +100 reseñas</span>
+            <span class="reviews__rating-count">(+100)</span>
         </div>
     </div>
 
