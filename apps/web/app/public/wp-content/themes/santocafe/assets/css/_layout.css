@@ -101,6 +101,9 @@
     height: 26px;
     width: auto;
     display: block;
+    /* El wordmark es oscuro; lo pasamos a blanco para que contraste con el
+       header oscuro (brightness(0) -> negro, invert(1) -> blanco). */
+    filter: brightness(0) invert(1);
 }
 
 .site-nav__menu {
