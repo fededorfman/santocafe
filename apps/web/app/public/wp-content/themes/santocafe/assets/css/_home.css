@@ -776,12 +776,14 @@ a.contacto__item-value:hover {
    para que el punto de corte del loop sea exacto. */
 .reviews__marquee {
     overflow: hidden;
+    /* Aire vertical para que la sombra de las tarjetas no se recorte arriba/abajo */
+    padding: var(--spacing-md) 0;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
             mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
 .reviews__marquee + .reviews__marquee {
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-xs);
 }
 
 .reviews__track {
@@ -816,6 +818,14 @@ a.contacto__item-value:hover {
     gap: var(--spacing-sm);
 }
 
+/* Cabecera: estrellas a la izquierda, nombre arriba a la derecha */
+.review-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+}
+
 .review-card__stars {
     display: flex;
     gap: 2px;
@@ -840,6 +850,8 @@ a.contacto__item-value:hover {
     font-weight: 600;
     color: var(--color-oscuro);
     font-size: var(--font-size-sm);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 @media (max-width: 600px) {
