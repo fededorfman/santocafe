@@ -11,7 +11,7 @@ $sc_stars = str_repeat( $sc_star, 5 );
 
 // Fila que se desplaza hacia la izquierda
 $sc_reviews_left = [
-    [ 'name' => 'Matías G.',     'text' => 'Compré café ahí por primera vez por recomendación, compré de 3 variedades y nunca mas volveré a comprar café de supermercado.. volveré a pedir pronto, muy buenos. Y algo que añadir, el reparto y el repartidor de 10' ],
+    [ 'name' => 'Matías G.',     'text' => 'Compré café ahí por primera vez por recomendación, compré de 3 variedades y nunca mas volveré a comprar café de supermercado.. volveré a pedir pronto,' ],
     [ 'name' => 'Constanza V.',  'text' => 'pedí el de Colombia y se nota la diferencia con el de supermercado. llegó rapidísimo y bien embalado, ya van 3 pedidos y seguimos' ],
     [ 'name' => 'Felipe C.',     'text' => 'Yo era consumidor habitual de otra marca de café y quise buscar otro proveedor por cambiar un poco. He de decir que fue un descubrimiento y un acierto, la relación calidad-precio es inmejorable' ],
     [ 'name' => 'Antonia P.',    'text' => 'Lo regale para el dia del padre y a mi papa le encanto. despues volvi a comprar para la casa y no me arrepiento para nada' ],
@@ -36,6 +36,7 @@ $sc_reviews_right = [
     [ 'name' => 'Martina S.',    'text' => 'me encanta que venga molido al gusto, lo pedí para filtro y quedó tal cual. se nota la frescura, nada que ver con el de antes' ],
     [ 'name' => 'Nicolás P.',    'text' => 'Atención impecable, respondieron todas mis dudas por whatsapp rápido. el café riquísimo, lo recomiendo con los ojos cerrados' ],
     [ 'name' => 'Isidora C.',    'text' => 'regalo perfecto para mi hermano que es cafetero, quedó feliz con el pack. seguro vuelvo a comprar para las fiestas' ],
+    [ 'name' => 'Rodrigo M.',    'text' => 'muy buenos, quiero probar todos. Y algo que añadir, el reparto y el repartidor de 10' ],
 ];
 
 $sc_render_reviews = static function ( array $items, bool $hidden = false ) use ( $sc_stars ): string {
