@@ -49,13 +49,36 @@ $values = [
                 </div>
             </div>
 
-            <!-- Imagen -->
+            <!-- Galería -->
+            <?php
+            $sc_nos_imgs = [ 'sobre-nosotros.jpg', 'sobre-nosotros2.jpg', 'sobre-nosotros3.jpg', 'sobre-nosotros4.jpg' ];
+            $sc_nos_base = get_template_directory_uri() . '/assets/images/';
+            ?>
             <div class="nosotros__image-wrap">
-                <img class="nosotros__image"
-                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/sobre-nosotros.jpg' ); ?>"
-                     alt="Café de especialidad de Santo Café"
-                     width="800" height="800"
-                     loading="lazy">
+                <div class="pdesc-gallery pdesc-gallery--multi" data-pdesc-gallery>
+                    <div class="pdesc-gallery__track" data-gallery-track>
+                        <?php foreach ( $sc_nos_imgs as $sc_i => $sc_img ) : ?>
+                        <div class="pdesc-gallery__slide<?php echo 0 === $sc_i ? ' is-active' : ''; ?>"
+                             aria-hidden="<?php echo 0 === $sc_i ? 'false' : 'true'; ?>">
+                            <img src="<?php echo esc_url( $sc_nos_base . $sc_img ); ?>"
+                                 alt="Café de especialidad de Santo Café"
+                                 loading="lazy">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="pdesc-gallery__thumbs" role="tablist" aria-label="Galería Nuestra historia">
+                        <?php foreach ( $sc_nos_imgs as $sc_i => $sc_img ) : ?>
+                        <button class="pdesc-gallery__thumb<?php echo 0 === $sc_i ? ' is-active' : ''; ?>"
+                                data-gallery-thumb="<?php echo esc_attr( $sc_i ); ?>"
+                                role="tab"
+                                aria-selected="<?php echo 0 === $sc_i ? 'true' : 'false'; ?>"
+                                aria-label="Imagen <?php echo esc_attr( $sc_i + 1 ); ?>">
+                            <img src="<?php echo esc_url( $sc_nos_base . $sc_img ); ?>"
+                                 alt="" loading="lazy" aria-hidden="true">
+                        </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
 
         </div>

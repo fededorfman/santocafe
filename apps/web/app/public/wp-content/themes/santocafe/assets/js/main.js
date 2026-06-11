@@ -822,106 +822,108 @@
     })();
 
     // ============================================================
-    // Product description gallery (pdesc-gallery)
-    // Auto-advances, supports drag/swipe, thumbnail navigation.
+    // Galería de imágenes (pdesc-gallery) — descripción de producto
+    // y "Nuestra historia". Soporta múltiples instancias por página.
+    // Auto-advance, drag/swipe, navegación por miniaturas.
     // ============================================================
-    (function initPdescGallery() {
-        var gallery = document.querySelector('[data-pdesc-gallery]');
-        if (!gallery) return;
+    (function initPdescGalleries() {
+        Array.prototype.forEach.call(
+            document.querySelectorAll('[data-pdesc-gallery]'),
+            function (gallery) {
 
-        var track  = gallery.querySelector('[data-gallery-track]');
-        var slides = Array.from(gallery.querySelectorAll('.pdesc-gallery__slide'));
-        var thumbs = Array.from(gallery.querySelectorAll('[data-gallery-thumb]'));
-        if (slides.length < 2) return; // single image — no carousel needed
+            var track  = gallery.querySelector('[data-gallery-track]');
+            var slides = Array.from(gallery.querySelectorAll('.pdesc-gallery__slide'));
+            var thumbs = Array.from(gallery.querySelectorAll('[data-gallery-thumb]'));
+            if (!track || slides.length < 2) return; // una sola imagen — sin carrusel
 
-        var current  = 0;
-        var timer    = null;
-        var INTERVAL = 4500; // ms between auto-advances
+            var current  = 0;
+            var timer    = null;
+            var INTERVAL = 4500; // ms entre avances automáticos
 
-        function goTo(index) {
-            slides[current].classList.remove('is-active');
-            slides[current].setAttribute('aria-hidden', 'true');
-            if (thumbs[current]) {
-                thumbs[current].classList.remove('is-active');
-                thumbs[current].setAttribute('aria-selected', 'false');
+            function goTo(index) {
+                slides[current].classList.remove('is-active');
+                slides[current].setAttribute('aria-hidden', 'true');
+                if (thumbs[current]) {
+                    thumbs[current].classList.remove('is-active');
+                    thumbs[current].setAttribute('aria-selected', 'false');
+                }
+
+                current = (index + slides.length) % slides.length;
+
+                slides[current].classList.add('is-active');
+                slides[current].setAttribute('aria-hidden', 'false');
+                if (thumbs[current]) {
+                    thumbs[current].classList.add('is-active');
+                    thumbs[current].setAttribute('aria-selected', 'true');
+                }
             }
 
-            current = (index + slides.length) % slides.length;
-
-            slides[current].classList.add('is-active');
-            slides[current].setAttribute('aria-hidden', 'false');
-            if (thumbs[current]) {
-                thumbs[current].classList.add('is-active');
-                thumbs[current].setAttribute('aria-selected', 'true');
+            function startAuto() {
+                stopAuto();
+                if (reducedMotion.matches) return;
+                timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
             }
-        }
+            function stopAuto() {
+                if (timer) { clearInterval(timer); timer = null; }
+            }
+            function resetAuto() { stopAuto(); startAuto(); }
 
-        function startAuto() {
-            stopAuto();
-            if (reducedMotion.matches) return;
-            timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
-        }
-        function stopAuto() {
-            if (timer) { clearInterval(timer); timer = null; }
-        }
-        function resetAuto() { stopAuto(); startAuto(); }
-
-        // Thumbnail clicks
-        thumbs.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                goTo(parseInt(btn.getAttribute('data-gallery-thumb'), 10));
-                resetAuto();
+            // Thumbnail clicks
+            thumbs.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    goTo(parseInt(btn.getAttribute('data-gallery-thumb'), 10));
+                    resetAuto();
+                });
             });
-        });
 
-        // Drag / swipe (mouse + touch)
-        var dragStartX = null;
-        var THRESHOLD  = 50; // px
+            // Drag / swipe (mouse + touch)
+            var dragStartX = null;
+            var THRESHOLD  = 50; // px
 
-        function onDragStart(x) { dragStartX = x; }
-        function onDragEnd(x) {
-            if (dragStartX === null) return;
-            var delta = x - dragStartX;
-            dragStartX = null;
-            if (Math.abs(delta) < THRESHOLD) return;
-            goTo(delta < 0 ? current + 1 : current - 1);
-            resetAuto();
-        }
+            function onDragStart(x) { dragStartX = x; }
+            function onDragEnd(x) {
+                if (dragStartX === null) return;
+                var delta = x - dragStartX;
+                dragStartX = null;
+                if (Math.abs(delta) < THRESHOLD) return;
+                goTo(delta < 0 ? current + 1 : current - 1);
+                resetAuto();
+            }
 
-        // Touch
-        track.addEventListener('touchstart', function (e) {
-            onDragStart(e.touches[0].clientX);
-            stopAuto();
-        }, { passive: true });
-        track.addEventListener('touchend', function (e) {
-            onDragEnd(e.changedTouches[0].clientX);
+            // Touch
+            track.addEventListener('touchstart', function (e) {
+                onDragStart(e.touches[0].clientX);
+                stopAuto();
+            }, { passive: true });
+            track.addEventListener('touchend', function (e) {
+                onDragEnd(e.changedTouches[0].clientX);
+                startAuto();
+            }, { passive: true });
+
+            // Mouse drag — preventDefault corta el image-drag nativo del browser
+            // antes de que secuestre el puntero y podamos medir el delta.
+            track.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                onDragStart(e.clientX);
+                stopAuto();
+            });
+
+            // Por las dudas: cancelar cualquier dragstart que burbujee del <img>.
+            track.addEventListener('dragstart', function (e) {
+                e.preventDefault();
+            });
+            document.addEventListener('mouseup', function (e) {
+                if (dragStartX === null) return;
+                onDragEnd(e.clientX);
+                startAuto();
+            });
+
+            // Pausa al pasar el mouse
+            gallery.addEventListener('mouseenter', stopAuto);
+            gallery.addEventListener('mouseleave', startAuto);
+
             startAuto();
-        }, { passive: true });
-
-        // Mouse drag — preventDefault stops the browser's native image-drag
-        // from hijacking the pointer before we can measure the delta.
-        track.addEventListener('mousedown', function (e) {
-            e.preventDefault();
-            onDragStart(e.clientX);
-            stopAuto();
         });
-
-        // Belt-and-suspenders: also cancel any dragstart that bubbles up from
-        // the <img> elements inside the track.
-        track.addEventListener('dragstart', function (e) {
-            e.preventDefault();
-        });
-        document.addEventListener('mouseup', function (e) {
-            if (dragStartX === null) return;
-            onDragEnd(e.clientX);
-            startAuto();
-        });
-
-        // Pause on hover
-        gallery.addEventListener('mouseenter', stopAuto);
-        gallery.addEventListener('mouseleave', startAuto);
-
-        startAuto();
     })();
 
 })(jQuery);
