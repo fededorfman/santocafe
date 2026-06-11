@@ -12,24 +12,30 @@ $sc_stars = str_repeat( $sc_star, 5 );
 // Fila que se desplaza hacia la izquierda
 $sc_reviews_left = [
     [ 'name' => 'Matías G.',     'text' => 'Compré café ahí por primera vez por recomendación, compré de 3 variedades y nunca mas volveré a comprar café de supermercado.. volveré a pedir pronto, muy buenos. Y algo que añadir, el reparto y el repartidor de 10' ],
-    [ 'name' => 'Constanza V.',  'text' => 'Pedí el de Colombia y se nota la diferencia con el de supermercado. llegó rapidísimo y bien embalado, ya van 3 pedidos y seguimos' ],
+    [ 'name' => 'Constanza V.',  'text' => 'pedí el de Colombia y se nota la diferencia con el de supermercado. llegó rapidísimo y bien embalado, ya van 3 pedidos y seguimos' ],
     [ 'name' => 'Felipe C.',     'text' => 'Yo era consumidor habitual de otra marca de café y quise buscar otro proveedor por cambiar un poco. He de decir que fue un descubrimiento y un acierto, la relación calidad-precio es inmejorable' ],
-    [ 'name' => 'Antonia P.',    'text' => 'Lo regalé para el día del padre y a mi papá le encantó. después volví a comprar para la casa y no me arrepiento para nada' ],
+    [ 'name' => 'Antonia P.',    'text' => 'Lo regale para el dia del padre y a mi papa le encanto. despues volvi a comprar para la casa y no me arrepiento para nada' ],
     [ 'name' => 'Sebastián M.',  'text' => 'Café natural en grano y con sabor a café de verdad, ni comparación con muchas marcas comerciales que venden torrefacto a buen precio.' ],
-    [ 'name' => 'Valentina H.',  'text' => 'Soy media exigente con el café y este me dejó contenta. se nota el tueste reciente, nada que ver con los molidos que venden en el super' ],
+    [ 'name' => 'Valentina H.',  'text' => 'Soy media exigente con el cafe y este me dejo contenta. se nota el tueste reciente, nada que ver con los molidos que venden en el super' ],
     [ 'name' => 'Fernanda L.',   'text' => 'buenísimo todo, el sabor, el aroma y la rapidez del envío. lo único que la bolsa se me terminó rápido porque tomo harto café jaja' ],
     [ 'name' => 'Catalina N.',   'text' => 'Me escribieron para coordinar la entrega y llegó puntual. la atención de primera y el café intenso pero sin amargar.' ],
+    [ 'name' => 'Tomás B.',      'text' => 'el de Guatemala me voló la cabeza, súper aromático. lo tomo solo sin azúcar y queda perfecto, ya es parte de la rutina de la mañana' ],
+    [ 'name' => 'Francisca E.',  'text' => 'Pedí para la oficina y a todos les gustó, ahora compramos seguido. el envío siempre llega cuando dicen, sin atrasos' ],
+    [ 'name' => 'Joaquín R.',    'text' => 'probé varios y me quedo con el de Bolivia, buen cuerpo y no amarga. la verdad muy buena compra y mejor precio que otros' ],
 ];
 
 // Fila que se desplaza hacia la derecha
 $sc_reviews_right = [
     [ 'name' => 'Camila R.',     'text' => 'Grandes profesionales, dan un trato genial, con producto de mucha calidad, sabor y aroma. Recomendable al 100%.' ],
-    [ 'name' => 'Diego A.',      'text' => 'Muy buena atención, me asesoraron para elegir según la cafetera que tengo. el café fresco se siente en el aroma apenas abres la bolsa' ],
+    [ 'name' => 'Diego A.',      'text' => 'muy buena atención, me asesoraron para elegir según la cafetera que tengo. el café fresco se siente en el aroma apenas abres la bolsa' ],
     [ 'name' => 'Javiera S.',    'text' => 'Un café delicioso y de gran calidad, tostado en su punto y a un precio razonable. La parte de la empresa y el transporte, excelente. Lo recomiendo 100%' ],
-    [ 'name' => 'Cristóbal F.',  'text' => 'Excelente relación precio calidad. probé el natural de Brasil y es suavecito, ideal para la mañana. el despacho llegó antes de lo previsto' ],
+    [ 'name' => 'Cristóbal F.',  'text' => 'excelente relación precio calidad. probé el natural de Brasil y es suavecito, ideal para la mañana. el despacho llegó antes de lo previsto' ],
     [ 'name' => 'Ignacio T.',    'text' => 'Compré por recomendación de una amiga y ahora ando recomendando yo. la molienda para prensa francesa quedó perfecta' ],
-    [ 'name' => 'Benjamín O.',   'text' => 'Primera vez que pido café de especialidad y no vuelvo atrás. el de Perú tiene un dejo dulzón que me gustó harto, recomendado' ],
+    [ 'name' => 'Benjamín O.',   'text' => 'Primera vez que pido cafe de especialidad y no vuelvo atras. el de Peru tiene un dejo dulzon que me gusto harto, recomendado' ],
     [ 'name' => 'Josefa M.',     'text' => 'Llevo varios meses comprando y nunca me ha fallado, siempre fresco y rico. el repartidor además súper amable.' ],
+    [ 'name' => 'Martina S.',    'text' => 'me encanta que venga molido al gusto, lo pedí para filtro y quedó tal cual. se nota la frescura, nada que ver con el de antes' ],
+    [ 'name' => 'Nicolás P.',    'text' => 'Atención impecable, respondieron todas mis dudas por whatsapp rápido. el café riquísimo, lo recomiendo con los ojos cerrados' ],
+    [ 'name' => 'Isidora C.',    'text' => 'regalo perfecto para mi hermano que es cafetero, quedó feliz con el pack. seguro vuelvo a comprar para las fiestas' ],
 ];
 
 $sc_render_reviews = static function ( array $items, bool $hidden = false ) use ( $sc_stars ): string {
