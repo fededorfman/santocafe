@@ -741,3 +741,107 @@ a.contacto__item-value:hover {
     .home-guias__grid { grid-template-columns: 1fr; }
     .home-guias { padding: var(--spacing-xl) 0; }
 }
+
+/* ============================================================
+   RESEÑAS (home) — dos carouseles infinitos (izquierda / derecha)
+   ============================================================ */
+.reviews {
+    padding: var(--spacing-2xl) 0;
+    background: var(--color-crema);
+    overflow: hidden;
+}
+
+.reviews__head {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.reviews__label {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado-suave);
+    margin-bottom: var(--spacing-xs);
+}
+
+.reviews__title {
+    font-size: var(--font-size-2xl);
+    color: var(--color-oscuro);
+}
+
+/* Pista que se desplaza; el contenido va duplicado, así -50% loopea sin saltos.
+   El gap entre tarjetas lo aporta el margin-right de cada tarjeta (no flex gap)
+   para que el punto de corte del loop sea exacto. */
+.reviews__marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.reviews__marquee + .reviews__marquee {
+    margin-top: var(--spacing-lg);
+}
+
+.reviews__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+}
+
+.reviews__marquee--left  .reviews__track { animation: reviews-left  60s linear infinite; }
+.reviews__marquee--right .reviews__track { animation: reviews-right 72s linear infinite; }
+
+@keyframes reviews-left  { from { transform: translateX(0); }     to { transform: translateX(-50%); } }
+@keyframes reviews-right { from { transform: translateX(-50%); }  to { transform: translateX(0); } }
+
+/* Pausa al pasar el mouse */
+.reviews__marquee:hover .reviews__track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+    .reviews__track { animation: none; }
+}
+
+.review-card {
+    flex: 0 0 auto;
+    width: 340px;
+    margin-right: var(--spacing-lg);
+    background: var(--color-tarjeta);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.review-card__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--color-dorado);
+}
+
+.review-card__star {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.review-card__text {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto);
+    line-height: 1.55;
+    flex: 1;
+    margin: 0;
+}
+
+.review-card__name {
+    font-weight: 600;
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+}
+
+@media (max-width: 600px) {
+    .review-card { width: 280px; }
+}
