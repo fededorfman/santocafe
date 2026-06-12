@@ -18,18 +18,4 @@ get_template_part('template-parts/home/section-reviews');
 get_template_part('template-parts/home/section-contacto');
 echo '</main>';
 
-// Product quick-view modal shell (populated via AJAX)
-?>
-<div class="product-modal" id="product-quick-view" role="dialog"
-     aria-modal="true" aria-label="Vista rápida del producto" aria-hidden="true">
-    <div class="product-modal__overlay js-modal-close" aria-hidden="true"></div>
-    <div class="product-modal__dialog js-modal-dialog">
-        <div class="product-modal__loading">
-            <div class="spinner" aria-hidden="true"></div>
-            Cargando…
-        </div>
-    </div>
-</div>
-<?php
-
 get_footer();

@@ -46,6 +46,10 @@
     animation: spin 0.7s linear infinite;
 }
 
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .btn--primary {
     background: var(--color-dorado);
     color: var(--color-oscuro);

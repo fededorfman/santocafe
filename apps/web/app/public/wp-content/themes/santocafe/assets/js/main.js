@@ -126,100 +126,6 @@
     });
 
     // ============================================================
-    // Product Quick View Modal
-    // ============================================================
-    var $modal       = $('#product-quick-view');
-    var $modalDialog = $modal.find('.js-modal-dialog');
-    var lastFocus    = null;
-
-    function openModal() {
-        $modal.addClass('is-open').attr('aria-hidden', 'false');
-        $('body').css('overflow', 'hidden');
-        // Focus first focusable element inside dialog
-        setTimeout(function () {
-            $modal.find('.product-modal__close').first().trigger('focus');
-        }, 300);
-    }
-
-    function closeModal() {
-        $modal.removeClass('is-open').attr('aria-hidden', 'true');
-        $('body').css('overflow', '');
-        if (lastFocus) $(lastFocus).trigger('focus');
-    }
-
-    // Open on info button click
-    $(document).on('click', '.js-product-info', function () {
-        var productId = $(this).data('product-id');
-        if (!productId) return;
-
-        lastFocus = this;
-
-        // Reset dialog to loading state
-        $modalDialog.html(
-            '<div class="product-modal__loading">' +
-            '<div class="spinner" aria-hidden="true"></div>Cargando…</div>'
-        );
-        openModal();
-
-        $.ajax({
-            url:    SC.ajaxUrl,
-            type:   'POST',
-            data:   {
-                action:     'sc_product_quick_view',
-                nonce:      SC.nonce,
-                product_id: productId,
-            },
-            success: function (response) {
-                if (response.success && response.data.html) {
-                    $modalDialog.html(response.data.html);
-                } else {
-                    $modalDialog.html(
-                        '<div class="product-modal__loading">No se pudo cargar el producto.</div>'
-                    );
-                }
-            },
-            error: function () {
-                $modalDialog.html(
-                    '<div class="product-modal__loading">Error al cargar. Intentá de nuevo.</div>'
-                );
-            },
-        });
-    });
-
-    // Close on overlay / close button
-    $(document).on('click', '.js-modal-close', closeModal);
-
-    // Close on ESC
-    $(document).on('keydown', function (e) {
-        if (e.key === 'Escape' && $modal.hasClass('is-open')) closeModal();
-    });
-
-    // Modal format selector — same logic, different price/add targets
-    $(document).on('click', '.product-modal__format .pill-selector__option', function () {
-        var $pill  = $(this);
-        var price  = $pill.data('price');
-        var addUrl = $pill.data('add-url');
-        var orig   = $pill.data('original');
-        var disc   = parseInt($pill.data('discount'), 10) || 0;
-
-        $pill.siblings('.pill-selector__option').removeClass('is-selected');
-        $pill.addClass('is-selected');
-
-        if (price)  $modal.find('.js-modal-price').text(price);
-        if (addUrl) $modal.find('.js-modal-add').attr('href', addUrl);
-
-        var $o = $modal.find('.js-modal-original');
-        var $d = $modal.find('.js-modal-discount');
-        if (disc > 0) {
-            $o.text(orig).prop('hidden', false);
-            $d.text('-' + disc + '%').prop('hidden', false);
-        } else {
-            $o.prop('hidden', true);
-            $d.prop('hidden', true);
-        }
-    });
-
-    // ============================================================
     // Product Detail Page
     // ============================================================
     var $detail = $('.product-detail-page');
@@ -445,21 +351,6 @@
             product_id:   $weights.data('product-id'),
             variation_id: $sel.data('variation-id'),
             peso:         $sel.data('peso'),
-            molienda:     'Grano',
-            quantity:     1
-        }, $(this));
-    });
-
-    // --- Modal "Añadir" ---
-    $(document).on('click', '.js-modal-add', function (e) {
-        e.preventDefault();
-        var $format = $('.product-modal__format');
-        var $pill   = $format.find('.pill-selector__option.is-selected');
-
-        addToCart({
-            product_id:   $format.data('product-id'),
-            variation_id: $pill.data('variation-id'),
-            peso:         $pill.data('peso'),
             molienda:     'Grano',
             quantity:     1
         }, $(this));

@@ -117,18 +117,6 @@ $sc_flag_url  = $sc_flag_file
         </div>
         <?php endif; ?>
 
-        <button class="product-card__info-btn js-product-info"
-                data-product-id="<?php echo esc_attr( $id ); ?>"
-                aria-label="<?php echo esc_attr( 'Más información sobre ' . get_the_title() ); ?>">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                 stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/>
-                <line x1="12" y1="12" x2="12" y2="16"/>
-            </svg>
-        </button>
-
         <?php if ( $on_sale ) : ?>
         <span class="product-card__offer-badge" aria-label="En oferta">Oferta</span>
         <?php endif; ?>
