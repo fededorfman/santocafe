@@ -52,6 +52,7 @@
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    padding-bottom: 10px;
     /* Acerca el eyebrow al título (el gap del contenedor es spacing-lg) */
     margin-bottom: calc(-1 * var(--spacing-md));
 }
@@ -87,7 +88,6 @@
     line-height: 1.7;
     max-width: 500px;
     margin-inline: auto;
-    padding-top: 40px;
 }
 
 .hero__chips {
@@ -376,7 +376,7 @@
 
 @media (max-width: 600px) {
     .hero__content             { gap: var(--spacing-md); }
-    .hero__description         { text-align: justify; }
+    .hero__description         { text-align: center; }
     .features                  { padding: var(--spacing-xl) 0; }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
