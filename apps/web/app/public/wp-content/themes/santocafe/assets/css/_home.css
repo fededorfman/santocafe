@@ -339,6 +339,26 @@
     }
 }
 
+/* Landscape / pantallas bajas: a pantalla completa el contenido se desbordaba
+   (el eyebrow se metía bajo la navbar). Se alinea arriba y se reducen tipografía
+   y paddings para que entre. No afecta tamaños normales (altura > 700px). */
+@media (orientation: landscape) and (max-height: 700px) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+        align-items: flex-start;
+    }
+    .hero__content {
+        padding-top: calc(var(--header-height-mob) + var(--spacing-md));
+        padding-bottom: var(--spacing-xl);
+        gap: var(--spacing-sm);
+    }
+    .hero__eyebrow { padding-bottom: 6px; }
+    .hero__title { font-size: clamp(1.6rem, 5vw, 2.3rem); }
+    .hero__description { font-size: var(--font-size-sm); }
+}
+
 /* Below 800px the 4 panels become a swipeable horizontal carousel
    (scroll-snap) so they don't take up so much vertical space. */
 @media (max-width: 800px) {
