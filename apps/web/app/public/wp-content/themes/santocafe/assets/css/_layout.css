@@ -23,10 +23,14 @@
     flex-direction: column;
 }
 
-/* Non-hero pages: push main content below the fixed header */
+/* Non-hero pages: push main content below the fixed header.
+   Usamos la altura REAL del header (medida por JS en --sc-header-offset, que
+   incluye o no el banner de envío según el carrito) + un gap fijo, para que la
+   separación con el contenido se mantenga aparezca o no la barra amarilla.
+   Fallback al valor estático mientras el JS no corrió (sin FOUC). */
 .wc-main,
 .site-main {
-    padding-top: var(--header-height);
+    padding-top: calc(var(--sc-header-offset, var(--nav-height)) + var(--spacing-xl));
 }
 
 /* ---- Shipping Banner ---- */

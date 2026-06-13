@@ -60,8 +60,9 @@
 
     /* --- Layout --- */
     --max-width:         1400px;
-    --header-height:     118px;
+    --header-height:     118px;  /* nav + banner + respiro (clearance estática) */
     --header-height-mob: 64px;
+    --nav-height:        70px;   /* solo la barra (sin banner) — base del padding real */
 
     /* --- Breakpoints (solo documentados — usar en media queries) ---
        mobile:  ≤600px

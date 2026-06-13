@@ -10,8 +10,10 @@
     .site-nav__hamburger { display: flex; }
 
     .site-nav        { height: var(--header-height-mob); }
+    /* Altura real del header (incluye el banner si está) para que el contenido lo
+       libere siempre, aparezca o no la barra amarilla. Fallback estático sin JS. */
     .wc-main,
-    .site-main       { padding-top: var(--header-height-mob); }
+    .site-main       { padding-top: var(--sc-header-offset, var(--header-height-mob)); }
 
     /* No-JS fallback for the shorter mobile header (JS overrides this with
        the real measured height via --sc-header-offset). */

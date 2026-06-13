@@ -2,9 +2,11 @@
    Cart Page
    ============================================================ */
 
-/* Page shell (page.php) — offset for the fixed header */
+/* Page shell (page.php) — offset for the fixed header.
+   Altura real del header (--sc-header-offset, con o sin banner) + gap fijo, para
+   mantener la separación aparezca o no la barra amarilla. Fallback estático. */
 .page-main {
-    padding-top: var(--header-height);
+    padding-top: calc(var(--sc-header-offset, var(--nav-height)) + var(--spacing-xl));
     padding-bottom: var(--spacing-2xl);
 }
 
