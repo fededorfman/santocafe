@@ -26,6 +26,12 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
             más reciente para que lleguen frescos a tu taza. Envío gratis desde $50.000.
         </p>
 
+        <div class="hero__chips">
+            <span class="hero__chip">SCA 82+</span>
+            <span class="hero__chip">8 orígenes</span>
+            <span class="hero__chip">Envío en 24–48 h</span>
+        </div>
+
         <a href="#catalogo" class="btn btn--primary btn--lg hero__cta">
             Comprar café
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"

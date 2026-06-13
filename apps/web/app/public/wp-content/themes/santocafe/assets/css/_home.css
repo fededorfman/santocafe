@@ -27,7 +27,11 @@
 .hero__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.56);
+    /* Más oscuro en el centro (legibilidad del texto centrado) y más claro a los
+       lados para dejar ver la foto; leve oscurecido arriba/abajo para la navbar. */
+    background:
+        linear-gradient(90deg, rgba(26,19,16,0.40) 0%, rgba(26,19,16,0.74) 50%, rgba(26,19,16,0.40) 100%),
+        linear-gradient(180deg, rgba(26,19,16,0.38) 0%, transparent 22%, transparent 80%, rgba(26,19,16,0.32) 100%);
 }
 
 .hero__content {
@@ -35,10 +39,9 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: var(--spacing-lg);
-    /* Left-aligned to the page container's edge (no narrow centered cap), so
-       the title keeps to its two intended lines without wrapping further. */
     /* Push text below the transparent fixed navbar (70px) + breathing room */
     padding-top: calc(70px + var(--spacing-xl));
 }
@@ -73,7 +76,27 @@
     font-size: var(--font-size-base);
     line-height: 1.7;
     max-width: 500px;
+    margin-inline: auto;
     padding-top: 40px;
+}
+
+.hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.hero__chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-dorado);
+    background: rgba(223, 179, 62, 0.10);
+    border: 1px solid rgba(223, 179, 62, 0.45);
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
 }
 
 .hero__cta {
