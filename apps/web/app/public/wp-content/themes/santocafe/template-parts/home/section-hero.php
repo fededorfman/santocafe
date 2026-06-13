@@ -31,7 +31,7 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
             </span>
             <span class="hero__chip">8 orígenes latinos</span>
             <span class="hero__chip">Tueste reciente</span>
-            <span class="hero__chip">Envío RM 24–48 h</span>
+            <span class="hero__chip">Envío en 24–48 h</span>
         </div>
 
         <a href="#catalogo" class="btn btn--primary btn--lg hero__cta">
