@@ -69,21 +69,7 @@ $add_1kg_url = add_query_arg( [
 $on_sale = $product->is_on_sale();
 
 // ---- Country flag ----
-$sc_flag_map = [
-    'colombia'   => 'colombia_bandera.svg',
-    'perú'       => 'peru_bandera.svg',
-    'peru'       => 'peru_bandera.svg',
-    'bolivia'    => 'bolivia_bandera.svg',
-    'brasil'     => 'brasil_bandera.svg',
-    'brazil'     => 'brasil_bandera.svg',
-    'guatemala'  => 'guatemala_bandera.svg',
-    'costa rica' => 'costa_rica_bandera.svg',
-];
-$sc_flag_key  = mb_strtolower( trim( (string) $pais ) );
-$sc_flag_file = $sc_flag_map[ $sc_flag_key ] ?? null;
-$sc_flag_url  = $sc_flag_file
-    ? get_template_directory_uri() . '/assets/images/banderas/' . $sc_flag_file
-    : null;
+$sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
 ?>
 
 <article <?php wc_product_class( 'product-card', $product ); ?>>

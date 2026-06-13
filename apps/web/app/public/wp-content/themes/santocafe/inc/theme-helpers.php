@@ -130,6 +130,31 @@ function sc_country_flag( string $country ): string {
 }
 
 /**
+ * URL del SVG de bandera para un país de origen (assets/images/banderas/),
+ * o null si no hay archivo para ese país. Centraliza el mapa usado por la
+ * ficha de producto y el detalle del pedido.
+ *
+ * @param string $country
+ * @return string|null
+ */
+function sc_country_flag_url( string $country ): ?string {
+    $map = [
+        'colombia'   => 'colombia_bandera.svg',
+        'perú'       => 'peru_bandera.svg',
+        'peru'       => 'peru_bandera.svg',
+        'bolivia'    => 'bolivia_bandera.svg',
+        'brasil'     => 'brasil_bandera.svg',
+        'brazil'     => 'brasil_bandera.svg',
+        'guatemala'  => 'guatemala_bandera.svg',
+        'costa rica' => 'costa_rica_bandera.svg',
+    ];
+
+    $file = $map[ mb_strtolower( trim( $country ) ) ] ?? null;
+
+    return $file ? get_template_directory_uri() . '/assets/images/banderas/' . $file : null;
+}
+
+/**
  * Calculate how much (in CLP) is left to reach free shipping.
  * Returns 0 if the threshold is already reached or WooCommerce is not active.
  *

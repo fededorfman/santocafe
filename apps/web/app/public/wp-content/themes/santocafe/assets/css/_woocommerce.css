@@ -1345,6 +1345,8 @@
 }
 .sc-order-item__name a { color: inherit; }
 .sc-order-item__name a:hover { color: var(--color-dorado-suave); }
+/* País de origen antes del título (igual que en la ficha de producto) */
+.sc-order-item__pais { color: var(--color-dorado); }
 
 .sc-order-item__qty {
     font-size: var(--font-size-xs);

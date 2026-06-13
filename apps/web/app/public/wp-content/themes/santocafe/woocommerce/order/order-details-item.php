@@ -32,6 +32,15 @@ $name  = apply_filters(
 	$item,
 	$is_visible
 );
+
+// País de origen (a la izquierda del título, como en la ficha de producto).
+// El meta "pais" vive en el producto padre, no en la variación.
+$sc_pais = '';
+if ( $product ) {
+	$sc_pais_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+	$sc_pais    = (string) sc_get_product_meta( $sc_pais_id, 'pais' );
+}
+$sc_flag_url = $sc_pais ? sc_country_flag_url( $sc_pais ) : null;
 ?>
 <tr class="<?php echo esc_attr( apply_filters( 'woocommerce_order_item_class', 'woocommerce-table__line-item order_item', $item, $order ) ); ?>">
 
@@ -47,7 +56,7 @@ $name  = apply_filters(
 			<?php endif; ?>
 
 			<div class="sc-order-item__info">
-				<span class="sc-order-item__name"><?php echo wp_kses_post( $name ); ?></span>
+				<span class="sc-order-item__name"><?php if ( $sc_pais ) : ?><span class="sc-order-item__pais"><?php if ( $sc_flag_url ) : ?><img class="product-card__flag-inline" src="<?php echo esc_url( $sc_flag_url ); ?>" alt="" width="18" height="12" aria-hidden="true"><?php endif; ?><?php echo esc_html( $sc_pais ); ?></span><?php echo esc_html( ' - ' ); endif; ?><?php echo wp_kses_post( $name ); ?></span>
 				<span class="sc-order-item__qty">Cantidad: <strong><?php echo wp_kses_post( $qty_display ); ?></strong></span>
 
 				<div class="sc-order-item__meta">
