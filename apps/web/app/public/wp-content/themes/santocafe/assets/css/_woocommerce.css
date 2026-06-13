@@ -44,6 +44,14 @@
     box-shadow: 0 0 0 2px rgba(223, 179, 62, 0.25), var(--shadow-card);
 }
 
+/* Puerta de login en "pedido recibido": WooCommerce imprime un aviso suelto
+   ("accedé para ver el pedido") justo antes del form. Ese mensaje ya va dentro
+   de la tarjeta, así que ocultamos el aviso para que se vea igual que /cuenta.
+   Scoped: solo el aviso inmediatamente seguido por la tarjeta-puerta. */
+.woocommerce-info:has(+ .sc-account--gate) {
+    display: none;
+}
+
 .sc-account__title {
     font-family: var(--font-heading);
     font-size: var(--font-size-xl);
