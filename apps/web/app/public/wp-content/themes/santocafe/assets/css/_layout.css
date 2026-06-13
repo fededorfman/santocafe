@@ -152,10 +152,16 @@
     /* Padding = área clickeable más grande (el ícono queda centrado; sin fondo
        no se ve) y separa el carrito del borde derecho. */
     padding: 12px 10px;
+    /* Pointer explícito: `cursor: auto` del <a> se hereda al SVG como flecha
+       (auto sobre un SVG no-link = flecha), causando flicker flecha↔manito al
+       pasar sobre los trazos del ícono. Con un valor explícito se hereda igual. */
+    cursor: pointer;
 }
 
 .site-nav__action-btn:hover { color: var(--color-dorado); }
-.site-nav__action-btn .icon { width: 22px; height: 22px; }
+/* El ícono no captura el puntero: todo el evento (y el cursor) lo resuelve el
+   <a>, eliminando el cambio de cursor sobre los trazos del SVG (fill:none). */
+.site-nav__action-btn .icon { width: 22px; height: 22px; pointer-events: none; }
 
 /* El padding del botón corre el badge; lo reanclamos sobre el ícono. */
 .site-nav__cart .cart-icon__badge {

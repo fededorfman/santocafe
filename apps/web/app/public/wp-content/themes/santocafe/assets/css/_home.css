@@ -395,6 +395,11 @@
 @media (max-width: 600px) {
     .hero__content             { gap: var(--spacing-md); }
     .hero__description         { text-align: center; }
+    /* En mobile no hay ancho para un gradiente horizontal; usamos un oscurecido
+       parejo para la legibilidad del texto. */
+    .hero__overlay             { background: #00000055; }
+    /* Reencuadre del foco de la imagen en pantallas angostas. */
+    .hero__bg                  { background-position: 48%; }
     .features                  { padding: var(--spacing-xl) 0; }
     .catalog-section__grid     { grid-template-columns: 1fr; }
     .catalog-section           { padding: var(--spacing-xl) 0; }
