@@ -26,6 +26,18 @@ add_filter( 'woocommerce_get_base_location', function ( string $location ): stri
 } );
 
 // ============================================================
+// Etiqueta de la nota del pedido: "Note:" (es_CL → "Aviso:") => "Notas:".
+// Se hace por gettext para que sea coherente en todos lados (detalle del
+// pedido, "pedido recibido", emails) sin editar templates ni el core.
+// ============================================================
+add_filter( 'gettext', function ( $translation, $text, $domain ) {
+    if ( 'woocommerce' === $domain && 'Note:' === $text ) {
+        return 'Notas:';
+    }
+    return $translation;
+}, 20, 3 );
+
+// ============================================================
 // Styles — remove WC layout/responsive CSS (we provide our own)
 // ============================================================
 add_filter( 'woocommerce_enqueue_styles', function ( array $styles ): array {

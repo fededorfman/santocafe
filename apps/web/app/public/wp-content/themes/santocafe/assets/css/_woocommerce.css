@@ -269,7 +269,7 @@
 .woocommerce-MyAccount-content p {
     color: var(--color-texto-suave);
     line-height: 1.6;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 0;
 }
 
 .woocommerce-MyAccount-content h2,
@@ -1381,6 +1381,13 @@
 .woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot td {
     text-align: right;
     white-space: nowrap;
+}
+/* Sin líneas divisorias en el pie de totales (cuenta + pedido recibido) */
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot td,
+.woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot th,
+.woocommerce-order table.order_details tfoot td,
+.woocommerce-order table.order_details tfoot th {
+    border-top: none;
 }
 .woocommerce-account .woocommerce-MyAccount-content table.order_details tfoot th {
     text-align: right;
