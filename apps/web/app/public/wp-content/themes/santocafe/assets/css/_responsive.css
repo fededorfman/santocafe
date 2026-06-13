@@ -20,6 +20,8 @@
     /* Logo centered via absolute positioning */
     .site-nav__inner {
         position: relative;
+        /* Un poco más de aire a la derecha para que el carrito no quede pegado */
+        padding-right: calc(max(var(--spacing-lg), env(safe-area-inset-right)) + var(--spacing-sm));
     }
 
     .site-nav__logo {
