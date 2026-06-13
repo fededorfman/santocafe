@@ -470,6 +470,7 @@
 .sc-address-card__body {
     flex: 1;
     margin-bottom: var(--spacing-lg);
+    padding-left: 10px;
 }
 
 .sc-address-card__body address {
@@ -488,21 +489,19 @@
 .sc-address-card__lines {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .sc-address-line {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-sm);
     margin: 0;
     color: var(--color-texto);
-    line-height: 1.5;
+    line-height: 1.35;
 }
 
 .sc-address-line__icon {
-    /* Alinea el ícono con la primera línea de texto aunque el texto envuelva */
-    margin-top: 1px;
     color: var(--color-dorado-suave);
     flex-shrink: 0;
 }
