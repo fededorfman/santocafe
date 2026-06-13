@@ -484,19 +484,31 @@
     margin: 0;
 }
 
-/* Teléfono debajo de la dirección */
-.sc-address-card__phone {
+/* Dirección desglosada en filas con ícono (nombre, calle, localidad, teléfono) */
+.sc-address-card__lines {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin: var(--spacing-sm) 0 0;
-    color: var(--color-texto-suave);
-    font-size: var(--font-size-sm);
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
-.sc-address-card__phone svg {
+.sc-address-line {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin: 0;
+    color: var(--color-texto);
+    line-height: 1.5;
+}
+
+.sc-address-line__icon {
+    /* Alinea el ícono con la primera línea de texto aunque el texto envuelva */
+    margin-top: 1px;
     color: var(--color-dorado-suave);
     flex-shrink: 0;
+}
+
+.sc-address-line__muted {
+    color: var(--color-texto-suave);
 }
 
 /* Fila de acciones: editar (izq) + "Usar dirección de envío" (der) */
