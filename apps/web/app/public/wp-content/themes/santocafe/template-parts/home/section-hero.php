@@ -34,15 +34,32 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
             <span class="hero__chip">Envío en 24–48 h</span>
         </div>
 
-        <a href="#catalogo" class="btn btn--primary btn--lg hero__cta">
-            Comprar café
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                 stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-            </svg>
+        <a href="#catalogo" class="btn btn--lg hero__cta hero__cta--gooey">
+            <span class="hero__cta-label">
+                Comprar café
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </span>
+            <span class="hero__cta-blobs" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </span>
         </a>
+
+        <?php /* Filtro SVG "gooey" para el relleno con blobs del CTA (decorativo). */ ?>
+        <svg class="hero__goo-defs" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+                <filter id="sc-goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix"
+                        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"></feColorMatrix>
+                    <feBlend in="SourceGraphic" in2="goo"></feBlend>
+                </filter>
+            </defs>
+        </svg>
 
     </div>
 

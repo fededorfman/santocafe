@@ -120,6 +120,67 @@
     margin-top: 40px;
 }
 
+/* ---- CTA "gooey": relleno con blobs dorados al hover ----
+   Botón con borde dorado y fondo transparente; al hover, 3 blobs dorados suben
+   y se fusionan (filtro #sc-goo) hasta rellenar la píldora. El texto pasa a
+   oscuro para contrastar sobre el dorado. Adaptado de uiverse.io/dpaulos6. */
+.hero__cta--gooey {
+    position: relative;
+    z-index: 0;
+    background: transparent;
+    color: var(--color-dorado);
+    border: 2px solid var(--color-dorado);
+    transition: color 400ms ease, transform var(--transition-fast);
+}
+
+.hero__cta--gooey:hover,
+.hero__cta--gooey:focus-visible {
+    color: var(--color-oscuro);
+    background: transparent;
+}
+
+/* El label va por encima de los blobs */
+.hero__cta-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.hero__cta-blobs {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    filter: url(#sc-goo);
+}
+
+.hero__cta-blobs span {
+    position: absolute;
+    width: 34%;
+    height: 100%;
+    background: var(--color-dorado);
+    border-radius: 100%;
+    transform: scale(1.4) translateY(125%) translateZ(0);
+    transition: transform 700ms ease;
+}
+
+.hero__cta-blobs span:nth-child(1) { left: -5%; }
+.hero__cta-blobs span:nth-child(2) { left: 30%; transition-delay: 60ms; }
+.hero__cta-blobs span:nth-child(3) { left: 66%; transition-delay: 25ms; }
+
+.hero__cta--gooey:hover .hero__cta-blobs span,
+.hero__cta--gooey:focus-visible .hero__cta-blobs span {
+    transform: scale(1.4) translateY(0) translateZ(0);
+}
+
+/* Accesibilidad: sin animación de subida; el relleno aparece directo al hover. */
+@media (prefers-reduced-motion: reduce) {
+    .hero__cta-blobs span { transition: none; }
+}
+
 /* Scroll indicator */
 .hero__scroll-indicator {
     position: absolute;
