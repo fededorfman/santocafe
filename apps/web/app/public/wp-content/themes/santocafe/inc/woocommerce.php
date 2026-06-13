@@ -141,6 +141,61 @@ add_action( 'woocommerce_created_customer', function ( int $customer_id ): void 
     }
 }, 20 );
 
+// Si el email recién registrado ya tenía pedidos (como invitado), precargar la
+// dirección por defecto (envío + facturación) con la del último pedido, para que
+// el cliente no tenga que volver a cargarla. Corre después de vincular pedidos.
+add_action( 'woocommerce_created_customer', function ( int $customer_id ): void {
+    if ( ! function_exists( 'wc_get_orders' ) ) {
+        return;
+    }
+
+    $user = get_userdata( $customer_id );
+    if ( ! $user || empty( $user->user_email ) ) {
+        return;
+    }
+
+    $customer = new WC_Customer( $customer_id );
+
+    // No pisar una dirección ya cargada (el registro no pide dirección, así que
+    // normalmente está vacía; esto es solo defensa por las dudas).
+    if ( '' !== $customer->get_billing_address_1() || '' !== $customer->get_shipping_address_1() ) {
+        return;
+    }
+
+    // Último pedido asociado a ese email (incluye los hechos como invitado).
+    $orders = wc_get_orders( [
+        'billing_email' => $user->user_email,
+        'limit'         => 1,
+        'orderby'       => 'date',
+        'order'         => 'DESC',
+    ] );
+
+    if ( empty( $orders ) ) {
+        return;
+    }
+
+    $order  = $orders[0];
+    $fields = [ 'first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country', 'phone' ];
+
+    foreach ( [ 'billing', 'shipping' ] as $type ) {
+        foreach ( $fields as $field ) {
+            $getter = "get_{$type}_{$field}";
+            $setter = "set_{$type}_{$field}";
+            if ( is_callable( [ $order, $getter ] ) && is_callable( [ $customer, $setter ] ) ) {
+                $value = (string) $order->$getter();
+                if ( '' !== $value ) {
+                    $customer->$setter( $value );
+                }
+            }
+        }
+    }
+
+    // Email de facturación: el del pedido o, si no, el de la cuenta.
+    $customer->set_billing_email( $order->get_billing_email() ?: $user->user_email );
+
+    $customer->save();
+}, 25 );
+
 // Notices: don't print them above the login/register forms — the templates
 // print them inside the relevant form instead.
 add_action( 'init', function (): void {
