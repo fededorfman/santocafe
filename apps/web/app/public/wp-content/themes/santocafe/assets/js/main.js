@@ -829,6 +829,14 @@
     })();
 
     // ============================================================
+    // Términos: el link va dentro del <label> del checkbox, así que un click en
+    // el link también marcaría/desmarcaría el checkbox. Lo evitamos.
+    // ============================================================
+    $(document).on('click', '.woocommerce-terms-and-conditions-checkbox-text a', function (e) {
+        e.stopPropagation();
+    });
+
+    // ============================================================
     // "Usar dirección de envío": copia la dirección de envío sobre la de
     // facturación en la página de Direcciones. Pide confirmación si ya había
     // datos de facturación. El botón llega deshabilitado si no hay envío cargado.
