@@ -232,3 +232,46 @@ function sc_ajax_change_password(): void {
 }
 
 add_action( 'wp_ajax_sc_change_password', 'sc_ajax_change_password' );
+
+// ============================================================
+// Copiar la dirección de envío sobre la de facturación (botón en "Direcciones").
+// No toca el email de facturación (envío no lo tiene).
+// ============================================================
+function sc_ajax_copy_shipping_to_billing(): void {
+    check_ajax_referer( 'sc_nonce', 'nonce' );
+
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( [ 'message' => 'Tu sesión expiró. Volvé a iniciar sesión.' ] );
+    }
+
+    $customer = new WC_Customer( get_current_user_id() );
+
+    // Exigimos que haya una dirección de envío real cargada.
+    if ( '' === $customer->get_shipping_address_1() && '' === $customer->get_shipping_city() ) {
+        wp_send_json_error( [ 'message' => 'No hay una dirección de envío cargada para copiar.' ] );
+    }
+
+    $customer->set_billing_first_name( $customer->get_shipping_first_name() );
+    $customer->set_billing_last_name( $customer->get_shipping_last_name() );
+    $customer->set_billing_company( $customer->get_shipping_company() );
+    $customer->set_billing_address_1( $customer->get_shipping_address_1() );
+    $customer->set_billing_address_2( $customer->get_shipping_address_2() );
+    $customer->set_billing_city( $customer->get_shipping_city() );
+    $customer->set_billing_state( $customer->get_shipping_state() );
+    $customer->set_billing_postcode( $customer->get_shipping_postcode() );
+    $customer->set_billing_country( $customer->get_shipping_country() );
+
+    // El teléfono de envío existe en WC modernas; lo copiamos si está disponible.
+    if ( is_callable( [ $customer, 'get_shipping_phone' ] ) ) {
+        $shipping_phone = $customer->get_shipping_phone();
+        if ( '' !== $shipping_phone ) {
+            $customer->set_billing_phone( $shipping_phone );
+        }
+    }
+
+    $customer->save();
+
+    wp_send_json_success( [ 'message' => 'Copiamos la dirección de envío a facturación.' ] );
+}
+
+add_action( 'wp_ajax_sc_copy_shipping_to_billing', 'sc_ajax_copy_shipping_to_billing' );

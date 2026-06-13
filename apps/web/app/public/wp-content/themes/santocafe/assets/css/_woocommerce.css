@@ -484,6 +484,58 @@
     margin: 0;
 }
 
+/* Teléfono debajo de la dirección */
+.sc-address-card__phone {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: var(--spacing-sm) 0 0;
+    color: var(--color-texto-suave);
+    font-size: var(--font-size-sm);
+}
+
+.sc-address-card__phone svg {
+    color: var(--color-dorado-suave);
+    flex-shrink: 0;
+}
+
+/* Fila de acciones: editar (izq) + "Usar dirección de envío" (der) */
+.sc-address-card__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Botón secundario, alineado a la derecha */
+.woocommerce-MyAccount-content .sc-address-card__copy {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px var(--spacing-md);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-pill);
+    background: var(--color-crema);
+    color: var(--color-oscuro);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.woocommerce-MyAccount-content .sc-address-card__copy:hover {
+    background: var(--color-beige);
+    border-color: var(--color-dorado-suave);
+}
+
+.woocommerce-MyAccount-content .sc-address-card__copy:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Edit/Add action — outline pill, distinct from primary buttons */
 .woocommerce-MyAccount-content a.sc-address-card__edit {
     align-self: flex-start;

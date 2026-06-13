@@ -828,4 +828,36 @@
         });
     })();
 
+    // ============================================================
+    // "Usar dirección de envío": copia la dirección de envío sobre la de
+    // facturación en la página de Direcciones. Pide confirmación si ya había
+    // datos de facturación. El botón llega deshabilitado si no hay envío cargado.
+    // ============================================================
+    $(document).on('click', '.js-copy-shipping', function () {
+        var $btn = $(this);
+        if ($btn.prop('disabled')) return;
+
+        if (String($btn.data('hasBilling')) === '1' &&
+            !window.confirm('Ya tenés una dirección de facturación cargada. ¿Querés reemplazarla por la dirección de envío?')) {
+            return;
+        }
+
+        var original = $btn.text();
+        $btn.prop('disabled', true).text('Copiando…');
+
+        $.post(SC.ajaxUrl, { action: 'sc_copy_shipping_to_billing', nonce: SC.nonce })
+            .done(function (res) {
+                if (res && res.success) {
+                    window.location.reload();
+                } else {
+                    window.alert((res && res.data && res.data.message) || 'No se pudo copiar la dirección.');
+                    $btn.prop('disabled', false).text(original);
+                }
+            })
+            .fail(function () {
+                window.alert('Hubo un error. Intentá de nuevo.');
+                $btn.prop('disabled', false).text(original);
+            });
+    });
+
 })(jQuery);
