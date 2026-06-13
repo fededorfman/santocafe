@@ -37,11 +37,12 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
         <a href="#catalogo" class="btn btn--lg hero__cta hero__cta--gooey">
             <span class="hero__cta-label">
                 Comprar café
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
                      stroke-linejoin="round" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
+                    <path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"></path>
+                    <path d="M17 10h2.4a2.4 2.4 0 0 1 0 4.8H17"></path>
+                    <path d="M7.5 5.5c0-1 .8-1.4.8-2.5M11 5.5c0-1 .8-1.4.8-2.5"></path>
                 </svg>
             </span>
             <span class="hero__cta-blobs" aria-hidden="true">
