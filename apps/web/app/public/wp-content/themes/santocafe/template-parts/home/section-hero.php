@@ -12,24 +12,26 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
 
     <div class="container hero__content">
 
+        <span class="hero__eyebrow">Café de especialidad en Santiago</span>
+
         <h1 class="hero__title">
             <span class="hero__title-line1">Un buen día</span>
             <span class="hero__title-line2">es un buen café.</span>
         </h1>
 
-        <p class="hero__subtitle">
-            Café de especialidad, del origen a tu taza.
-        </p>
-
         <p class="hero__description">
-            Seleccionamos los mejores cafés de especialidad del mundo, con el tueste
-            más reciente para que lleguen frescos a tu taza. Envío gratis desde $50.000.
+            Seleccionamos los mejores orígenes de especialidad con el tueste más
+            reciente, para que lleguen frescos a tu taza.<br>
+            Envío gratis desde $50.000.
         </p>
 
         <div class="hero__chips">
-            <span class="hero__chip">SCA 82+</span>
-            <span class="hero__chip">8 orígenes</span>
-            <span class="hero__chip">Envío en 24–48 h</span>
+            <span class="hero__chip">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>SCA 82+
+            </span>
+            <span class="hero__chip">8 orígenes latinos</span>
+            <span class="hero__chip">Tueste reciente</span>
+            <span class="hero__chip">Envío RM 24–48 h</span>
         </div>
 
         <a href="#catalogo" class="btn btn--primary btn--lg hero__cta">
