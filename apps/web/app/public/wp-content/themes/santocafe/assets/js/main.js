@@ -9,6 +9,17 @@
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     // ============================================================
+    // Anti-drag: evita el "fantasma" al click-y-arrastrar imágenes en todo el
+    // sitio (cobertura cross-browser, incl. Firefox). De paso cancela el drag
+    // nativo de los links del navbar, que cambiaba el cursor (flicker).
+    // ============================================================
+    document.addEventListener('dragstart', function (e) {
+        if (e.target.closest('img, .site-nav__action-btn, .site-nav__logo')) {
+            e.preventDefault();
+        }
+    });
+
+    // ============================================================
     // Mobile Drawer
     // ============================================================
     var $drawer  = $('.js-mobile-drawer');

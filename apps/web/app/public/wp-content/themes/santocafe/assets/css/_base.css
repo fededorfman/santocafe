@@ -74,6 +74,10 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
+    /* Sin "fantasma" al hacer click-y-arrastrar sobre imágenes (WebKit/Chrome).
+       Firefox se cubre con el handler de dragstart en main.js. */
+    -webkit-user-drag: none;
+    user-select: none;
 }
 
 ul, ol {
