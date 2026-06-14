@@ -1426,6 +1426,135 @@
     text-align: center;
 }
 
+/* ============================================================
+   Pagar pedido (order-pay) — misma estética que ver pedido / gracias
+   ============================================================ */
+.sc-pay {
+    max-width: 760px;
+    margin-inline: auto;
+}
+
+.sc-pay .sc-order-head {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Tabla de detalles */
+.sc-pay-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-xl);
+}
+
+.sc-pay-table thead th {
+    text-align: left;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-oscuro);
+    padding: 0 0 var(--spacing-sm);
+    border-bottom: 1px solid var(--color-borde);
+}
+.sc-pay-table thead th.product-total { text-align: right; }
+
+.sc-pay-table tbody td {
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-borde);
+    vertical-align: top;
+}
+.sc-pay-table td.product-total {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.sc-pay-table tfoot th,
+.sc-pay-table tfoot td {
+    padding: var(--spacing-sm) 0;
+    font-size: var(--font-size-sm);
+}
+.sc-pay-table tfoot th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-texto-suave);
+}
+.sc-pay-table tfoot td {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.sc-pay-table tfoot tr:last-child th,
+.sc-pay-table tfoot tr:last-child td {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+
+/* Caja de pago (sobre-escribe el fondo gris por defecto de WC, que usa #payment) */
+#payment.sc-pay__payment {
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: var(--spacing-lg);
+}
+
+.sc-pay__payment .payment_methods {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.sc-pay__payment .payment_methods li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+.sc-pay__payment .payment_methods label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--color-oscuro);
+}
+.sc-pay__payment .payment_methods img {
+    max-height: 30px;
+    width: auto;
+}
+.sc-pay__payment .payment_box {
+    flex-basis: 100%;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+/* Términos + privacidad */
+.sc-pay__payment .woocommerce-terms-and-conditions-wrapper {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-borde);
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    line-height: 1.6;
+}
+.sc-pay__payment .woocommerce-privacy-policy-text p {
+    margin: 0 0 var(--spacing-sm);
+}
+.sc-pay__payment .woocommerce-terms-and-conditions-wrapper a {
+    color: var(--color-dorado-hover);
+    text-decoration: underline;
+}
+.sc-pay__payment label.checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin: 0;
+    cursor: pointer;
+}
+.sc-pay__payment label.checkbox input { margin-top: 3px; }
+
+.sc-pay__submit {
+    margin-top: var(--spacing-lg);
+}
+
 /* Customer details (addresses) below the order — reuse the .sc-address-card
    look from "Mis direcciones". The card/grid styles already exist; here we
    just space the section and style the extra phone/email lines. */

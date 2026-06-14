@@ -109,6 +109,30 @@ add_filter( 'woocommerce_terms_and_conditions_page_id', function ( $page_id ) {
     return $page ? (int) $page->ID : $page_id;
 } );
 
+// Páginas de checkout CLÁSICO (p. ej. "pagar pedido" / order-pay): texto del
+// checkbox de términos y del aviso de privacidad, en español, con mayúsculas y
+// links que funcionan. (El checkout por bloques usa sus propios textos, no estos
+// filtros, así que esto no lo toca.)
+add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', function () {
+    return sprintf(
+        'He leído y acepto los <a href="%s" target="_blank" rel="noopener">Términos y Condiciones</a>',
+        esc_url( sc_legal_page_url( 'condiciones-de-venta' ) )
+    );
+}, 20 );
+
+add_filter( 'option_woocommerce_checkout_privacy_policy_text', function () {
+    return sprintf(
+        'Usamos tus datos para procesar tu pedido y mejorar tu experiencia en el sitio, como se describe en nuestra <a href="%s" target="_blank" rel="noopener">Política de Privacidad</a>.',
+        esc_url( sc_legal_page_url( 'politica-de-privacidad' ) )
+    );
+} );
+
+// URL de una página legal por slug (fallback al permalink por defecto).
+function sc_legal_page_url( string $slug ): string {
+    $page = get_page_by_path( $slug );
+    return $page ? get_permalink( $page ) : home_url( "/{$slug}/" );
+}
+
 // Acciones del pedido (Pagar/Cancelar): WooCommerce las pone DENTRO del <tfoot>
 // de la tabla de detalles, y como tbody y tfoot comparten ancho de columna, esos
 // botones estiran la columna y aplastan la del producto. Las re-renderizamos en
@@ -287,6 +311,12 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 // query var sigue siendo 'order-received'. Se setea en DOS pasos (WC fija los
 // endpoints al init, por eso el flush va aparte):
 //   wp option update woocommerce_checkout_order_received_endpoint gracias
+//   wp rewrite flush
+//
+// "Pagar pedido" (endpoint order-pay) es 'pagar-orden' → /checkout/pagar-orden/{id}.
+// Mismo motivo (el slug se cachea al init, un filtro del tema llega tarde): se
+// setea por DB + flush. No colisiona con otros slugs.
+//   wp option update woocommerce_checkout_pay_endpoint pagar-orden
 //   wp rewrite flush
 //
 // The product permalink base is also a DB option (Ajustes → Enlaces permanentes →
