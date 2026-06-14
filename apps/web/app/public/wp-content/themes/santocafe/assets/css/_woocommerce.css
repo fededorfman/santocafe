@@ -1405,6 +1405,27 @@
     color: var(--color-oscuro);
 }
 
+/* Acciones del pedido (Pagar/Cancelar): se ocultan en el tfoot (sus botones
+   estiraban la columna y aplastaban el producto) y se muestran en una fila
+   propia debajo de la tabla, vía el hook woocommerce_order_details_after_order_table. */
+.order_details tfoot tr:has(.order-actions--heading) {
+    display: none;
+}
+
+.sc-order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    max-width: 620px;
+}
+
+.sc-order-actions__btn {
+    flex: 1 1 auto;
+    min-width: 140px;
+    text-align: center;
+}
+
 /* Customer details (addresses) below the order — reuse the .sc-address-card
    look from "Mis direcciones". The card/grid styles already exist; here we
    just space the section and style the extra phone/email lines. */

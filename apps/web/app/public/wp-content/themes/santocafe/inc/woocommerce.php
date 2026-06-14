@@ -109,6 +109,35 @@ add_filter( 'woocommerce_terms_and_conditions_page_id', function ( $page_id ) {
     return $page ? (int) $page->ID : $page_id;
 } );
 
+// Acciones del pedido (Pagar/Cancelar): WooCommerce las pone DENTRO del <tfoot>
+// de la tabla de detalles, y como tbody y tfoot comparten ancho de columna, esos
+// botones estiran la columna y aplastan la del producto. Las re-renderizamos en
+// una fila propia debajo de la tabla (la fila nativa se oculta por CSS).
+add_action( 'woocommerce_order_details_after_order_table', function ( $order ): void {
+    if ( ! $order instanceof WC_Order ) {
+        return;
+    }
+    $actions = array_filter(
+        wc_get_account_orders_actions( $order ),
+        static fn( $key ) => 'view' !== $key,
+        ARRAY_FILTER_USE_KEY
+    );
+    if ( empty( $actions ) ) {
+        return;
+    }
+    echo '<div class="sc-order-actions">';
+    foreach ( $actions as $key => $action ) {
+        printf(
+            '<a href="%s" class="btn %s sc-order-actions__btn %s">%s</a>',
+            esc_url( $action['url'] ),
+            'pay' === $key ? 'btn--primary' : 'btn--outline',
+            esc_attr( sanitize_html_class( $key ) ),
+            esc_html( $action['name'] )
+        );
+    }
+    echo '</div>';
+} );
+
 // Drop the password strength meter (relax password rules) and the cart-fragments
 // script (its sessionStorage cache fought with the theme's own mini-cart AJAX).
 add_action( 'wp_enqueue_scripts', function (): void {
