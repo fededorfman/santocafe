@@ -97,62 +97,6 @@ add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
     'Usamos tus datos para gestionar tu cuenta y tu experiencia en este sitio, según nuestra [privacy_policy].'
 );
 
-// ============================================================
-// Checkout: país junto al título del producto + links de legales que funcionan.
-// ============================================================
-
-// País (bandera + nombre en dorado) a la izquierda del título en el resumen del
-// pedido del checkout. review-order.php usa este filtro; el drawer arma su
-// propio nombre por separado, así que no se duplica.
-add_filter( 'woocommerce_cart_item_name', function ( $name, $cart_item, $cart_item_key ) {
-    if ( is_admin() || ! is_array( $cart_item ) ) {
-        return $name;
-    }
-    $product = $cart_item['data'] ?? null;
-    if ( ! $product instanceof WC_Product ) {
-        return $name;
-    }
-    $parent_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
-    $pais      = (string) sc_get_product_meta( $parent_id, 'pais' );
-    if ( '' === $pais ) {
-        return $name;
-    }
-
-    $flag = sc_country_flag_url( $pais );
-    $out  = '<span class="sc-cart-pais">';
-    if ( $flag ) {
-        $out .= '<img class="product-card__flag-inline" src="' . esc_url( $flag ) . '" alt="" width="18" height="12" aria-hidden="true">';
-    }
-    $out .= esc_html( $pais ) . '</span> - ' . $name;
-    return $out;
-}, 10, 3 );
-
-// URL de una página legal por slug (fallback al permalink por defecto).
-function sc_legal_page_url( string $slug ): string {
-    $page = get_page_by_path( $slug );
-    return $page ? get_permalink( $page ) : home_url( "/{$slug}/" );
-}
-
-// Checkout: link de Términos y Condiciones que funcione (link directo a
-// "Condiciones de venta", abre en pestaña nueva), con "Condiciones" en mayúscula.
-add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', function () {
-    return sprintf(
-        'He leído y acepto los <a href="%s" target="_blank" rel="noopener">Términos y Condiciones</a>.',
-        esc_url( sc_legal_page_url( 'condiciones-de-venta' ) )
-    );
-}, 20 );
-
-// Checkout: texto de privacidad con "Privacidad" en mayúscula y link válido.
-add_filter( 'woocommerce_get_privacy_policy_text', function ( $text, $type ) {
-    if ( 'checkout' !== $type || '' === trim( wp_strip_all_tags( (string) $text ) ) ) {
-        return $text;
-    }
-    return sprintf(
-        'Tus datos se usan para procesar tu pedido y mejorar tu experiencia en el sitio, como se describe en nuestra <a href="%s" target="_blank" rel="noopener">Política de Privacidad</a>.',
-        esc_url( sc_legal_page_url( 'politica-de-privacidad' ) )
-    );
-}, 20, 2 );
-
 // Drop the password strength meter (relax password rules) and the cart-fragments
 // script (its sessionStorage cache fought with the theme's own mini-cart AJAX).
 add_action( 'wp_enqueue_scripts', function (): void {
