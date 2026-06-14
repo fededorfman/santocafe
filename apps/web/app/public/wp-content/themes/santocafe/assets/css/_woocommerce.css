@@ -1543,9 +1543,21 @@
 .sc-pay__payment label.checkbox {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    /* gap 0: el espaciado checkbox↔texto lo da el margin del input; así el "*"
+       (item flex aparte) queda pegado al texto y no separado por el gap. */
+    gap: 0;
     margin: 0;
     cursor: pointer;
+}
+.sc-pay__payment label.checkbox .input-checkbox {
+    margin-right: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* WC aplica margin: -2px 8px 0 0 al checkbox; lo quitamos (el -2px peleaba con
+   el centrado vertical y el 8px duplicaba el espaciado). */
+.woocommerce form .form-row .input-checkbox {
+    margin: 0;
 }
 
 .sc-pay__submit {
