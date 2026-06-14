@@ -829,6 +829,16 @@
     })();
 
     // ============================================================
+    // Cancelar pedido: pedir confirmación antes de seguir el link (cancela el
+    // pedido y no se puede deshacer).
+    // ============================================================
+    $(document).on('click', '.sc-order-actions__btn.cancel', function (e) {
+        if (!window.confirm('¿Seguro que querés cancelar este pedido? No se puede deshacer.')) {
+            e.preventDefault();
+        }
+    });
+
+    // ============================================================
     // "Usar dirección de envío": copia la dirección de envío sobre la de
     // facturación en la página de Direcciones. Pide confirmación si ya había
     // datos de facturación. El botón llega deshabilitado si no hay envío cargado.
