@@ -47,9 +47,31 @@ function sc_ajax_update_cart(): void {
         wp_send_json_error( [ 'message' => 'Item no encontrado.' ] );
     }
 
+    $notice = '';
+
     switch ( $act ) {
         case 'update_qty':
-            $qty = max( 1, min( 20, absint( $_POST['qty'] ?? 1 ) ) );
+            $qty     = max( 1, min( 20, absint( $_POST['qty'] ?? 1 ) ) );
+            $product = $cart->cart_contents[ $key ]['data'] ?? null;
+
+            // Tope por stock (gramos): set_quantity no dispara la validación de WC,
+            // así que la aplicamos a mano y limitamos al máximo disponible.
+            if ( $product instanceof WC_Product && function_exists( 'sc_can_add_grams' )
+                 && ! sc_can_add_grams( $product, $qty, $key ) ) {
+                $avail = sc_available_grams( $product );
+                $unit  = sc_product_unit_grams( $product );
+                $other = sc_grams_in_cart_for( (int) $product->get_stock_managed_by_id(), $key );
+                $max   = ( $unit > 0 && null !== $avail ) ? intdiv( max( 0, $avail - $other ), $unit ) : $qty;
+                if ( $qty > $max && $max >= 1 ) {
+                    $qty    = $max;
+                    $notice = 'No hay más stock disponible de este café.';
+                } elseif ( $max < 1 ) {
+                    // No alcanza ni para una unidad más: dejamos la cantidad actual.
+                    $qty    = (int) $cart->cart_contents[ $key ]['quantity'];
+                    $notice = 'No hay más stock disponible de este café.';
+                }
+            }
+
             $cart->set_quantity( $key, $qty, false );
             break;
 
@@ -74,6 +96,7 @@ function sc_ajax_update_cart(): void {
     wp_send_json_success( [
         'fragments' => sc_get_cart_fragments(),
         'count'     => $cart->get_cart_contents_count(),
+        'notice'    => $notice,
     ] );
 }
 

@@ -293,6 +293,7 @@
             .done(function (res) {
                 if (res && res.success) {
                     applyFragments(res.data.fragments);
+                    if (res.data.notice) window.alert(res.data.notice);
                 }
             })
             .always(function () {
