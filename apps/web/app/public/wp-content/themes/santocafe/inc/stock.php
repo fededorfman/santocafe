@@ -194,11 +194,17 @@ function sc_autofit_cart_to_stock(): void {
         }
     }
 
-    if ( $changes && WC()->session ) {
-        WC()->session->set(
-            'sc_stock_adjust_msg',
-            'Ajustamos tu carrito por falta de stock: ' . implode( '; ', $changes ) . '.'
-        );
+    if ( $changes ) {
+        // Persistir el recorte en la sesión para que NO se repita en cada request
+        // (si no, el carrito vuelve a cargar sobre-stockeado y re-dispara el aviso).
+        $cart->set_session();
+
+        if ( WC()->session ) {
+            WC()->session->set(
+                'sc_stock_adjust_msg',
+                'Ajustamos tu carrito por falta de stock: ' . implode( '; ', $changes ) . '.'
+            );
+        }
     }
 }
 
