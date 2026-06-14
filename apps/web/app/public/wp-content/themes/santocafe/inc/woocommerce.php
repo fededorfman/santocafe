@@ -97,6 +97,18 @@ add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
     'Usamos tus datos para gestionar tu cuenta y tu experiencia en este sitio, según nuestra [privacy_policy].'
 );
 
+// El link de "Términos y Condiciones" del checkout (bloque) sale de la página de
+// términos configurada en WooCommerce. Si no hay ninguna, el link no funciona.
+// La apuntamos a "Condiciones de venta" buscándola por slug (sirve en cualquier
+// entorno), respetando la que ya esté configurada en los ajustes de WC.
+add_filter( 'woocommerce_terms_and_conditions_page_id', function ( $page_id ) {
+    if ( (int) $page_id > 0 ) {
+        return $page_id;
+    }
+    $page = get_page_by_path( 'condiciones-de-venta' );
+    return $page ? (int) $page->ID : $page_id;
+} );
+
 // Drop the password strength meter (relax password rules) and the cart-fragments
 // script (its sessionStorage cache fought with the theme's own mini-cart AJAX).
 add_action( 'wp_enqueue_scripts', function (): void {
