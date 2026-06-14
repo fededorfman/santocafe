@@ -124,11 +124,18 @@ add_filter( 'woocommerce_update_cart_validation', function ( $passed, $cart_item
     return $passed;
 }, 10, 4 );
 
-// --- Auto-ajuste en carrito/checkout: si el stock bajó, recorta o quita lo que
-//     ya no hay (en vez de bloquear) y deja un aviso con los cambios. ---
-add_action( 'woocommerce_check_cart_items', 'sc_autofit_cart_to_stock' );
+// --- Auto-ajuste del carrito al stock: si el stock bajó, recorta o quita lo que
+//     ya no hay (en vez de bloquear) y guarda un mensaje (lo muestra el JS como
+//     toast, así anda igual en el checkout por bloques que en el clásico).
+//     Corre en cada carga del carrito (incluida la que lee la Store API del
+//     bloque), así el carrito siempre llega ya válido. ---
+add_action( 'woocommerce_cart_loaded_from_session', 'sc_autofit_cart_to_stock' );
 
 function sc_autofit_cart_to_stock(): void {
+    // No correr en pantallas de wp-admin (sí en frontend, AJAX y Store API/REST).
+    if ( is_admin() && ! wp_doing_ajax() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return;
+    }
     if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
         return;
     }
@@ -187,13 +194,24 @@ function sc_autofit_cart_to_stock(): void {
         }
     }
 
-    if ( $changes ) {
-        $cart->calculate_totals();
-        wc_add_notice(
-            'Ajustamos tu carrito por falta de stock — ' . implode( '; ', $changes ) . '.',
-            'notice'
+    if ( $changes && WC()->session ) {
+        WC()->session->set(
+            'sc_stock_adjust_msg',
+            'Ajustamos tu carrito por falta de stock: ' . implode( '; ', $changes ) . '.'
         );
     }
+}
+
+/** Devuelve y limpia el mensaje de ajuste de stock guardado en sesión. */
+function sc_pull_stock_notice(): string {
+    if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+        return '';
+    }
+    $msg = (string) WC()->session->get( 'sc_stock_adjust_msg', '' );
+    if ( '' !== $msg ) {
+        WC()->session->set( 'sc_stock_adjust_msg', '' );
+    }
+    return $msg;
 }
 
 // --- Descuento/reposición de stock = unidades × gramos (el padre lleva el pool en gramos) ---

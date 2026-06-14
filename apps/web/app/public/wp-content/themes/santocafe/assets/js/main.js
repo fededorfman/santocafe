@@ -20,6 +20,24 @@
     });
 
     // ============================================================
+    // Toast de ajuste de stock: PHP lo setea en SC.stockNotice cuando recortó el
+    // carrito por falta de stock. Se muestra una vez (sirve en checkout clásico
+    // y por bloques, es independiente del sistema de notices de WooCommerce).
+    // ============================================================
+    if (window.SC && SC.stockNotice) {
+        (function (msg) {
+            var $t = $('<div class="sc-toast" role="status" aria-live="polite"></div>').text(msg);
+            var $x = $('<button type="button" class="sc-toast__close" aria-label="Cerrar">×</button>');
+            $t.append($x).appendTo('body');
+            $t[0].offsetWidth; // reflow para disparar la transición de entrada
+            $t.addClass('is-visible');
+            function dismiss() { $t.removeClass('is-visible'); setTimeout(function () { $t.remove(); }, 300); }
+            $x.on('click', dismiss);
+            setTimeout(dismiss, 9000);
+        })(SC.stockNotice);
+    }
+
+    // ============================================================
     // Mobile Drawer
     // ============================================================
     var $drawer  = $('.js-mobile-drawer');

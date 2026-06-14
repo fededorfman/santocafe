@@ -55,6 +55,8 @@ add_action('wp_enqueue_scripts', function () {
         'currency'        => get_woocommerce_currency_symbol(),
         'cartUrl'         => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/carrito/'),
         'checkoutUrl'     => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/finalizar-compra/'),
+        // Aviso de ajuste de stock (se muestra una vez como toast desde el JS).
+        'stockNotice'     => function_exists('sc_pull_stock_notice') ? sc_pull_stock_notice() : '',
     ]);
 });
 
