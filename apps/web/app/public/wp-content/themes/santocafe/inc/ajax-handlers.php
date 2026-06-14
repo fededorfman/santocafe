@@ -190,6 +190,20 @@ function sc_ajax_add_to_cart(): void {
     $variation = $peso ? [ 'attribute_pa_peso' => $peso ] : [];
     $item_data = [ 'molienda' => $molienda ];
 
+    // WC()->cart->add_to_cart() NO dispara woocommerce_add_to_cart_validation
+    // (eso lo hacen el form handler y el AJAX nativo, no el carrito). Como acá
+    // llamamos al carrito directo, corremos la validación a mano (incluye el
+    // chequeo de stock por gramos). Si falla, devolvemos el motivo.
+    $passed = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $qty, $variation_id, $variation, $item_data );
+    if ( ! $passed ) {
+        $errors = wc_get_notices( 'error' );
+        wc_clear_notices();
+        $message = ! empty( $errors )
+            ? wp_strip_all_tags( (string) ( end( $errors )['notice'] ?? '' ) )
+            : 'No se pudo agregar el producto.';
+        wp_send_json_error( [ 'message' => $message ] );
+    }
+
     $added = WC()->cart->add_to_cart( $product_id, $qty, $variation_id, $variation, $item_data );
 
     if ( ! $added ) {
