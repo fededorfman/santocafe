@@ -111,6 +111,16 @@
     // ============================================================
     // Product Card — format selector (250g / 1kg)
     // ============================================================
+
+    // Refleja el stock del peso seleccionado en el botón "Añadir".
+    function setCardAddState($card) {
+        var $sel    = $card.find('.product-card__weight.is-selected');
+        var inStock = !$sel.length || String($sel.data('instock')) !== '0';
+        var $add    = $card.find('.js-card-add');
+        $add.toggleClass('is-disabled', !inStock).attr('aria-disabled', inStock ? null : 'true');
+        $add.find('.js-card-add-label').text(inStock ? 'Añadir' : 'Sin stock');
+    }
+
     $(document).on('click', '.product-card__weights .product-card__weight', function () {
         var $btn   = $(this);
         var $card  = $btn.closest('.product-card');
@@ -134,7 +144,12 @@
             $orig.prop('hidden', true);
             $disc.prop('hidden', true);
         }
+
+        setCardAddState($card);
     });
+
+    // Estado inicial de cada tarjeta (peso por defecto).
+    $('.product-card').each(function () { setCardAddState($(this)); });
 
     // ============================================================
     // Product Detail Page
@@ -200,7 +215,20 @@
             $detail.find('.js-peso-input').val(peso);
 
             updateDetailCtaPrice();
+            setDetailCtaState();
         });
+
+        // Refleja el stock del formato seleccionado en el botón "Agregar".
+        function setDetailCtaState() {
+            var $sel    = $detail.find('.product-detail__format .is-selected');
+            var inStock = !$sel.length || String($sel.data('instock')) !== '0';
+            var $cta    = $detail.find('.product-detail__cta');
+            $cta.toggleClass('is-disabled', !inStock).prop('disabled', !inStock);
+            $cta.find('.js-cta-label').text(inStock ? 'Agregar al carrito —' : 'Sin stock');
+            $cta.find('.js-cta-price').prop('hidden', !inStock);
+            if (!inStock) $cta.find('.js-cta-original').prop('hidden', true);
+        }
+        setDetailCtaState();
 
         // --- Molienda selector ---
         $detail.on('click', '.molienda-option', function () {
@@ -344,6 +372,8 @@
                 if (res && res.success) {
                     applyFragments(res.data.fragments);
                     openCartDrawer();
+                } else if (res && res.data && res.data.message) {
+                    window.alert(res.data.message);
                 }
             })
             .always(function () {
@@ -354,6 +384,7 @@
     // --- Card "Añadir" ---
     $(document).on('click', '.js-card-add', function (e) {
         e.preventDefault();
+        if ($(this).hasClass('is-disabled')) return; // sin stock
         var $card    = $(this).closest('.product-card');
         var $weights = $card.find('.product-card__weights');
         var $sel     = $weights.find('.product-card__weight.is-selected');
@@ -371,6 +402,7 @@
     $(document).on('submit', '.product-detail__cart-form', function (e) {
         e.preventDefault();
         var $form = $(this);
+        if ($form.find('.product-detail__cta').hasClass('is-disabled')) return; // sin stock
 
         addToCart({
             product_id:   $form.find('input[name="add-to-cart"]').val(),

@@ -481,6 +481,23 @@
     gap: var(--spacing-sm);
 }
 
+/* Formato sin stock: atenuado y tachado (sigue seleccionable para ver "Sin stock"). */
+.pill-selector__option--out {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+/* CTA deshabilitado por falta de stock. */
+.product-detail__cta.is-disabled,
+.product-detail__cta:disabled {
+    background: var(--color-borde);
+    border-color: var(--color-borde);
+    color: var(--color-texto-suave);
+    cursor: not-allowed;
+}
+.product-detail__cta.is-disabled svg,
+.product-detail__cta:disabled svg { display: none; }
+
 .product-detail__cta-was {
     text-decoration: line-through;
     opacity: 0.6;

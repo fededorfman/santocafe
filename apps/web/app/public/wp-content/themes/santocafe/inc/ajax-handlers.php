@@ -170,7 +170,13 @@ function sc_ajax_add_to_cart(): void {
     $added = WC()->cart->add_to_cart( $product_id, $qty, $variation_id, $variation, $item_data );
 
     if ( ! $added ) {
-        wp_send_json_error( [ 'message' => 'No se pudo agregar el producto.' ] );
+        // Si falló por validación (p. ej. sin stock), devolvemos ese mensaje.
+        $errors = wc_get_notices( 'error' );
+        wc_clear_notices();
+        $message = ! empty( $errors )
+            ? wp_strip_all_tags( (string) ( end( $errors )['notice'] ?? '' ) )
+            : 'No se pudo agregar el producto.';
+        wp_send_json_error( [ 'message' => $message ] );
     }
 
     wp_send_json_success( [

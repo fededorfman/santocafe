@@ -101,6 +101,7 @@ $modules = [
     'inc/woocommerce.php',
     'inc/product-meta.php',
     'inc/ajax-handlers.php',
+    'inc/stock.php',
     'inc/seo.php',
     'inc/security.php',
 ];

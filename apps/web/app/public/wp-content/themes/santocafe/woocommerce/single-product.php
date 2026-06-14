@@ -56,6 +56,11 @@ while ( have_posts() ) :
     $pr_250  = sc_weight_pricing( $price_250, $reg_250 );
     $pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
+    // ---- Stock por peso (gramos) ----
+    $sc_stock  = sc_weight_stock_states( $id );
+    $sc_in_250 = $sc_stock['250g'] ?? true;
+    $sc_in_1kg = $sc_stock['1kg'] ?? true;
+
     // ---- Molienda options ----
     $sc_icon_attrs = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
     $molienda_opts = [
@@ -210,8 +215,9 @@ while ( have_posts() ) :
                 <div class="product-detail__section">
                     <span class="product-detail__section-label">Formato</span>
                     <div class="pill-selector product-detail__format">
-                        <button class="pill-selector__option is-selected"
+                        <button class="pill-selector__option is-selected<?php echo $sc_in_250 ? '' : ' pill-selector__option--out'; ?>"
                                 data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
+                                data-instock="<?php echo $sc_in_250 ? '1' : '0'; ?>"
                                 data-price="<?php echo esc_attr( $price_250_fmt ); ?>"
                                 data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
                                 data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
@@ -224,8 +230,9 @@ while ( have_posts() ) :
                             <span class="format-cups">~30 tazas</span>
                         </button>
                         <?php if ( $var_1kg ) : ?>
-                        <button class="pill-selector__option"
+                        <button class="pill-selector__option<?php echo $sc_in_1kg ? '' : ' pill-selector__option--out'; ?>"
                                 data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
+                                data-instock="<?php echo $sc_in_1kg ? '1' : '0'; ?>"
                                 data-price="<?php echo esc_attr( $price_1kg_fmt ); ?>"
                                 data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
                                 data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
@@ -308,7 +315,7 @@ while ( have_posts() ) :
                             <line x1="3" y1="6" x2="21" y2="6"/>
                             <path d="M16 10a4 4 0 01-8 0"/>
                         </svg>
-                        Agregar al carrito —
+                        <span class="js-cta-label">Agregar al carrito —</span>
                         <span class="js-cta-price"><?php echo esc_html( $price_250_fmt ); ?></span>
                         <span class="product-detail__cta-was js-cta-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
                     </button>

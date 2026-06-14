@@ -70,6 +70,11 @@ $on_sale = $product->is_on_sale();
 
 // ---- Country flag ----
 $sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
+
+// ---- Stock por peso (gramos) ----
+$sc_stock   = sc_weight_stock_states( $id );
+$sc_in_250  = $sc_stock['250g'] ?? true;
+$sc_in_1kg  = $sc_stock['1kg'] ?? true;
 ?>
 
 <article <?php wc_product_class( 'product-card', $product ); ?>>
@@ -143,9 +148,10 @@ $sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
 
         <!-- Formato / precio selector (250g / 1kg) -->
         <div class="product-card__weights" data-product-id="<?php echo esc_attr( $id ); ?>">
-            <button class="product-card__weight is-selected"
+            <button class="product-card__weight is-selected<?php echo $sc_in_250 ? '' : ' product-card__weight--out'; ?>"
                     data-variation-id="<?php echo esc_attr( $var_250_id ); ?>"
                     data-peso="250g"
+                    data-instock="<?php echo $sc_in_250 ? '1' : '0'; ?>"
                     data-price="<?php echo esc_attr( $pr_250['price_fmt'] ); ?>"
                     data-original="<?php echo esc_attr( $pr_250['compare_fmt'] ); ?>"
                     data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
@@ -155,9 +161,10 @@ $sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
                 <span class="product-card__weight-unit">250g</span>
             </button>
             <?php if ( $var_1kg ) : ?>
-            <button class="product-card__weight"
+            <button class="product-card__weight<?php echo $sc_in_1kg ? '' : ' product-card__weight--out'; ?>"
                     data-variation-id="<?php echo esc_attr( $var_1kg_id ); ?>"
                     data-peso="1kg"
+                    data-instock="<?php echo $sc_in_1kg ? '1' : '0'; ?>"
                     data-price="<?php echo esc_attr( $pr_1kg['price_fmt'] ); ?>"
                     data-original="<?php echo esc_attr( $pr_1kg['compare_fmt'] ); ?>"
                     data-discount="<?php echo esc_attr( $pr_1kg['discount'] ); ?>"
@@ -199,7 +206,7 @@ $sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
                     <line x1="3" y1="6" x2="21" y2="6"/>
                     <path d="M16 10a4 4 0 01-8 0"/>
                 </svg>
-                Añadir
+                <span class="js-card-add-label">Añadir</span>
             </a>
         </div>
 

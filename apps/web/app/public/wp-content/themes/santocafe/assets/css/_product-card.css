@@ -290,6 +290,22 @@
     height: 14px;
 }
 
+/* Peso sin stock: atenuado y tachado (sigue clickeable para ver "Sin stock"). */
+.product-card__weight--out {
+    opacity: 0.45;
+    text-decoration: line-through;
+}
+
+/* Botón "Añadir" deshabilitado por falta de stock. */
+.product-card__add.is-disabled {
+    background: var(--color-borde);
+    border-color: var(--color-borde);
+    color: var(--color-texto-suave);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.product-card__add.is-disabled svg { display: none; }
+
 @media (min-width: 1281px) {
     .product-card {
         max-width: 320px;
