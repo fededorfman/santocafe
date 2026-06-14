@@ -20,20 +20,40 @@
     });
 
     // ============================================================
-    // Toast de ajuste de stock: PHP lo setea en SC.stockNotice cuando recortó el
-    // carrito por falta de stock. Se muestra una vez (sirve en checkout clásico
-    // y por bloques, es independiente del sistema de notices de WooCommerce).
+    // Aviso de ajuste de stock: PHP lo setea en SC.stockNotice cuando recortó el
+    // carrito por falta de stock. Se muestra como banner fijo arriba del
+    // formulario (checkout por bloques o clásico) y se queda hasta que el usuario
+    // lo cierre. Independiente del sistema de notices de WooCommerce.
     // ============================================================
     if (window.SC && SC.stockNotice) {
         (function (msg) {
-            var $t = $('<div class="sc-toast" role="status" aria-live="polite"></div>').text(msg);
-            var $x = $('<button type="button" class="sc-toast__close" aria-label="Cerrar">×</button>');
-            $t.append($x).appendTo('body');
-            $t[0].offsetWidth; // reflow para disparar la transición de entrada
-            $t.addClass('is-visible');
-            function dismiss() { $t.removeClass('is-visible'); setTimeout(function () { $t.remove(); }, 300); }
-            $x.on('click', dismiss);
-            setTimeout(dismiss, 9000);
+            var $banner = $(
+                '<div class="sc-stock-banner" role="alert">' +
+                    '<svg class="sc-stock-banner__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' +
+                    '</svg>' +
+                    '<span class="sc-stock-banner__text"></span>' +
+                    '<button type="button" class="sc-stock-banner__close" aria-label="Cerrar">×</button>' +
+                '</div>'
+            );
+            $banner.find('.sc-stock-banner__text').text(msg);
+
+            // Ubicarlo arriba del formulario: checkout por bloques → antes del
+            // bloque; si no, dentro del wrapper .woocommerce; último recurso, el
+            // contenedor de la página.
+            var $target = $('.wp-block-woocommerce-checkout').first();
+            if ($target.length) {
+                $banner.insertBefore($target);
+            } else {
+                $target = $('.woocommerce').first();
+                if ($target.length) {
+                    $target.prepend($banner);
+                } else {
+                    $('.page-main .container, main').first().prepend($banner);
+                }
+            }
+
+            $banner.on('click', '.sc-stock-banner__close', function () { $banner.remove(); });
         })(SC.stockNotice);
     }
 

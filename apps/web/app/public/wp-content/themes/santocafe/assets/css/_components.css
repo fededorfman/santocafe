@@ -251,40 +251,34 @@
     height: 26px;
 }
 
-/* ---- Toast (aviso flotante, p. ej. ajuste de stock del carrito) ---- */
-.sc-toast {
-    position: fixed;
-    left: 50%;
-    bottom: var(--spacing-lg);
-    transform: translate(-50%, 16px);
-    z-index: 3000;
-    max-width: min(560px, calc(100vw - 2 * var(--spacing-md)));
+/* ---- Banner de ajuste de stock (fijo arriba del formulario, persistente) ---- */
+.sc-stock-banner {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
+    margin: 0 auto var(--spacing-lg);
     padding: var(--spacing-md) var(--spacing-lg);
-    background: var(--color-oscuro);
-    color: #fff;
+    background: #fbf3e0;
+    border: 1px solid var(--color-dorado);
     border-radius: var(--radius-card);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    color: var(--color-oscuro);
     font-size: var(--font-size-sm);
-    line-height: 1.5;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-base), transform var(--transition-base);
+    line-height: 1.55;
 }
 
-.sc-toast.is-visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-    pointer-events: auto;
+.sc-stock-banner__icon {
+    color: var(--color-dorado-hover);
+    flex-shrink: 0;
+    margin-top: 1px;
 }
 
-.sc-toast__close {
+.sc-stock-banner__text { flex: 1; }
+
+.sc-stock-banner__close {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 18px;
+    color: var(--color-texto-suave);
+    font-size: 20px;
     line-height: 1;
     cursor: pointer;
     flex-shrink: 0;
@@ -292,4 +286,4 @@
     transition: color var(--transition-fast);
 }
 
-.sc-toast__close:hover { color: #fff; }
+.sc-stock-banner__close:hover { color: var(--color-oscuro); }
