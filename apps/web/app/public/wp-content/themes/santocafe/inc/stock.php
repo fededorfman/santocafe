@@ -124,13 +124,19 @@ add_filter( 'woocommerce_update_cart_validation', function ( $passed, $cart_item
     return $passed;
 }, 10, 4 );
 
-// --- Revalidación final en carrito/checkout (suma gramos por café) ---
-add_action( 'woocommerce_check_cart_items', function () {
+// --- Auto-ajuste en carrito/checkout: si el stock bajó, recorta o quita lo que
+//     ya no hay (en vez de bloquear) y deja un aviso con los cambios. ---
+add_action( 'woocommerce_check_cart_items', 'sc_autofit_cart_to_stock' );
+
+function sc_autofit_cart_to_stock(): void {
     if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
         return;
     }
-    $by_managed = array();
-    foreach ( WC()->cart->get_cart() as $item ) {
+    $cart = WC()->cart;
+
+    // Agrupar los ítems del carrito por café (producto que gestiona el stock).
+    $groups = array();
+    foreach ( $cart->get_cart() as $key => $item ) {
         $p = $item['data'] ?? null;
         if ( ! $p instanceof WC_Product ) {
             continue;
@@ -139,17 +145,56 @@ add_action( 'woocommerce_check_cart_items', function () {
         if ( null === $avail ) {
             continue;
         }
+        $unit = sc_product_unit_grams( $p );
+        if ( $unit <= 0 ) {
+            continue;
+        }
         $mid = (int) $p->get_stock_managed_by_id();
-        $by_managed[ $mid ]['grams'] = ( $by_managed[ $mid ]['grams'] ?? 0 ) + sc_product_unit_grams( $p ) * (int) $item['quantity'];
-        $by_managed[ $mid ]['avail'] = $avail;
-        $by_managed[ $mid ]['name']  = $p->get_name();
+        $groups[ $mid ]['avail']   = $avail;
+        $groups[ $mid ]['items'][] = array(
+            'key'  => $key,
+            'unit' => $unit,
+            'qty'  => (int) $item['quantity'],
+            'name' => $p->get_name(),
+        );
     }
-    foreach ( $by_managed as $data ) {
-        if ( $data['grams'] > $data['avail'] ) {
-            wc_add_notice( sprintf( 'No nos queda stock suficiente de %s. Ajustá la cantidad.', $data['name'] ), 'error' );
+
+    $changes = array();
+
+    foreach ( $groups as $g ) {
+        $total = 0;
+        foreach ( $g['items'] as $it ) {
+            $total += $it['unit'] * $it['qty'];
+        }
+        if ( $total <= $g['avail'] ) {
+            continue; // este café entra completo
+        }
+        // Recortar ítem por ítem (en orden del carrito) con lo que vaya quedando.
+        $remaining = $g['avail'];
+        foreach ( $g['items'] as $it ) {
+            $max = intdiv( $remaining, $it['unit'] );
+            $new = min( $it['qty'], $max );
+            if ( $new !== $it['qty'] ) {
+                if ( $new <= 0 ) {
+                    $cart->remove_cart_item( $it['key'] );
+                    $changes[] = sprintf( '%s: quitado (sin stock)', $it['name'] );
+                } else {
+                    $cart->set_quantity( $it['key'], $new, false );
+                    $changes[] = sprintf( '%s: de %d a %d', $it['name'], $it['qty'], $new );
+                }
+            }
+            $remaining -= $new * $it['unit'];
         }
     }
-} );
+
+    if ( $changes ) {
+        $cart->calculate_totals();
+        wc_add_notice(
+            'Ajustamos tu carrito por falta de stock — ' . implode( '; ', $changes ) . '.',
+            'notice'
+        );
+    }
+}
 
 // --- Descuento/reposición de stock = unidades × gramos (el padre lleva el pool en gramos) ---
 add_filter( 'woocommerce_order_item_quantity', function ( $qty, $order, $item ) {
