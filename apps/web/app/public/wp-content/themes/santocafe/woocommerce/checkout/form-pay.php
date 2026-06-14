@@ -18,6 +18,15 @@ $totals = $order->get_order_item_totals();
 
 <div class="sc-order sc-pay">
 
+    <?php if ( is_user_logged_in() ) : ?>
+        <a class="sc-order-back" href="<?php echo esc_url( wc_get_account_endpoint_url( 'orders' ) ); ?>">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Volver a mis pedidos
+        </a>
+    <?php endif; ?>
+
     <div class="sc-order-head">
         <span class="sc-order-status sc-order-head__status sc-order-status--<?php echo esc_attr( $order->get_status() ); ?>">
             <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
