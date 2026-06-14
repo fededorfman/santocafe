@@ -1550,14 +1550,13 @@
     cursor: pointer;
 }
 .sc-pay__payment label.checkbox .input-checkbox {
-    margin-right: var(--spacing-sm);
     flex-shrink: 0;
 }
 
-/* WC aplica margin: -2px 8px 0 0 al checkbox; lo quitamos (el -2px peleaba con
-   el centrado vertical y el 8px duplicaba el espaciado). */
+/* WC aplica margin: -2px 8px 0 0 al checkbox; lo reemplazamos por un simple
+   margin-right (el -2px peleaba con el centrado vertical). */
 .woocommerce form .form-row .input-checkbox {
-    margin: 0;
+    margin: 0 5px 0 0;
 }
 
 .sc-pay__submit {
