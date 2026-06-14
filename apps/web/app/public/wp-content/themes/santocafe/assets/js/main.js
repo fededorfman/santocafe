@@ -830,9 +830,10 @@
 
     // ============================================================
     // Cancelar pedido: pedir confirmación antes de seguir el link (cancela el
-    // pedido y no se puede deshacer).
+    // pedido y no se puede deshacer). Apuntamos a la URL de cancelación
+    // (cancel_order=true) para cubrir la lista de pedidos, el detalle y gracias.
     // ============================================================
-    $(document).on('click', '.sc-order-actions__btn.cancel', function (e) {
+    $(document).on('click', 'a[href*="cancel_order=true"]', function (e) {
         if (!window.confirm('¿Seguro que querés cancelar este pedido? No se puede deshacer.')) {
             e.preventDefault();
         }
