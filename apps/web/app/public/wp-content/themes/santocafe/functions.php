@@ -106,6 +106,7 @@ $modules = [
     'inc/stock.php',
     'inc/seo.php',
     'inc/security.php',
+    'inc/analytics.php',
 ];
 
 foreach ($modules as $module) {
