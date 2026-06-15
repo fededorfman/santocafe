@@ -41,6 +41,8 @@ Vienen como `{{...}}` (cambialos por los merge-tags de tu herramienta):
   `{{order_url}}`, `{{tracking_url}}`, `{{product_name}}`, `{{product_image}}`,
   `{{product_url}}`, `{{coupon_code}}`, `{{cart_url}}`, `{{review_url}}`,
   `{{reset_url}}`, `{{expiry_date}}`.
+- **Contacto** (18 y 19): `{{name}}`, `{{email}}`, `{{phone}}`, `{{subject}}`,
+  `{{message}}`, `{{submitted_at}}`.
 
 > El bloque de filas de productos en `03-confirmacion-pedido.html` está marcado
 > con `<!-- ITEM:start --> ... <!-- ITEM:end -->` para que lo repitas por ítem.
@@ -71,6 +73,8 @@ santocafespecialtycoffee@gmail.com · +56 9 5141 4791
 | 15 | promo-3-meses.html | Ciclo de vida |
 | 16 | newsletter.html | Marketing (genérico) |
 | 17 | cumpleanos.html | Ciclo de vida |
+| 18 | contacto-admin.html | Operativo (aviso al admin) |
+| 19 | contacto-confirmacion.html | Transaccional (al usuario) |
 
 ## Probar antes de enviar
 

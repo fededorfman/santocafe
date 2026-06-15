@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Nuevo mensaje de contacto</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+    body,table,td,a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    table,td { mso-table-lspace:0pt; mso-table-rspace:0pt; }
+    img { -ms-interpolation-mode:bicubic; border:0; height:auto; line-height:100%; outline:none; text-decoration:none; display:block; }
+    body { margin:0; padding:0; width:100%!important; height:100%!important; }
+    a { color:#8a6d1f; }
+    .h1 { font-family:'Bricolage Grotesque',Arial,sans-serif; }
+    @media only screen and (max-width:600px){
+      .container { width:100%!important; }
+      .px { padding-left:24px!important; padding-right:24px!important; }
+      .h1 { font-size:24px!important; line-height:30px!important; }
+      .lbl { display:block!important; width:100%!important; padding:0 0 2px!important; }
+      .val { display:block!important; width:100%!important; padding:0 0 12px!important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f3ece1;">
+
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
+    {{name}} escribió desde el formulario de contacto · {{subject}}&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:14px; overflow:hidden;">
+
+          <tr>
+            <td align="center" style="background-color:#1a1310; padding:24px;">
+              <img src="{{LOGO_URL}}" width="150" alt="Santo Café" style="display:block; width:150px; max-width:58%; height:auto;">
+            </td>
+          </tr>
+
+          <tr>
+            <td class="px" style="padding:34px 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Formulario de contacto</p>
+              <h1 class="h1" style="margin:0 0 6px; font-size:26px; line-height:32px; color:#1a1310; font-weight:700;">Nuevo mensaje recibido</h1>
+              <p style="margin:0 0 22px; font-size:14px; line-height:1.6; color:#8a7d6b;">Recibido el {{submitted_at}}</p>
+            </td>
+          </tr>
+
+          <!-- Datos -->
+          <tr>
+            <td class="px" style="padding:0 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #efe6d6; border-radius:12px;">
+                <tr>
+                  <td class="lbl" width="120" valign="top" style="padding:14px 0 14px 18px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Nombre</td>
+                  <td class="val" valign="top" style="padding:14px 18px; font-size:15px; color:#1a1310; font-weight:600; border-bottom:1px solid #f1eadd;">{{name}}</td>
+                </tr>
+                <tr>
+                  <td class="lbl" width="120" valign="top" style="padding:14px 0 14px 18px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Email</td>
+                  <td class="val" valign="top" style="padding:14px 18px; font-size:15px; border-bottom:1px solid #f1eadd;"><a href="mailto:{{email}}" style="color:#8a6d1f; text-decoration:underline;">{{email}}</a></td>
+                </tr>
+                <tr>
+                  <td class="lbl" width="120" valign="top" style="padding:14px 0 14px 18px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Teléfono</td>
+                  <td class="val" valign="top" style="padding:14px 18px; font-size:15px; color:#3a2f27; border-bottom:1px solid #f1eadd;">{{phone}}</td>
+                </tr>
+                <tr>
+                  <td class="lbl" width="120" valign="top" style="padding:14px 0 14px 18px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Asunto</td>
+                  <td class="val" valign="top" style="padding:14px 18px; font-size:15px; color:#3a2f27;">{{subject}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Mensaje -->
+          <tr>
+            <td class="px" style="padding:16px 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 8px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Mensaje</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fcfaf7; border:1px solid #efe6d6; border-radius:12px;">
+                <tr><td style="padding:18px 20px; font-size:15px; line-height:1.65; color:#3a2f27;">{{message}}</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Responder -->
+          <tr>
+            <td class="px" align="left" style="padding:24px 44px 38px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#dfb33e" style="border-radius:30px;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="mailto:{{email}}?subject=RE:%20{{subject}}" style="height:48px;v-text-anchor:middle;width:220px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
+                      <w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">Responder a {{name}}</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <a href="mailto:{{email}}?subject=RE:%20{{subject}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:15px; font-weight:700; line-height:48px; text-align:center; text-decoration:none; padding:0 28px; mso-hide:all;">Responder</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#fcfaf7; border-top:1px solid #efe6d6; padding:20px 44px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0; font-size:12px; line-height:1.6; color:#a89c8a;">
+                Notificación interna · Formulario de contacto de santocafe.cl
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
