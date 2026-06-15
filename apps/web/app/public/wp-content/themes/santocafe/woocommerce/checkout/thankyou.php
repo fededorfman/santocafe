@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
                 </svg>
             </div>
             <h1 class="sc-thankyou__title">No pudimos procesar el pago</h1>
-            <p class="sc-thankyou__lead">El banco o medio de pago rechazó la transacción. Podés intentar el pago nuevamente.</p>
+            <p class="sc-thankyou__lead">El banco o medio de pago rechazó la transacción. Puedes intentar el pago nuevamente.</p>
             <p class="sc-thankyou__actions">
                 <a href="<?php echo esc_url( $order->get_checkout_payment_url() ); ?>" class="btn btn--primary">Reintentar el pago</a>
             </p>
@@ -82,7 +82,7 @@ defined( 'ABSPATH' ) || exit;
                 <div class="sc-account-invite__body">
                     <h3 class="sc-account-invite__title">Creá tu cuenta y seguí tu pedido</h3>
                     <p class="sc-account-invite__text">
-                        Registrate con el mismo email de tu compra y este pedido aparecerá en tu
+                        Regístrate con el mismo email de tu compra y este pedido aparecerá en tu
                         historial, con su estado y seguimiento. Además agilizás tus próximas compras.
                     </p>
                 </div>

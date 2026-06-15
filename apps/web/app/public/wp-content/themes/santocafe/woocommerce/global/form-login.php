@@ -24,9 +24,9 @@ if ( is_user_logged_in() ) {
 
 <div class="sc-account sc-account--gate">
     <div class="sc-account__card">
-        <h2 class="sc-account__title">Iniciá sesión para ver tu pedido</h2>
+        <h2 class="sc-account__title">Inicia sesión para ver tu pedido</h2>
         <p class="sc-account__sub">
-            <?php echo ! empty( $message ) ? wp_kses_post( $message ) : 'Esta orden pertenece a una cuenta registrada. Accedé para ver el detalle.'; ?>
+            <?php echo ! empty( $message ) ? wp_kses_post( $message ) : 'Esta orden pertenece a una cuenta registrada. Accede para ver el detalle.'; ?>
         </p>
 
         <form class="woocommerce-form woocommerce-form-login login js-validate" method="post" <?php echo $hidden ? 'style="display:none;"' : ''; ?> novalidate>

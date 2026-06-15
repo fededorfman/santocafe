@@ -71,7 +71,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
     <!-- Register -->
     <div class="sc-account__card" id="sc-register">
         <h2 class="sc-account__title">Crear cuenta</h2>
-        <p class="sc-account__sub">Registrate para comprar más rápido y seguir tus pedidos.</p>
+        <p class="sc-account__sub">Regístrate para comprar más rápido y seguir tus pedidos.</p>
 
         <form method="post" class="woocommerce-form woocommerce-form-register register js-validate" novalidate <?php do_action( 'woocommerce_register_form_tag' ); ?>>
 

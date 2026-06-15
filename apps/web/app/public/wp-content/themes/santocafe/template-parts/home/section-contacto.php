@@ -10,12 +10,12 @@ defined('ABSPATH') || exit;
             <div class="contacto__info">
                 <span class="contacto__label">Contacto</span>
                 <h2 class="contacto__title">
-                    ¿Tenés alguna<br>
+                    ¿Tienes alguna<br>
                     consulta?
                 </h2>
                 <p class="contacto__desc">
                     Estamos para ayudarte. Ya sea por un pedido, una duda sobre nuestros
-                    cafés o simplemente para charlar sobre especialidad, escribinos.
+                    cafés o simplemente para charlar sobre especialidad, escríbenos.
                 </p>
 
                 <div class="contacto__items">
@@ -97,7 +97,7 @@ defined('ABSPATH') || exit;
                     <div class="form-field validate-required">
                         <label for="contact-mensaje">Mensaje <span class="form-field__req" aria-hidden="true">*</span></label>
                         <textarea id="contact-mensaje" name="mensaje"
-                                  placeholder="Contanos en qué te podemos ayudar…" required aria-required="true"></textarea>
+                                  placeholder="Cuéntanos en qué te podemos ayudar…" required aria-required="true"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn--primary">

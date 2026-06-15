@@ -38,7 +38,7 @@ $products = new WP_Query( [
 
         <?php else : ?>
         <p class="catalog-section__empty">
-            Los productos estarán disponibles pronto. ¡Volvé en breve!
+            Los productos estarán disponibles pronto. ¡Vuelve en breve!
         </p>
         <?php endif; ?>
 

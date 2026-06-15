@@ -27,7 +27,7 @@ if ( ! $sc_guias->have_posts() ) {
 
         <header class="home-guias__header">
             <span class="home-guias__kicker">Guías de preparación</span>
-            <h2 class="home-guias__title">Aprendé a preparar el café perfecto</h2>
+            <h2 class="home-guias__title">Aprende a preparar el café perfecto</h2>
             <p class="home-guias__desc">
                 Desde elegir la molienda correcta hasta dominar tu método favorito.
             </p>

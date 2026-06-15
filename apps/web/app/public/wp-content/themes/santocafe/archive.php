@@ -16,7 +16,7 @@ $sc_is_cat  = $sc_queried instanceof WP_Term;
 $sc_title   = $sc_is_cat ? $sc_queried->name : 'Guías de Café';
 $sc_desc    = $sc_is_cat && $sc_queried->description
     ? $sc_queried->description
-    : 'Todo lo que necesitás saber para preparar y elegir tu café de especialidad.';
+    : 'Todo lo que necesitas saber para preparar y elegir tu café de especialidad.';
 ?>
 
 <main class="site-main page-main" id="main">

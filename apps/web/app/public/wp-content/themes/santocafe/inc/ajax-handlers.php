@@ -233,7 +233,7 @@ function sc_ajax_change_password(): void {
     check_ajax_referer( 'sc_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
-        wp_send_json_error( [ 'field' => 'password_current', 'message' => 'Tu sesión expiró. Volvé a iniciar sesión.' ] );
+        wp_send_json_error( [ 'field' => 'password_current', 'message' => 'Tu sesión expiró. Vuelve a iniciar sesión.' ] );
     }
 
     $user    = wp_get_current_user();
@@ -284,7 +284,7 @@ function sc_ajax_copy_shipping_to_billing(): void {
     check_ajax_referer( 'sc_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
-        wp_send_json_error( [ 'message' => 'Tu sesión expiró. Volvé a iniciar sesión.' ] );
+        wp_send_json_error( [ 'message' => 'Tu sesión expiró. Vuelve a iniciar sesión.' ] );
     }
 
     $customer = new WC_Customer( get_current_user_id() );

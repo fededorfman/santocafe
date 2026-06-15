@@ -23,7 +23,7 @@ $catalog_url = home_url( '/#catalogo' );
             <h1 class="error-404__title">Ups, no pudimos encontrar tu café.</h1>
             <p class="error-404__text">
                 La página que buscás no existe o se movió.<br>
-                Descubrí nuestros orígenes de especialidad.
+                Descubre nuestros orígenes de especialidad.
             </p>
             <a href="<?php echo esc_url( $catalog_url ); ?>" class="btn btn--primary btn--lg">
                 Ver nuestros cafés

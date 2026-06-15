@@ -22,7 +22,7 @@ if ( $has && $gap > 0 ) : ?>
 <?php elseif ( $has && $gap === 0 ) : ?>
     <div class="shipping-banner js-shipping-banner">
         <div class="container">
-            <p class="shipping-banner__text">¡Tenés <strong>envío gratis</strong> en la Región Metropolitana de Santiago!</p>
+            <p class="shipping-banner__text">¡Tienes <strong>envío gratis</strong> en la Región Metropolitana de Santiago!</p>
         </div>
     </div>
 <?php endif;

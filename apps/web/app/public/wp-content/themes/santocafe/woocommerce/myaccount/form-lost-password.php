@@ -18,7 +18,7 @@ do_action( 'woocommerce_before_lost_password_form' );
         <form method="post" class="woocommerce-ResetPassword lost_reset_password js-validate" novalidate>
 
             <p class="sc-account__sub">
-                <?php echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Ingresá tu email o usuario y te enviaremos un enlace para crear una nueva contraseña.', 'santocafe' ) ); ?>
+                <?php echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Ingresa tu email o usuario y te enviaremos un enlace para crear una nueva contraseña.', 'santocafe' ) ); ?>
             </p>
 
             <p class="woocommerce-form-row form-row">

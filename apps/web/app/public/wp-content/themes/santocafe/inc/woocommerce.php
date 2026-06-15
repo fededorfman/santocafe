@@ -172,10 +172,10 @@ add_action( 'wp_enqueue_scripts', function (): void {
 // Register validation: name + surname required, password >= 8 with a letter and a number.
 add_action( 'woocommerce_register_post', function ( $username, $email, $errors ): void {
     if ( empty( trim( $_POST['first_name'] ?? '' ) ) ) {
-        $errors->add( 'first_name_required', 'Ingresá tu nombre.' );
+        $errors->add( 'first_name_required', 'Ingresa tu nombre.' );
     }
     if ( empty( trim( $_POST['last_name'] ?? '' ) ) ) {
-        $errors->add( 'last_name_required', 'Ingresá tu apellido.' );
+        $errors->add( 'last_name_required', 'Ingresa tu apellido.' );
     }
 
     $password = (string) ( $_POST['password'] ?? '' );
@@ -313,7 +313,7 @@ add_filter( 'authenticate', function ( $user ) {
         if ( array_intersect( (array) $user->get_error_codes(), $enum ) ) {
             return new WP_Error(
                 'sc_login_failed',
-                'Email o contraseña incorrectos. Revisá los datos e intentá de nuevo.'
+                'Email o contraseña incorrectos. Revisa los datos e intenta de nuevo.'
             );
         }
     }

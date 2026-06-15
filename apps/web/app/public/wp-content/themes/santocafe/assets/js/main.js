@@ -525,9 +525,9 @@
             if (required && val === '') {
                 error = 'Este campo es obligatorio.';
             } else if (val !== '' && ($row.hasClass('validate-email') || type === 'email') && !this.EMAIL_RE.test(val)) {
-                error = 'Ingresá un email válido.';
+                error = 'Ingresa un email válido.';
             } else if (val !== '' && ($row.hasClass('validate-phone') || type === 'tel') && !this.PHONE_RE.test(val)) {
-                error = 'Ingresá un teléfono válido.';
+                error = 'Ingresa un teléfono válido.';
             }
 
             if (error) {
@@ -627,7 +627,7 @@
                 }
             }).fail(function () {
                 $feedback.removeClass('is-success').addClass('is-error')
-                    .text('Ocurrió un error. Intentá de nuevo.').removeAttr('hidden');
+                    .text('Ocurrió un error. Intenta de nuevo.').removeAttr('hidden');
             }).always(function () {
                 $btn.prop('disabled', false);
             });
@@ -919,7 +919,7 @@
     // (cancel_order=true) para cubrir la lista de pedidos, el detalle y gracias.
     // ============================================================
     $(document).on('click', 'a[href*="cancel_order=true"]', function (e) {
-        if (!window.confirm('¿Seguro que querés cancelar este pedido? No se puede deshacer.')) {
+        if (!window.confirm('¿Seguro que quieres cancelar este pedido? No se puede deshacer.')) {
             e.preventDefault();
         }
     });
@@ -934,7 +934,7 @@
         if ($btn.prop('disabled')) return;
 
         if (String($btn.data('hasBilling')) === '1' &&
-            !window.confirm('Ya tenés una dirección de facturación cargada. ¿Querés reemplazarla por la dirección de envío?')) {
+            !window.confirm('Ya tienes una dirección de facturación cargada. ¿Quieres reemplazarla por la dirección de envío?')) {
             return;
         }
 
@@ -951,7 +951,7 @@
                 }
             })
             .fail(function () {
-                window.alert('Hubo un error. Intentá de nuevo.');
+                window.alert('Hubo un error. Intenta de nuevo.');
                 $btn.prop('disabled', false).text(original);
             });
     });
