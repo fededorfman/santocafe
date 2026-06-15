@@ -7,6 +7,7 @@
  *
  * @see woocommerce/templates/order/order-details-customer.php
  * @package santocafe
+ * @version 8.7.0
  */
 
 defined( 'ABSPATH' ) || exit;

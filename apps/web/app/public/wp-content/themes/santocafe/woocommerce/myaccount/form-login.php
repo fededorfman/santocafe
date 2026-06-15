@@ -4,6 +4,7 @@
  * Centered, narrow cards with theme styles. Preserves WC fields, nonces and hooks.
  *
  * @see woocommerce/templates/myaccount/form-login.php
+ * @version 9.9.0
  */
 defined( 'ABSPATH' ) || exit;
 

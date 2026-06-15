@@ -12,6 +12,7 @@
  * @var bool   $hidden  Si el form arranca oculto.
  * @var string $redirect URL de retorno tras el login.
  * @package santocafe
+ * @version 9.2.0
  */
 
 defined( 'ABSPATH' ) || exit;

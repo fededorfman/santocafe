@@ -16,6 +16,7 @@
  *
  * @see https://woocommerce.com/document/template-structure/
  * @package santocafe
+ * @version 10.5.0
  */
 
 defined( 'ABSPATH' ) || exit;

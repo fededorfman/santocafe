@@ -7,6 +7,7 @@
  * footer (header.php), not here.
  *
  * @see woocommerce/templates/cart/mini-cart.php
+ * @version 10.0.0
  */
 defined( 'ABSPATH' ) || exit;
 

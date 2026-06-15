@@ -4,6 +4,7 @@
  * Greeting + two-column layout (navigation left, content right).
  *
  * @see woocommerce/templates/myaccount/my-account.php
+ * @version 3.5.0
  */
 defined( 'ABSPATH' ) || exit;
 

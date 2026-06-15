@@ -2,6 +2,7 @@
 /**
  * Single Product Page — Santo Café custom template.
  * Overrides: woocommerce/templates/single-product.php
+ * @version 1.6.4
  */
 defined( 'ABSPATH' ) || exit;
 

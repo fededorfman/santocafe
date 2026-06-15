@@ -6,6 +6,7 @@
  *
  * @see woocommerce/templates/order/order-details-item.php
  * @package santocafe
+ * @version 5.2.0
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -5,6 +5,7 @@
  * then the order details table (rendered via woocommerce_view_order).
  *
  * @see woocommerce/templates/myaccount/view-order.php
+ * @version 10.6.0
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -4,6 +4,7 @@
  * Overrides: woocommerce/templates/content-product.php
  *
  * Used by: shop page loop, homepage catalog section.
+ * @version 9.4.0
  */
 defined('ABSPATH') || exit;
 

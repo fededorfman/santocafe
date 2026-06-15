@@ -9,6 +9,7 @@
  * @see woocommerce/templates/checkout/form-pay.php
  * @var WC_Order $order
  * @package santocafe
+ * @version 8.2.0
  */
 
 defined( 'ABSPATH' ) || exit;

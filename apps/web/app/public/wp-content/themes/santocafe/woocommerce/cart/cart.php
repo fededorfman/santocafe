@@ -6,6 +6,7 @@
  * Rendered by the [woocommerce_cart] shortcode inside the_content(),
  * so it must NOT call get_header()/get_footer() — page.php provides those.
  * All cart mutations happen via AJAX (sc_update_cart).
+ * @version 10.8.0
  */
 defined( 'ABSPATH' ) || exit;
 ?>

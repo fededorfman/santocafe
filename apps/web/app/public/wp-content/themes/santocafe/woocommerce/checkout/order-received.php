@@ -11,6 +11,7 @@
  * @see woocommerce/templates/checkout/order-received.php
  * @var WC_Order|false $order
  * @package santocafe
+ * @version 8.8.0
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -4,6 +4,7 @@
  * Same orders table as default; custom calm empty state linking to /#catalogo.
  *
  * @see woocommerce/templates/myaccount/orders.php
+ * @version 9.5.0
  */
 defined( 'ABSPATH' ) || exit;
 

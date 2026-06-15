@@ -4,6 +4,7 @@
  * Centered narrow card with theme styles. Preserves WC fields, nonce and hooks.
  *
  * @see woocommerce/templates/myaccount/form-lost-password.php
+ * @version 9.2.0
  */
 defined( 'ABSPATH' ) || exit;
 

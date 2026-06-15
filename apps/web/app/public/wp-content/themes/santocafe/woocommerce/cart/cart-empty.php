@@ -7,6 +7,7 @@
  * Does NOT call get_header()/get_footer(). Provides both wrappers
  * (.js-cart-items and .js-cart-totals) so the AJAX flow can repopulate
  * them when items are added back without a reload.
+ * @version 7.0.1
  */
 defined( 'ABSPATH' ) || exit;
 ?>
