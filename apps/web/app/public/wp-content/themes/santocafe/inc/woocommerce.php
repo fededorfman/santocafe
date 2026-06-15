@@ -261,6 +261,41 @@ add_action( 'woocommerce_created_customer', function ( int $customer_id ): void 
     $customer->save();
 }, 25 );
 
+// ============================================================
+// Fecha de nacimiento (Detalles de la cuenta): se guarda UNA sola vez.
+// Una vez cargada, el form la muestra read-only y acá ignoramos cualquier
+// intento posterior de cambiarla (anti-abuso del regalo de cumpleaños).
+// ============================================================
+function sc_valid_birthday( string $raw ): bool {
+    $d = DateTime::createFromFormat( '!Y-m-d', $raw );
+    if ( ! $d || $d->format( 'Y-m-d' ) !== $raw ) {
+        return false;
+    }
+    return $d < new DateTime( 'today' ) && (int) $d->format( 'Y' ) >= 1900;
+}
+
+// Validación: si mandan una fecha (y todavía no hay una guardada), tiene que ser válida.
+add_action( 'woocommerce_save_account_details_errors', function ( $errors, $user ): void {
+    if ( get_user_meta( $user->ID, 'sc_birthday', true ) ) {
+        return; // ya cargada → inmutable, no se valida
+    }
+    $raw = sanitize_text_field( wp_unslash( $_POST['sc_birthday'] ?? '' ) );
+    if ( '' !== $raw && ! sc_valid_birthday( $raw ) ) {
+        $errors->add( 'sc_birthday_invalid', 'La fecha de nacimiento no es válida.' );
+    }
+}, 10, 2 );
+
+// Guardado: solo si no había una previa y la fecha es válida.
+add_action( 'woocommerce_save_account_details', function ( $user_id ): void {
+    if ( get_user_meta( $user_id, 'sc_birthday', true ) ) {
+        return;
+    }
+    $raw = sanitize_text_field( wp_unslash( $_POST['sc_birthday'] ?? '' ) );
+    if ( '' !== $raw && sc_valid_birthday( $raw ) ) {
+        update_user_meta( $user_id, 'sc_birthday', $raw );
+    }
+} );
+
 // Notices: don't print them above the login/register forms — the templates
 // print them inside the relevant form instead.
 add_action( 'init', function (): void {

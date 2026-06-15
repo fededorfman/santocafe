@@ -45,6 +45,26 @@ do_action( 'woocommerce_before_edit_account_form' );
 				<label for="account_last_name">Apellidos&nbsp;<span class="required" aria-hidden="true">*</span></label>
 				<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="account_last_name" id="account_last_name" autocomplete="family-name" value="<?php echo esc_attr( $user->last_name ); ?>" required aria-required="true" />
 			</p>
+
+			<?php
+				// Fecha de nacimiento: editable solo una vez; al estar cargada pasa
+				// a solo lectura (para evitar abusos con el regalo de cumpleaños).
+				$sc_birthday = get_user_meta( $user->ID, 'sc_birthday', true );
+			?>
+			<?php if ( $sc_birthday ) : ?>
+				<div class="form-row sc-form-readonly" id="account_birthday_field">
+					<span class="sc-form-readonly__label">Fecha de nacimiento</span>
+					<span class="sc-form-readonly__value"><?php echo esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( $sc_birthday ) ) ); ?></span>
+				</div>
+			<?php else : ?>
+				<p class="woocommerce-form-row form-row form-row-wide" id="account_birthday_field">
+					<label for="sc_birthday">Fecha de nacimiento</label>
+					<input type="date" class="woocommerce-Input woocommerce-Input--text input-text" name="sc_birthday" id="sc_birthday"
+						max="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>"
+						value="<?php echo esc_attr( isset( $_POST['sc_birthday'] ) ? wp_unslash( $_POST['sc_birthday'] ) : '' ); ?>" />
+					<span class="sc-form-hint">Queremos saber tu fecha de nacimiento, para poder hacerte un regalo el día de tu cumple :)</span>
+				</p>
+			<?php endif; ?>
 		</div>
 
 		<?php
