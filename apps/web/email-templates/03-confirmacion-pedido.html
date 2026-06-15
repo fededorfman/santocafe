@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Confirmación de tu pedido</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+    body,table,td,a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    table,td { mso-table-lspace:0pt; mso-table-rspace:0pt; }
+    img { -ms-interpolation-mode:bicubic; border:0; height:auto; line-height:100%; outline:none; text-decoration:none; display:block; }
+    body { margin:0; padding:0; width:100%!important; height:100%!important; }
+    a { color:#8a6d1f; }
+    .h1 { font-family:'Bricolage Grotesque',Arial,sans-serif; }
+    @media only screen and (max-width:600px){
+      .container { width:100%!important; }
+      .px { padding-left:24px!important; padding-right:24px!important; }
+      .h1 { font-size:24px!important; line-height:30px!important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f3ece1;">
+
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
+    Recibimos tu pedido #{{order_number}}. Ya lo estamos preparando.&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:14px; overflow:hidden;">
+
+          <tr>
+            <td align="center" style="background-color:#1a1310; padding:26px 24px;">
+              <a href="{{SITE_URL}}" style="text-decoration:none;">
+                <img src="{{LOGO_URL}}" width="160" alt="Santo Café" style="display:block; width:160px; max-width:62%; height:auto;">
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="px" style="padding:38px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">¡Gracias por tu compra!</p>
+              <h1 class="h1" style="margin:0 0 14px; font-size:28px; line-height:34px; color:#1a1310; font-weight:700;">Confirmamos tu pedido #{{order_number}}</h1>
+              <p style="margin:0 0 24px; font-size:16px; line-height:1.65; color:#3a2f27;">
+                Hola {{first_name}}, recibimos tu pedido y ya lo estamos preparando. Te avisamos cuando salga en camino.
+              </p>
+            </td>
+          </tr>
+
+          <!-- RESUMEN -->
+          <tr>
+            <td class="px" style="padding:0 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #efe6d6; border-radius:12px;">
+
+                <!-- ITEM:start (repetir por producto) -->
+                <tr>
+                  <td style="padding:16px 18px; border-bottom:1px solid #f1eadd;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td width="56" valign="top" style="padding-right:14px;">
+                          <img src="{{product_image}}" width="56" height="56" alt="" style="display:block; width:56px; height:56px; border-radius:8px; background-color:#f3ece1;">
+                        </td>
+                        <td valign="top" style="font-size:15px; line-height:1.5; color:#3a2f27;">
+                          <strong style="color:#1a1310;">{{product_name}}</strong><br>
+                          <span style="font-size:13px; color:#8a7d6b;">Molienda: {{grind}} · Cantidad: {{qty}}</span>
+                        </td>
+                        <td valign="top" align="right" style="font-size:15px; color:#1a1310; font-weight:600; white-space:nowrap;">{{line_total}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <!-- ITEM:end -->
+
+                <tr>
+                  <td style="padding:14px 18px 4px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:14px; color:#6f6353;">
+                      <tr><td style="padding:3px 0;">Subtotal</td><td align="right" style="padding:3px 0;">{{subtotal}}</td></tr>
+                      <tr><td style="padding:3px 0;">Envío</td><td align="right" style="padding:3px 0;">{{shipping}}</td></tr>
+                      <tr>
+                        <td style="padding:10px 0 4px; font-size:16px; color:#1a1310; font-weight:700; border-top:1px solid #efe6d6;">Total</td>
+                        <td align="right" style="padding:10px 0 4px; font-size:16px; color:#1a1310; font-weight:700; border-top:1px solid #efe6d6;">{{order_total}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ENVÍO -->
+          <tr>
+            <td class="px" style="padding:18px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 4px; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:#8a7d6b; font-weight:700;">Dirección de entrega</p>
+              <p style="margin:0; font-size:15px; line-height:1.55; color:#3a2f27;">{{shipping_address}}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="px" align="center" style="padding:26px 44px 38px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#dfb33e" style="border-radius:30px;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{order_url}}" style="height:50px;v-text-anchor:middle;width:220px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
+                      <w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Ver mi pedido</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <a href="{{order_url}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:16px; font-weight:700; line-height:50px; text-align:center; text-decoration:none; width:220px; mso-hide:all;">Ver mi pedido</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#fcfaf7; border-top:1px solid #efe6d6; padding:28px 44px 32px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 14px; font-size:13px; line-height:1.6; color:#8a7d6b;">
+                ¿Dudas con tu pedido? Escribinos a <a href="mailto:santocafespecialtycoffee@gmail.com" style="color:#8a6d1f; text-decoration:underline;">santocafespecialtycoffee@gmail.com</a> o al +56 9 5141 4791.
+              </p>
+              <p style="margin:0; font-size:12px; line-height:1.6; color:#a89c8a;">
+                SANTO CAFÉ SPECIALTY COFFEE SPA · RUT 78.245.225-8 · San Pío X 2390 Of 803, Santiago
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
