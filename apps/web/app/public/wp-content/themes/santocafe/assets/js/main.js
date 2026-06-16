@@ -637,9 +637,21 @@
     PasswordForm.init();
 
     // ============================================================
-    // Contact form — validate (via FormValidate) then, on success,
-    // replace the form with a thank-you message (no page reload).
+    // Contact form — validate (via FormValidate), then POST via AJAX.
+    // Envía 2 emails (admin + confirmación). En éxito, swap por el
+    // mensaje de gracias; en error, toast flotante y se puede reintentar.
     // ============================================================
+    function scContactToast(msg) {
+        var $t = $('<div class="sc-toast sc-toast--error" role="alert" aria-live="assertive"></div>').text(msg);
+        var $x = $('<button type="button" class="sc-toast__close" aria-label="Cerrar">×</button>');
+        $t.append($x).appendTo('body');
+        $t[0].offsetWidth; // reflow para la transición de entrada
+        $t.addClass('is-visible');
+        var dismiss = function () { $t.removeClass('is-visible'); setTimeout(function () { $t.remove(); }, 300); };
+        $x.on('click', dismiss);
+        setTimeout(dismiss, 8000);
+    }
+
     $(document).on('submit', 'form.js-contact-form', function (e) {
         // FormValidate (js-validate) already ran and marked invalid fields.
         e.preventDefault();
@@ -650,9 +662,30 @@
             return;
         }
 
-        // Valid → swap the form for the success message.
-        $form.attr('hidden', true);
-        $form.siblings('.js-contact-success').removeAttr('hidden');
+        var $btn = $form.find('button[type="submit"]');
+        if ($btn.prop('disabled')) { return; }
+        $btn.prop('disabled', true).addClass('is-loading');
+
+        $.post(SC.ajaxUrl, {
+            action:     'sc_contact',
+            nonce:      SC.nonce,
+            nombre:     $form.find('[name="nombre"]').val(),
+            email:      $form.find('[name="email"]').val(),
+            mensaje:    $form.find('[name="mensaje"]').val(),
+            sc_website: $form.find('[name="sc_website"]').val()
+        }).done(function (res) {
+            if (res && res.success) {
+                $form.attr('hidden', true);
+                $form.siblings('.js-contact-success').removeAttr('hidden');
+            } else {
+                var msg = (res && res.data && res.data.message) || 'No pudimos enviar tu mensaje. Intenta de nuevo.';
+                scContactToast(msg);
+                $btn.prop('disabled', false).removeClass('is-loading');
+            }
+        }).fail(function () {
+            scContactToast('No pudimos enviar tu mensaje. Revisa tu conexión e intenta de nuevo.');
+            $btn.prop('disabled', false).removeClass('is-loading');
+        });
     });
 
     // ============================================================

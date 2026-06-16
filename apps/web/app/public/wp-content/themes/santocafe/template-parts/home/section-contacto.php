@@ -75,10 +75,6 @@ defined('ABSPATH') || exit;
 
             <!-- Formulario -->
             <div class="contacto__form-col">
-                <?php if ( shortcode_exists( 'contact-form-7' ) || shortcode_exists( 'wpforms' ) ) :
-                    // Si Contact Form 7 o WPForms está instalado, mostrar el shortcode
-                    echo do_shortcode( '[contact-form-7 id="1" title="Contacto"]' );
-                else : ?>
                 <form class="contacto__form js-validate js-contact-form" action="#" method="post" novalidate
                       aria-label="Formulario de contacto">
 
@@ -100,6 +96,12 @@ defined('ABSPATH') || exit;
                                   placeholder="Cuéntanos en qué te podemos ayudar…" required aria-required="true"></textarea>
                     </div>
 
+                    <?php // Honeypot anti-spam: oculto a humanos; los bots lo rellenan. ?>
+                    <div class="contacto__hp" aria-hidden="true" style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+                        <label for="contact-website">No completar este campo</label>
+                        <input type="text" id="contact-website" name="sc_website" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <button type="submit" class="btn btn--primary">
                         Enviar mensaje
                     </button>
@@ -113,7 +115,6 @@ defined('ABSPATH') || exit;
                     <h3 class="contacto__success-title">¡Mensaje enviado!</h3>
                     <p class="contacto__success-text">Gracias por escribirnos. Te responderemos a la brevedad.</p>
                 </div>
-                <?php endif; ?>
             </div>
 
         </div>

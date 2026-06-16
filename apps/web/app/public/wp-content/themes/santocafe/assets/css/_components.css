@@ -330,3 +330,6 @@
 }
 
 .sc-toast__close:hover { color: #fff; }
+
+/* Variante de error (form de contacto, etc.): acento rojo a la izquierda. */
+.sc-toast--error { border-left: 4px solid #d9534f; }
