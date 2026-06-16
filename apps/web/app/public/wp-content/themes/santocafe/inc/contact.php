@@ -93,7 +93,25 @@ function sc_handle_contact() {
 		)
 	);
 
-	$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+	/**
+	 * Remitente de los correos automáticos de contacto. Usamos no-reply porque
+	 * la confirmación no espera respuesta. Debe ser una dirección que el SMTP
+	 * del sitio tenga permitido enviar (ver "Force From" del plugin SMTP).
+	 *
+	 * @param string $from_email Email remitente.
+	 */
+	$from_email = apply_filters( 'sc_contact_from_email', 'no-reply@santocafe.cl' );
+	/**
+	 * Nombre visible del remitente.
+	 *
+	 * @param string $from_name Nombre del remitente.
+	 */
+	$from_name = apply_filters( 'sc_contact_from_name', 'Santo Café' );
+
+	$base_headers = array(
+		'Content-Type: text/html; charset=UTF-8',
+		sprintf( 'From: %s <%s>', $from_name, $from_email ),
+	);
 
 	/**
 	 * Destinatario del aviso interno de contacto.
@@ -102,13 +120,15 @@ function sc_handle_contact() {
 	 */
 	$admin_to = apply_filters( 'sc_contact_recipient', 'hola@santocafe.cl' );
 
-	// Aviso al admin con Reply-To del usuario, para responder directo.
-	$admin_headers   = $headers;
+	// Aviso al admin: Reply-To del usuario, para responder directo a la consulta.
+	$admin_headers   = $base_headers;
 	$admin_headers[] = sprintf( 'Reply-To: %s <%s>', $name, $email );
 	$admin_sent      = wp_mail( $admin_to, 'Nuevo mensaje de contacto · ' . $subject, $admin_html, $admin_headers );
 
-	// Confirmación al usuario (no bloqueante: si falla, igual avisamos al admin).
-	wp_mail( $email, 'Recibimos tu mensaje · Santo Café', $confirm_html, $headers );
+	// Confirmación al usuario: si igual responde, su mensaje cae en hola@ (no en no-reply).
+	$confirm_headers   = $base_headers;
+	$confirm_headers[] = 'Reply-To: hola@santocafe.cl';
+	wp_mail( $email, 'Recibimos tu mensaje · Santo Café', $confirm_html, $confirm_headers );
 
 	if ( ! $admin_sent ) {
 		wp_send_json_error(
