@@ -191,7 +191,7 @@ a,
 /* Tabla de detalle del pedido. */
 .td {
 	color: <?php echo esc_attr( $sc_text ); ?>;
-	border: 1px solid <?php echo esc_attr( $sc_border2 ); ?>;
+	border: 0;
 	vertical-align: middle;
 }
 
@@ -199,12 +199,14 @@ a,
 	border: 1px solid <?php echo esc_attr( $sc_border ); ?>;
 	border-radius: 12px;
 	border-collapse: separate;
+	border-spacing: 0;
 	overflow: hidden;
 }
 
 #body_content table .email-order-details td,
 #body_content table .email-order-details th {
 	padding: 12px 16px;
+	border: 0;
 	color: <?php echo esc_attr( $sc_text ); ?>;
 	font-family: <?php echo $sc_body_font; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
 }
@@ -214,11 +216,11 @@ a,
 	font-size: 13px;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
-	border-bottom: 1px solid <?php echo esc_attr( $sc_border ); ?>;
 }
 
-#body_content .email-order-details tbody tr td {
-	border-bottom: 1px solid <?php echo esc_attr( $sc_border2 ); ?>;
+/* Subrayado solo bajo el encabezado de columnas (no bajo las filas de totales). */
+#body_content table .email-order-details thead th {
+	border-bottom: 1px solid <?php echo esc_attr( $sc_border ); ?>;
 }
 
 #body_content .email-order-details .order-totals td,

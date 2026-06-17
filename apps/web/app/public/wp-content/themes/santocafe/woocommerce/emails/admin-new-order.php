@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-<p>Nuevo pedido <strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong> de <strong><?php echo esc_html( $order->get_formatted_billing_full_name() ); ?></strong>.</p>
+<p>Recibiste un nuevo pedido de <strong><?php echo esc_html( $order->get_formatted_billing_full_name() ); ?></strong>.</p>
 
 <?php
 do_action( 'woocommerce_email_order_details', $order, $sent_to_admin, $plain_text, $email );
