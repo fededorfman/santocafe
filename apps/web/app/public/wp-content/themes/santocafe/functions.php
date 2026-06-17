@@ -109,6 +109,7 @@ $modules = [
     'inc/analytics.php',
     'inc/contact.php',
     'inc/emails.php',
+    'inc/scheduled-emails.php',
 ];
 
 foreach ($modules as $module) {
