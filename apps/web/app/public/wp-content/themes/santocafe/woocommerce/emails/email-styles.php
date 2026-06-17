@@ -223,6 +223,21 @@ a,
 	border-bottom: 1px solid <?php echo esc_attr( $sc_border ); ?>;
 }
 
+/* Fila de producto: imagen, nombre, cantidad y precio centrados verticalmente. */
+#body_content .order-item-data td {
+	border: 0 !important;
+	padding: 0 !important;
+	vertical-align: middle !important;
+}
+
+#body_content .order-item-data img {
+	margin: 0 16px 0 0;
+}
+
+#body_content .order-item-data h3 {
+	margin: 0;
+}
+
 #body_content .email-order-details .order-totals td,
 #body_content .email-order-details .order-totals th {
 	font-weight: normal;
