@@ -45,3 +45,7 @@ mysql-data/
 
 # Claude Code — overrides locales (contienen rutas absolutas de cada máquina)
 .claude/settings.local.json
+
+# WordPress: fuentes de import pesadas y assets locales (no van al deploy ni a git)
+apps/web/app/public/wp-content/themes/santocafe/scripts/
+apps/web/source-assets/
