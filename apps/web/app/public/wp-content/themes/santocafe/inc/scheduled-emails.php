@@ -68,8 +68,9 @@ function sc_auto_cfg() {
 	$defs  = sc_auto_email_defs();
 	$saved = get_option( 'sc_auto_emails', array() );
 	$cfg   = array(
-		'send_hour' => isset( $saved['send_hour'] ) ? (int) $saved['send_hour'] : 9,
-		'items'     => array(),
+		'send_hour'  => isset( $saved['send_hour'] ) ? (int) $saved['send_hour'] : 9,
+		'test_email' => isset( $saved['test_email'] ) ? $saved['test_email'] : '',
+		'items'      => array(),
 	);
 	foreach ( $defs as $key => $def ) {
 		$row = array_merge( array( 'enabled' => false ), $def['params'] );
@@ -588,6 +589,13 @@ function sc_auto_admin_page() {
 						<p class="description">Hora local de Chile en que corre el escaneo diario.</p>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><label for="sc-test-email">Email para pruebas</label></th>
+					<td>
+						<input name="sc[test_email]" id="sc-test-email" type="email" class="regular-text" value="<?php echo esc_attr( $cfg['test_email'] ? $cfg['test_email'] : wp_get_current_user()->user_email ); ?>" placeholder="hola@santocafe.cl">
+						<p class="description">A esta dirección se envían las pruebas (botón "Enviar prueba"). No afecta los envíos reales.</p>
+					</td>
+				</tr>
 			</table>
 
 			<h2>Automatizaciones</h2>
@@ -643,9 +651,10 @@ function sc_auto_admin_page() {
 	(function(){
 		var ajaxurl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;
 		var nonce   = <?php echo wp_json_encode( $ajax_nonce ); ?>;
-		function post(action, key, cb){
+		function post(action, key, cb, extras){
 			var fd = new FormData();
 			fd.append('action', action); fd.append('nonce', nonce); fd.append('key', key);
+			if (extras) { Object.keys(extras).forEach(function(k){ fd.append(k, extras[k]); }); }
 			fetch(ajaxurl, {method:'POST', body:fd, credentials:'same-origin'})
 				.then(function(r){return r.json();}).then(cb)
 				.catch(function(){ cb({success:false,data:{message:'Error de red'}}); });
@@ -665,9 +674,10 @@ function sc_auto_admin_page() {
 		document.querySelectorAll('.sc-auto-test').forEach(function(b){
 			b.addEventListener('click', function(){
 				var key=b.dataset.key, el=box(key); el.textContent='Enviando prueba…';
+				var te = document.getElementById('sc-test-email');
 				post('sc_auto_test', key, function(res){
 					el.textContent = (res.data && res.data.message) ? res.data.message : (res.success?'Enviado':'Error');
-				});
+				}, { test_email: te ? te.value : '' });
 			});
 		});
 	})();
@@ -687,8 +697,9 @@ function sc_auto_save() {
 	$in   = isset( $_POST['sc'] ) ? wp_unslash( $_POST['sc'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- saneado campo por campo abajo.
 	$prev = sc_auto_cfg();
 	$out  = array(
-		'send_hour' => max( 0, min( 23, (int) ( $in['send_hour'] ?? 9 ) ) ),
-		'items'     => array(),
+		'send_hour'  => max( 0, min( 23, (int) ( $in['send_hour'] ?? 9 ) ) ),
+		'test_email' => sanitize_email( $in['test_email'] ?? '' ),
+		'items'      => array(),
 	);
 	foreach ( $defs as $key => $def ) {
 		$i   = isset( $in['items'][ $key ] ) && is_array( $in['items'][ $key ] ) ? $in['items'][ $key ] : array();
@@ -747,11 +758,16 @@ function sc_auto_ajax_test() {
 	if ( ! isset( $defs[ $key ] ) ) {
 		wp_send_json_error( array( 'message' => 'Automatización desconocida' ) );
 	}
-	$cfg  = sc_auto_cfg()['items'][ $key ];
+	$full = sc_auto_cfg();
+	$cfg  = $full['items'][ $key ];
 	$user = wp_get_current_user();
+	$to   = isset( $_POST['test_email'] ) ? sanitize_email( wp_unslash( $_POST['test_email'] ) ) : '';
+	if ( ! is_email( $to ) ) {
+		$to = $full['test_email'] && is_email( $full['test_email'] ) ? $full['test_email'] : $user->user_email;
+	}
 	$item = array(
 		'user_id'    => $user->ID,
-		'email'      => $user->user_email,
+		'email'      => $to,
 		'first_name' => sc_auto_first_name( $user->ID, 'Equipo' ),
 		'order'      => null,
 		'product'    => null,
