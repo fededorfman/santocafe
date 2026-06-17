@@ -31,7 +31,6 @@ function sc_handle_contact() {
 	$name    = sanitize_text_field( wp_unslash( $_POST['nombre'] ?? '' ) );
 	$email   = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
 	$message = sanitize_textarea_field( wp_unslash( $_POST['mensaje'] ?? '' ) );
-	$phone   = sanitize_text_field( wp_unslash( $_POST['telefono'] ?? '' ) );
 	$subject = sanitize_text_field( wp_unslash( $_POST['asunto'] ?? '' ) );
 
 	// Validación de requeridos.
@@ -56,15 +55,22 @@ function sc_handle_contact() {
 	}
 
 	// Valores derivados / por defecto para los templates.
-	$phone        = '' !== $phone ? $phone : 'No indicado';
 	$subject      = '' !== $subject ? $subject : 'Consulta desde el sitio web';
 	$submitted_at = date_i18n( 'j \d\e F \d\e Y, H:i', current_time( 'timestamp' ) ) . ' hrs';
 	$message_html = nl2br( esc_html( $message ) );
 
-	$logo      = get_stylesheet_directory_uri() . '/assets/images/logo.png';
-	$site      = home_url( '/' );
-	$shop      = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+	$assets = get_stylesheet_directory_uri() . '/assets/images';
+	/**
+	 * URL del logo en los emails. En producción resuelve al dominio público;
+	 * en local apuntá a una URL accesible si querés que cargue en clientes externos.
+	 *
+	 * @param string $logo_url URL absoluta del logo.
+	 */
+	$logo      = apply_filters( 'sc_email_logo_url', $assets . '/logo.png' );
+	$icons     = apply_filters( 'sc_email_assets_url', $assets . '/email' );
 	$instagram = 'https://instagram.com/santocafespecialtycoffee';
+	$whatsapp  = 'https://wa.me/56951414791';
+	$year      = date_i18n( 'Y' );
 
 	// Render del aviso al admin.
 	$admin_html = sc_render_contact_email(
@@ -73,7 +79,6 @@ function sc_handle_contact() {
 			'LOGO_URL'     => esc_url( $logo ),
 			'name'         => esc_html( $name ),
 			'email'        => esc_html( $email ),
-			'phone'        => esc_html( $phone ),
 			'subject'      => esc_html( $subject ),
 			'message'      => $message_html,
 			'submitted_at' => esc_html( $submitted_at ),
@@ -85,11 +90,15 @@ function sc_handle_contact() {
 		'contacto-confirmacion.html',
 		array(
 			'LOGO_URL'      => esc_url( $logo ),
-			'SITE_URL'      => esc_url( $site ),
-			'SHOP_URL'      => esc_url( $shop ),
+			'SITE_URL'      => esc_url( home_url( '/' ) ),
+			'SHOP_URL'      => esc_url( home_url( '/' ) ),
 			'INSTAGRAM_URL' => esc_url( $instagram ),
+			'WHATSAPP_URL'  => esc_url( $whatsapp ),
+			'IG_ICON'       => esc_url( $icons . '/instagram.png' ),
+			'WA_ICON'       => esc_url( $icons . '/whatsapp.png' ),
 			'name'          => esc_html( $name ),
 			'message'       => $message_html,
+			'year'          => esc_html( $year ),
 		)
 	);
 

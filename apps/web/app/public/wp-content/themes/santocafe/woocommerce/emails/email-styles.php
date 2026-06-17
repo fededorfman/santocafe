@@ -311,29 +311,22 @@ a,
 	line-height: 160%;
 }
 
-/* Footer. */
+/* Footer oscuro de marca (los estilos finos van inline en email-footer.php). */
 #template_footer td {
 	padding: 0;
 }
 
 #template_footer #credit {
 	border: 0;
-	border-top: 1px solid <?php echo esc_attr( $sc_border ); ?>;
-	background-color: <?php echo esc_attr( $sc_cream ); ?>;
+	background-color: <?php echo esc_attr( $sc_dark ); ?>;
 	color: <?php echo esc_attr( $sc_muted ); ?>;
 	font-family: <?php echo $sc_body_font; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
-	font-size: 12px;
 	line-height: 160%;
 	text-align: center;
-	padding: 26px 44px 30px;
-}
-
-#template_footer #credit p {
-	margin: 0 0 10px;
 }
 
 #template_footer #credit a {
-	color: <?php echo esc_attr( $sc_link ); ?>;
+	color: <?php echo esc_attr( $sc_gold ); ?>;
 }
 
 img {
@@ -392,7 +385,7 @@ img {
 	}
 
 	#template_footer #credit {
-		padding: 22px 24px 26px !important;
+		padding: 28px 24px 28px !important;
 	}
 }
 <?php

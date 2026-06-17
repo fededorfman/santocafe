@@ -50,8 +50,10 @@
             <td class="px" style="padding:40px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
               <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Mensaje recibido</p>
               <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">¡Gracias por escribirnos, {{name}}!</h1>
-              <p style="margin:0 0 16px; font-size:16px; line-height:1.65; color:#3a2f27;">
+              <p style="margin:0 0 14px; font-size:16px; line-height:1.65; color:#3a2f27;">
                 Recibimos tu mensaje y nuestro equipo te va a responder dentro de <strong>24 a 48 horas hábiles</strong>.
+              </p>
+              <p style="margin:0 0 16px; font-size:16px; line-height:1.65; color:#3a2f27;">
                 Si es algo urgente, escríbenos directo al +56 9 5141 4791.
               </p>
             </td>
@@ -86,14 +88,27 @@
             </td>
           </tr>
 
+          <!-- Footer -->
           <tr>
-            <td style="background-color:#fcfaf7; border-top:1px solid #efe6d6; padding:28px 44px 32px; font-family:'Hanken Grotesk',Arial,sans-serif;">
-              <p style="margin:0 0 12px; font-size:13px; line-height:1.6; color:#8a7d6b;">
-                Santo Café · hola@santocafe.cl · +56 9 5141 4791 ·
-                <a href="{{INSTAGRAM_URL}}" style="color:#8a6d1f; text-decoration:underline;">Instagram</a>
+            <td style="background-color:#1a1310; padding:34px 44px 32px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 22px; font-size:15px; line-height:1.6; color:#ffffff; font-weight:600; text-align:center;">
+                Síguenos en redes sociales para enterarte de todas nuestras promociones, novedades y consejos de barista.
               </p>
-              <p style="margin:0; font-size:12px; line-height:1.6; color:#a89c8a;">
-                Este correo confirma la recepción de tu consulta. No hace falta que respondas.
+              <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 22px;">
+                <tr>
+                  <td style="padding:0 9px;">
+                    <a href="{{INSTAGRAM_URL}}" target="_blank" style="text-decoration:none;"><img src="{{IG_ICON}}" width="28" height="28" alt="Instagram" style="display:block; width:28px; height:28px; border:0;"></a>
+                  </td>
+                  <td style="padding:0 9px;">
+                    <a href="{{WHATSAPP_URL}}" target="_blank" style="text-decoration:none;"><img src="{{WA_ICON}}" width="28" height="28" alt="WhatsApp" style="display:block; width:28px; height:28px; border:0;"></a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 6px; font-size:13px; line-height:1.6; color:#c9bfb0; text-align:center;">
+                Santo Café · <a href="mailto:hola@santocafe.cl" style="color:#dfb33e; text-decoration:none;">hola@santocafe.cl</a> · +56 9 5141 4791
+              </p>
+              <p style="margin:0; font-size:12px; line-height:1.6; color:#8a7d6b; text-align:center;">
+                © {{year}} Santo Café
               </p>
             </td>
           </tr>
