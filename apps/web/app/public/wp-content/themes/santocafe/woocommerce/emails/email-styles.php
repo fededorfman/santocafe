@@ -231,6 +231,7 @@ a,
 }
 
 #body_content .order-item-data img {
+	display: block; /* evita el hueco del baseline debajo de la imagen inline */
 	margin: 0 16px 0 0;
 }
 
