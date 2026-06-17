@@ -36,7 +36,10 @@ Vienen como `{{...}}` (cambialos por los merge-tags de tu herramienta):
 
 - **Marca/links**: `{{LOGO_URL}}` (logo claro sobre fondo oscuro), `{{SITE_URL}}`,
   `{{SHOP_URL}}`, `{{ACCOUNT_URL}}`, `{{ORDERS_URL}}`, `{{UNSUBSCRIBE_URL}}`,
-  `{{PRIVACY_URL}}`, `{{INSTAGRAM_URL}}`.
+  `{{PRIVACY_URL}}`, `{{INSTAGRAM_URL}}`, `{{WHATSAPP_URL}}`.
+- **Footer (íconos de redes + año)**: `{{IG_ICON}}`, `{{WA_ICON}}` (URLs absolutas a
+  los PNG dorados — en el tema: `assets/images/email/instagram.png` y `whatsapp.png`),
+  `{{year}}` (año del copyright).
 - **Persona/pedido**: `{{first_name}}`, `{{order_number}}`, `{{order_total}}`,
   `{{order_url}}`, `{{tracking_url}}`, `{{product_name}}`, `{{product_image}}`,
   `{{product_url}}`, `{{coupon_code}}`, `{{cart_url}}`, `{{review_url}}`,
@@ -47,10 +50,17 @@ Vienen como `{{...}}` (cambialos por los merge-tags de tu herramienta):
 > El bloque de filas de productos en `03-confirmacion-pedido.html` está marcado
 > con `<!-- ITEM:start --> ... <!-- ITEM:end -->` para que lo repitas por ítem.
 
-## Datos legales (footer)
+## Footer (marketing 09–17)
+
+Footer oscuro de marca, consistente con los emails de WooCommerce: CTA "Síguenos
+en redes sociales…", íconos de Instagram + WhatsApp (`{{IG_ICON}}` / `{{WA_ICON}}`),
+contacto (`hola@santocafe.cl`), `© {{year}} Santo Café` y **Cancelar suscripción**
+(`{{UNSUBSCRIBE_URL}}`, obligatorio en marketing). Copy en tuteo chileno.
+
+## Datos legales
 
 SANTO CAFÉ SPECIALTY COFFEE SPA · RUT 78.245.225-8 · San Pío X 2390 Of 803 ·
-santocafespecialtycoffee@gmail.com · +56 9 5141 4791
+hola@santocafe.cl · +56 9 5141 4791
 
 ## Lista
 
