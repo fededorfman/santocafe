@@ -18,9 +18,16 @@
 .hero__bg {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center 40%;
-    background-repeat: no-repeat;
+    /* Color café oscuro de base: se ve apenas carga, en vez del gris del navegador.
+       Capa 1 = imagen real (var, definida inline); capa 2 = LQIP borroso embebido
+       que aparece al instante con el CSS y queda debajo hasta que entra la nítida. */
+    background-color: #1a1310;
+    /* Fallback "none": si --hero-img no está definida (p. ej. PHP cacheado),
+       la capa 1 queda vacía y el LQIP de abajo igual se muestra. */
+    background-image: var(--hero-img, none), url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAyADIAAD/4QCARXhpZgAATU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAADIAAAAAQAAAMgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAABUAAAAA/8AAEQgAFQAgAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMADAwMDAwMFAwMFB0UFBQdJx0dHR0nMScnJycnMTsxMTExMTE7Ozs7Ozs7O0dHR0dHR1NTU1NTXV1dXV1dXV1dXf/bAEMBDg8PGBYYKBYWKGFCNkJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYf/dAAQAAv/aAAwDAQACEQMRAD8A4gQyMCwO4DvS+S+0Nnrn8hV23VPs8obAPGFPelAxBtwgG0nrzmsrl2Ixp90F37Tj6GmtA6jk4+ua39NurWCVnnkPVc9cHHtVnWNQs7uErBz04x71OpR//9DzwE460isc9aUdKavWpEaEI3cHsKtMu1Q559qr23U/Srcv+qH1qHuaLY//2Q==');
+    background-size: cover, cover;
+    background-position: center 40%, center 40%;
+    background-repeat: no-repeat, no-repeat;
     transform: scale(1.03); /* slight scale for parallax headroom */
 }
 

@@ -105,6 +105,7 @@ $modules = [
     'inc/ajax-handlers.php',
     'inc/stock.php',
     'inc/seo.php',
+    'inc/llms.php',
     'inc/security.php',
     'inc/analytics.php',
     'inc/contact.php',

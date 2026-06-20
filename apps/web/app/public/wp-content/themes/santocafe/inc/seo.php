@@ -50,7 +50,7 @@ add_filter( 'document_title_parts', function ( array $title ): array {
 	if ( is_front_page() ) {
 		return [
 			'title'   => 'Comprar Café de Especialidad Online en Chile',
-			'tagline' => 'Santo Café · Envío en Región Metropolitana',
+			'tagline' => 'Santo Café',
 		];
 	}
 
@@ -96,6 +96,9 @@ add_filter( 'document_title_parts', function ( array $title ): array {
 	unset( $title['tagline'] );
 	return $title;
 }, 10 );
+
+// Separador uniforme en todos los <title> (mismo punto medio que usamos en el resto del SEO).
+add_filter( 'document_title_separator', static fn(): string => '·' );
 
 // ============================================================
 // 2. Meta description + Open Graph + Twitter cards + canonical
@@ -200,6 +203,10 @@ function sc_seo_resolve_context(): array {
 				$raw  = $product->get_short_description() ?: $product->get_description();
 				$desc = wp_trim_words( wp_strip_all_tags( $raw ), 30, '.' );
 			}
+			// Último recurso: descripción única basada en el nombre (nunca vacía/duplicada).
+			if ( empty( $desc ) ) {
+				$desc = $product->get_name() . ' — café de especialidad en granos y molido. Tueste reciente. Envío en Región Metropolitana.';
+			}
 
 			$image = $fallback;
 			if ( $product->get_image_id() ) {
@@ -222,7 +229,7 @@ function sc_seo_resolve_context(): array {
 		$term = get_queried_object();
 		$desc = $term->description
 			? wp_trim_words( wp_strip_all_tags( $term->description ), 30, '.' )
-			: 'Explora nuestra selección de cafés de especialidad en Chile. Single origins con puntaje SCA. Envío en Región Metropolitana.';
+			: $term->name . ': cafés de especialidad seleccionados, single origins con puntaje SCA y tueste reciente. Envío en Región Metropolitana.';
 		return [
 			$desc,
 			$term->name . ' · Cafés de Especialidad · ' . $site,
@@ -262,7 +269,7 @@ function sc_seo_resolve_context(): array {
 			if ( $src ) $image = $src;
 		}
 		return [
-			$desc ?: 'Santo Café — Café de especialidad en Chile.',
+			$desc ?: get_the_title( $post->ID ) . ' · Santo Café, café de especialidad en Chile con envío en Región Metropolitana.',
 			get_the_title( $post->ID ) . ' · ' . $site,
 			'website',
 			get_permalink( $post->ID ),
@@ -562,6 +569,12 @@ add_filter( 'woocommerce_structured_data_product', function ( array $markup, $pr
 		'@type' => 'Brand',
 		'name'  => 'Santo Café',
 	];
+
+	// Category (origen / tipo de café)
+	$cats = wc_get_product_terms( $id, 'product_cat', [ 'fields' => 'names' ] );
+	if ( ! empty( $cats ) ) {
+		$markup['category'] = implode( ', ', $cats );
+	}
 
 	// Additional properties from specialty meta
 	$props = [];

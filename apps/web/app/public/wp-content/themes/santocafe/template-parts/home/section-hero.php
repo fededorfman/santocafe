@@ -6,7 +6,8 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
 
 <section class="hero" id="inicio" aria-label="Bienvenida">
 
-    <div class="hero__bg" style="background-image: url('<?php echo esc_url( $hero_image ); ?>');"
+    <?php // La imagen real va en una var CSS para apilarla sobre el LQIP (placeholder borroso en _home.css). ?>
+    <div class="hero__bg" style="--hero-img: url('<?php echo esc_url( $hero_image ); ?>');"
          role="img" aria-label="Cafetera espresso con latte art"></div>
     <div class="hero__overlay" aria-hidden="true"></div>
 

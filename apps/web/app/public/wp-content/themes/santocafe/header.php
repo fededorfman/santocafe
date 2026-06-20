@@ -20,6 +20,12 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <?php // Hero (LCP) en la portada: lo pedimos cuanto antes para que no tarde en aparecer. ?>
+    <?php if ( is_front_page() ) : ?>
+    <link rel="preload" as="image" fetchpriority="high"
+          href="<?php echo esc_url( get_template_directory_uri() . '/assets/images/hero.jpg' ); ?>">
+    <?php endif; ?>
+
     <?php // Favicons (RealFaviconGenerator) — archivos servidos desde la raíz del sitio. ?>
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
