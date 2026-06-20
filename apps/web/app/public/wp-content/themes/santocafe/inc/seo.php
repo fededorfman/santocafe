@@ -158,8 +158,8 @@ function sc_seo_resolve_context(): array {
 	// --- Home ---
 	if ( is_front_page() ) {
 		return [
-			'Compra café de especialidad online en Chile. 8 single origins latinoamericanos con puntaje SCA. Envío a domicilio en Santiago y Región Metropolitana.',
-			$site . ' — Café de Especialidad Online en Chile',
+			'Compra café de especialidad en granos y molido de 8 orígenes. Envío a domicilio en Región Metropolitana.',
+			$site . ' // Café de Especialidad en Chile',
 			'website',
 			home_url( '/' ),
 			$fallback,

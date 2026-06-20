@@ -49,7 +49,7 @@ $features = [
                 <div class="feature-card__icon" aria-hidden="true">
                     <?php echo $feature['icon']; // SVG is safe — defined in PHP, not user input ?>
                 </div>
-                <h3 class="feature-card__title"><?php echo esc_html( $feature['title'] ); ?></h3>
+                <h2 class="feature-card__title"><?php echo esc_html( $feature['title'] ); ?></h2>
                 <p class="feature-card__desc"><?php echo esc_html( $feature['desc'] ); ?></p>
             </div>
             <?php endforeach; ?>

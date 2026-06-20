@@ -13,7 +13,8 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 <html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <?php // Sin user-scalable=no / maximum-scale: permitir zoom (accesibilidad WCAG). iOS 16+ no auto-zoomea con inputs font-size>=16px. ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <?php // Tint the mobile browser UI (address/toolbar) to match the header. ?>
     <meta name="theme-color" content="#1a1310">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +98,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                         <line x1="3" y1="6" x2="21" y2="6"/>
                         <path d="M16 10a4 4 0 01-8 0"/>
                     </svg>
-                    <span class="cart-icon__badge js-cart-count <?php echo $cart_count ? '' : 'is-empty'; ?>">
+                    <span class="cart-icon__badge js-cart-count <?php echo $cart_count ? '' : 'is-empty'; ?>" aria-hidden="true">
                         <?php echo esc_html( $cart_count ); ?>
                     </span>
                 </a>

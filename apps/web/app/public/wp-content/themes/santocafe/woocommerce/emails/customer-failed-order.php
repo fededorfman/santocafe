@@ -33,7 +33,7 @@ do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_
 
 $sc_pay_url = $order->get_checkout_payment_url();
 ?>
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0 8px;"><tr><td align="left">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:24px 0 8px;"><tr><td align="center">
 	<!--[if mso]>
 	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php echo esc_url( $sc_pay_url ); ?>" style="height:50px;v-text-anchor:middle;width:230px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
 		<w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Reintentar el pago</center>

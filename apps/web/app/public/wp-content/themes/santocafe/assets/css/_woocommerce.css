@@ -795,11 +795,16 @@
    Notices (success / error / info) — WooCommerce messages.
    WC renders these with an absolutely-positioned icon-font ::before
    that overlaps the text; we reset it into a clean inline badge.
+
+   Scoped to .page-main (el wrapper de page.php) para que apliquen en
+   TODAS las pantallas de cuenta/carrito/checkout —incluido el dashboard,
+   que también vive dentro— y no solo en .woocommerce-MyAccount-content.
+   Así la pantalla de "correo de restablecimiento enviado" usa la marca.
    ============================================================ */
-.woocommerce-MyAccount-content .woocommerce-info,
-.woocommerce-MyAccount-content .woocommerce-message,
-.woocommerce-MyAccount-content .woocommerce-Message,
-.woocommerce-MyAccount-content .woocommerce-error {
+.page-main .woocommerce-info,
+.page-main .woocommerce-message,
+.page-main .woocommerce-Message,
+.page-main .woocommerce-error {
     position: relative;
     display: flex;
     align-items: center;
@@ -818,16 +823,16 @@
 }
 
 /* The error notice is a <ul> with <li> items. */
-.woocommerce-MyAccount-content .woocommerce-error li {
+.page-main .woocommerce-error li {
     margin: 0;
     list-style: none;
 }
 
 /* Reset WC's absolute icon-font glyph into a tidy circular badge. */
-.woocommerce-MyAccount-content .woocommerce-info::before,
-.woocommerce-MyAccount-content .woocommerce-message::before,
-.woocommerce-MyAccount-content .woocommerce-Message::before,
-.woocommerce-MyAccount-content .woocommerce-error::before {
+.page-main .woocommerce-info::before,
+.page-main .woocommerce-message::before,
+.page-main .woocommerce-Message::before,
+.page-main .woocommerce-error::before {
     position: static;
     top: auto;
     left: auto;
@@ -848,39 +853,39 @@
 }
 
 /* Optional action button (e.g. "Ver pedido") sits at the far right. */
-.woocommerce-MyAccount-content .woocommerce-info .button,
-.woocommerce-MyAccount-content .woocommerce-message .button {
+.page-main .woocommerce-info .button,
+.page-main .woocommerce-message .button {
     margin-left: auto;
 }
 
 /* Success */
-.woocommerce-MyAccount-content .woocommerce-message,
-.woocommerce-MyAccount-content .woocommerce-Message {
+.page-main .woocommerce-message,
+.page-main .woocommerce-Message {
     background: #eef7ed;
     border-color: #cfe8c9;
     border-left-color: #2e7d32;
     color: #285f2b;
 }
-.woocommerce-MyAccount-content .woocommerce-message::before,
-.woocommerce-MyAccount-content .woocommerce-Message::before {
+.page-main .woocommerce-message::before,
+.page-main .woocommerce-Message::before {
     content: "\2713"; /* ✓ */
     background: #2e7d32;
 }
 
 /* Error */
-.woocommerce-MyAccount-content .woocommerce-error {
+.page-main .woocommerce-error {
     background: #fdf3f2;
     border-color: #f3c4bf;
     border-left-color: #c0392b;
     color: #9e2b21;
 }
-.woocommerce-MyAccount-content .woocommerce-error::before {
+.page-main .woocommerce-error::before {
     content: "\0021"; /* ! */
     background: #c0392b;
 }
 
 /* Info */
-.woocommerce-MyAccount-content .woocommerce-info::before {
+.page-main .woocommerce-info::before {
     content: "\0069"; /* i */
     background: var(--color-dorado);
 }

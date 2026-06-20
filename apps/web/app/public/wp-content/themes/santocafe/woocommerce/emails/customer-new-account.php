@@ -18,17 +18,24 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 $sc_account_url = wc_get_page_permalink( 'myaccount' );
 $sc_cta_url     = ( $password_generated && $set_password_url ) ? $set_password_url : $sc_account_url;
 $sc_cta_label   = ( $password_generated && $set_password_url ) ? 'Crear mi contraseña' : 'Ir a mi cuenta';
+
+// WooCommerce genera $user_login a partir del email (ej. "fedelaser"). Para el
+// saludo usamos el nombre que cargó la persona y, como identificador de acceso,
+// el email completo (que es con lo que inicia sesión).
+$sc_user     = get_user_by( 'login', $user_login );
+$sc_greeting = $sc_user && '' !== $sc_user->first_name ? $sc_user->first_name : $user_login;
+$sc_login_id = $sc_user && '' !== $sc_user->user_email ? $sc_user->user_email : $user_login;
 ?>
 
-<p>Hola <?php echo esc_html( $user_login ); ?>,</p>
+<p>Hola <?php echo esc_html( $sc_greeting ); ?>,</p>
 <p>¡Gracias por crear tu cuenta en <?php echo esc_html( $blogname ); ?>! Desde tu cuenta vas a poder seguir tus pedidos, guardar tus direcciones y comprar más rápido la próxima vez.</p>
-<p>Tu usuario es <strong><?php echo esc_html( $user_login ); ?></strong>.</p>
+<p>Tu usuario es <strong><?php echo esc_html( $sc_login_id ); ?></strong>.</p>
 
 <?php if ( $password_generated && $set_password_url ) : ?>
 	<p>Para terminar de activar tu cuenta, crea tu contraseña con el botón de abajo:</p>
 <?php endif; ?>
 
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0 8px;"><tr><td align="left">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:24px 0 8px;"><tr><td align="center">
 	<!--[if mso]>
 	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php echo esc_url( $sc_cta_url ); ?>" style="height:50px;v-text-anchor:middle;width:230px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
 		<w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;"><?php echo esc_html( $sc_cta_label ); ?></center>

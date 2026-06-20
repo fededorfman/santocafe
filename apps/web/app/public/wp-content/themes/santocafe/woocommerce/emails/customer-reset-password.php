@@ -23,12 +23,17 @@ $sc_reset_url = add_query_arg(
 	),
 	wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) )
 );
+
+// $user_login es el login autogenerado (ej. "fedelaser"). Saludamos con el
+// nombre real y, si está vacío, caemos al email.
+$sc_user     = get_user_by( 'login', $user_login );
+$sc_greeting = $sc_user && '' !== $sc_user->first_name ? $sc_user->first_name : ( $sc_user && '' !== $sc_user->user_email ? $sc_user->user_email : $user_login );
 ?>
 
-<p>Hola <?php echo esc_html( $user_login ); ?>,</p>
+<p>Hola <?php echo esc_html( $sc_greeting ); ?>,</p>
 <p>Alguien solicitó una nueva contraseña para tu cuenta en <?php echo esc_html( $blogname ); ?>. Si fuiste tú, crea una nueva con el botón de abajo.</p>
 
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0 8px;"><tr><td align="left">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:24px 0 8px;"><tr><td align="center">
 	<!--[if mso]>
 	<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="<?php echo esc_url( $sc_reset_url ); ?>" style="height:50px;v-text-anchor:middle;width:240px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
 		<w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Restablecer contraseña</center>

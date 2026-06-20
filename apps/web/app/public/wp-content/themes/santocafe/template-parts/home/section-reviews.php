@@ -44,7 +44,7 @@ $sc_render_reviews = static function ( array $items, bool $hidden = false ) use 
     foreach ( $items as $r ) {
         $out .= '<article class="review-card"' . ( $hidden ? ' aria-hidden="true"' : '' ) . '>'
               . '<div class="review-card__head">'
-              .   '<div class="review-card__stars" aria-label="5 de 5 estrellas">' . $sc_stars . '</div>'
+              .   '<div class="review-card__stars" role="img" aria-label="5 de 5 estrellas">' . $sc_stars . '</div>'
               .   '<span class="review-card__name">' . esc_html( $r['name'] ) . '</span>'
               . '</div>'
               . '<p class="review-card__text">' . esc_html( $r['text'] ) . '</p>'
@@ -58,7 +58,7 @@ $sc_render_reviews = static function ( array $items, bool $hidden = false ) use 
     <div class="container reviews__head">
         <span class="reviews__label">Reseñas</span>
         <h2 class="reviews__title">Lo que nos llena de orgullo</h2>
-        <div class="reviews__rating" aria-label="Calificación 4.9 de 5 sobre más de 100 reseñas">
+        <div class="reviews__rating" role="img" aria-label="Calificación 4.9 de 5 sobre más de 100 reseñas">
             <span class="reviews__rating-score">4.9</span>
             <span class="reviews__rating-stars" aria-hidden="true"><?php echo $sc_stars; // SVG estático ?></span>
             <span class="reviews__rating-count">(+100)</span>

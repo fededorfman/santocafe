@@ -9,7 +9,7 @@
     --color-oscuro:         #1a1310;   /* Texto, header, footer */
     --color-dorado:         #dfb33e;   /* CTA principal, acento */
     --color-dorado-hover:   #b08d4a;
-    --color-dorado-suave:   #c5a059;   /* Highlights, títulos */
+    --color-dorado-suave:   #7d6118;   /* Dorado para TEXTO sobre fondo claro (AA WCAG). El #dfb33e brillante queda para fondos oscuros y rellenos. */
     --color-crema:          #fcfaf7;   /* Fondo body */
 
     /* --- Colores de tarjetas y UI --- */

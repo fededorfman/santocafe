@@ -33,17 +33,19 @@ function sc_handle_contact() {
 	$message = sanitize_textarea_field( wp_unslash( $_POST['mensaje'] ?? '' ) );
 	$subject = sanitize_text_field( wp_unslash( $_POST['asunto'] ?? '' ) );
 
-	// Validación de requeridos.
+	// Validación de requeridos + topes de longitud (anti-abuso: nada infinito).
 	$fields = array();
-	if ( mb_strlen( $name ) < 2 ) {
+	if ( mb_strlen( $name ) < 2 || mb_strlen( $name ) > 100 ) {
 		$fields[] = 'nombre';
 	}
-	if ( ! is_email( $email ) ) {
+	if ( ! is_email( $email ) || mb_strlen( $email ) > 150 ) {
 		$fields[] = 'email';
 	}
-	if ( mb_strlen( $message ) < 5 ) {
+	if ( mb_strlen( $message ) < 5 || mb_strlen( $message ) > 3000 ) {
 		$fields[] = 'mensaje';
 	}
+	// El asunto no viene del form (default), pero lo acotamos por las dudas.
+	$subject = mb_substr( $subject, 0, 150 );
 	if ( $fields ) {
 		wp_send_json_error(
 			array(

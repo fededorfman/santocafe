@@ -697,7 +697,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.66); /* subido de 0.4 → contraste AA sobre la sección oscura */
     display: block;
     margin-bottom: 2px;
 }

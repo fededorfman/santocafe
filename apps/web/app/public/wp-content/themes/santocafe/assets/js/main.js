@@ -9,6 +9,25 @@
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     // ============================================================
+    // Tope global de longitud de inputs: ningún campo acepta texto
+    // infinito. Si un campo no declara su propio maxlength, le ponemos
+    // un tope sano (los <textarea> algo más holgado). Es defensa
+    // adicional — el server igual valida sus propios límites.
+    // ============================================================
+    $(function () {
+        var SKIP = {
+            hidden: 1, checkbox: 1, radio: 1, file: 1, submit: 1, button: 1,
+            image: 1, reset: 1, range: 1, number: 1, date: 1, 'datetime-local': 1,
+            month: 1, week: 1, time: 1, color: 1
+        };
+        $('input, textarea').each(function () {
+            if (this.tagName === 'INPUT' && SKIP[(this.type || '').toLowerCase()]) { return; }
+            if (this.maxLength && this.maxLength > 0) { return; } // ya tiene tope propio
+            this.maxLength = this.tagName === 'TEXTAREA' ? 5000 : 200;
+        });
+    });
+
+    // ============================================================
     // Anti-drag: evita el "fantasma" al click-y-arrastrar imágenes en todo el
     // sitio (cobertura cross-browser, incl. Firefox). De paso cancela el drag
     // nativo de los links del navbar, que cambiaba el cursor (flicker).
@@ -318,6 +337,49 @@
     }
 
     // ============================================================
+    // scPost — POST a admin-ajax con reintento ante nonce vencido.
+    //
+    // Si la página viene de la caché (LiteSpeed en prod), el SC.nonce embebido
+    // puede estar desactualizado respecto de la sesión real → check_ajax_referer
+    // falla y el server responde -1 con HTTP 403. Cuando eso pasa, pedimos un
+    // nonce fresco al endpoint sin caché (sc_refresh_nonce), lo guardamos en
+    // SC.nonce y reintentamos UNA sola vez. Devuelve una promesa compatible con
+    // .done()/.fail()/.always() (misma firma que $.post) para los call sites.
+    // ============================================================
+    function scPost(data) {
+        var dfd = $.Deferred();
+
+        function fire(isRetry) {
+            $.post(SC.ajaxUrl, $.extend({ nonce: SC.nonce }, data))
+                .done(function (res, textStatus, jqXHR) {
+                    dfd.resolve(res, textStatus, jqXHR);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    // 403 = nonce inválido. Refrescamos y reintentamos una vez.
+                    if (!isRetry && jqXHR && jqXHR.status === 403) {
+                        $.post(SC.ajaxUrl, { action: 'sc_refresh_nonce' })
+                            .done(function (r) {
+                                if (r && r.success && r.data && r.data.nonce) {
+                                    SC.nonce = r.data.nonce;
+                                    fire(true);
+                                } else {
+                                    dfd.reject(jqXHR, textStatus, errorThrown);
+                                }
+                            })
+                            .fail(function () {
+                                dfd.reject(jqXHR, textStatus, errorThrown);
+                            });
+                        return;
+                    }
+                    dfd.reject(jqXHR, textStatus, errorThrown);
+                });
+        }
+
+        fire(false);
+        return dfd.promise();
+    }
+
+    // ============================================================
     // Cart — unified fragment application (drawer + cart page)
     // Each fragment includes its wrapper → replaceWith. Selectors not
     // present on the current page simply no-op.
@@ -341,7 +403,7 @@
     function postCart(data, $row) {
         if ($row && $row.length) $row.addClass('is-updating');
 
-        $.post(SC.ajaxUrl, $.extend({ action: 'sc_update_cart', nonce: SC.nonce }, data))
+        scPost($.extend({ action: 'sc_update_cart' }, data))
             .done(function (res) {
                 if (res && res.success) {
                     applyFragments(res.data.fragments);
@@ -420,7 +482,7 @@
     function addToCart(data, $btn) {
         if ($btn && $btn.length) $btn.addClass('is-loading').prop('disabled', true);
 
-        $.post(SC.ajaxUrl, $.extend({ action: 'sc_add_to_cart', nonce: SC.nonce }, data))
+        scPost($.extend({ action: 'sc_add_to_cart' }, data))
             .done(function (res) {
                 if (res && res.success) {
                     applyFragments(res.data.fragments);
@@ -484,6 +546,7 @@
         ROW: '.form-row, .woocommerce-form-row, .sc-form-row, .form-field',
         EMAIL_RE: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         PHONE_RE: /^[\d\s\-+().]{6,}$/,
+        PW_RE: /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/, // 8+ con al menos una letra y un número
 
         init: function () {
             $(document).on('submit', 'form.js-validate', this.onSubmit.bind(this));
@@ -491,6 +554,33 @@
             $(document).on('input change blur', 'form.js-validate .sc-field--error :input', function () {
                 FormValidate.validateRow($(this).closest(FormValidate.ROW));
             });
+            // Validación en vivo de contraseñas (requisitos + coincidencia) desde
+            // la primera tecla, no solo después de un error ya mostrado.
+            $(document).on('input blur',
+                'form.js-validate .validate-password :input, form.js-validate .validate-password-match :input',
+                function (e) {
+                    var $field = $(this);
+                    var $row   = $field.closest(FormValidate.ROW);
+                    // Mientras el campo está vacío no molestamos con "obligatorio"
+                    // al tipear; eso queda para blur / submit.
+                    if (e.type === 'input' && $.trim(($field.val() || '').toString()) === '') {
+                        FormValidate.clear($row);
+                    } else {
+                        FormValidate.validateRow($row);
+                    }
+                    // Si este es el campo de origen, re-evaluamos el "repetir" ligado.
+                    var id = $field.attr('id');
+                    if (id) {
+                        $('form.js-validate .validate-password-match').each(function () {
+                            if ($(this).data('pwMatch') !== '#' + id) { return; }
+                            var $confirm = $(this).find(':input').first();
+                            if ($.trim(($confirm.val() || '').toString()) !== '') {
+                                FormValidate.validateRow($(this));
+                            }
+                        });
+                    }
+                }
+            );
         },
 
         onSubmit: function (e) {
@@ -528,6 +618,17 @@
                 error = 'Ingresa un email válido.';
             } else if (val !== '' && ($row.hasClass('validate-phone') || type === 'tel') && !this.PHONE_RE.test(val)) {
                 error = 'Ingresa un teléfono válido.';
+            } else if (val !== '' && $row.data('minlength') && val.length < parseInt($row.data('minlength'), 10)) {
+                error = 'Escribe al menos ' + parseInt($row.data('minlength'), 10) + ' caracteres.';
+            } else if (val !== '' && $row.hasClass('validate-password') && !this.PW_RE.test(val)) {
+                error = 'Mínimo 8 caracteres, con al menos una letra y un número.';
+            } else if (val !== '' && $row.hasClass('validate-password-match')) {
+                // La fila apunta al campo de origen vía data-pw-match (selector).
+                var matchSel = $row.data('pwMatch');
+                var matchVal = matchSel ? $.trim(($(matchSel).val() || '').toString()) : '';
+                if (val !== matchVal) {
+                    error = 'Las contraseñas no coinciden.';
+                }
             }
 
             if (error) {
@@ -601,9 +702,8 @@
             var $btn = $form.find('button[type="submit"]');
             $btn.prop('disabled', true);
 
-            $.post(SC.ajaxUrl, {
+            scPost({
                 action:  'sc_change_password',
-                nonce:   SC.nonce,
                 current: cur,
                 'new':   p1
             }).done(function (res) {
@@ -666,9 +766,8 @@
         if ($btn.prop('disabled')) { return; }
         $btn.prop('disabled', true).addClass('is-loading');
 
-        $.post(SC.ajaxUrl, {
+        scPost({
             action:     'sc_contact',
-            nonce:      SC.nonce,
             nombre:     $form.find('[name="nombre"]').val(),
             email:      $form.find('[name="email"]').val(),
             mensaje:    $form.find('[name="mensaje"]').val(),
@@ -678,8 +777,22 @@
                 $form.attr('hidden', true);
                 $form.siblings('.js-contact-success').removeAttr('hidden');
             } else {
-                var msg = (res && res.data && res.data.message) || 'No pudimos enviar tu mensaje. Intenta de nuevo.';
-                scContactToast(msg);
+                var d   = (res && res.data) || {};
+                var msg = d.message || 'No pudimos enviar tu mensaje. Intenta de nuevo.';
+                // Si el server indica qué campos fallaron, los marcamos inline.
+                if (Array.isArray(d.fields) && d.fields.length) {
+                    var $firstBad = null;
+                    d.fields.forEach(function (nm) {
+                        var $row = $form.find('[name="' + nm + '"]').closest('.form-field, .form-row');
+                        if ($row.length) {
+                            FormValidate.mark($row, msg);
+                            if (!$firstBad) { $firstBad = $row.find(':input').first(); }
+                        }
+                    });
+                    if ($firstBad && $firstBad.length) { $firstBad.trigger('focus'); }
+                } else {
+                    scContactToast(msg);
+                }
                 $btn.prop('disabled', false).removeClass('is-loading');
             }
         }).fail(function () {
@@ -974,7 +1087,7 @@
         var original = $btn.text();
         $btn.prop('disabled', true).text('Copiando…');
 
-        $.post(SC.ajaxUrl, { action: 'sc_copy_shipping_to_billing', nonce: SC.nonce })
+        scPost({ action: 'sc_copy_shipping_to_billing' })
             .done(function (res) {
                 if (res && res.success) {
                     window.location.reload();

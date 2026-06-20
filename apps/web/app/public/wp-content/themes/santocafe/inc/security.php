@@ -56,3 +56,20 @@ add_action( 'send_headers', function (): void {
     header( 'X-Frame-Options: SAMEORIGIN' );
     header( 'Referrer-Policy: strict-origin-when-cross-origin' );
 } );
+
+// ============================================================
+// Enumeración de usuarios por ?author=N y archivas de autor.
+// Complementa el bloqueo REST: /?author=1 normalmente redirige a
+// /author/<login>/ y filtra el nombre de usuario. Para anónimos lo
+// cortamos mandando al home (prioridad 0 → corre antes que
+// redirect_canonical, que haría la redirección reveladora).
+// ============================================================
+add_action( 'template_redirect', function (): void {
+    if ( is_user_logged_in() ) {
+        return;
+    }
+    if ( isset( $_GET['author'] ) || is_author() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        wp_safe_redirect( home_url( '/' ), 301 );
+        exit;
+    }
+}, 0 );

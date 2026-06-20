@@ -30,6 +30,26 @@ add_action( 'wp_ajax_sc_shipping_progress',        'sc_ajax_shipping_progress' )
 add_action( 'wp_ajax_nopriv_sc_shipping_progress', 'sc_ajax_shipping_progress' );
 
 // ============================================================
+// Nonce fresco — recuperación ante nonce vencido/desactualizado.
+//
+// Cuando una página se sirve desde la caché de página (LiteSpeed en prod), el
+// `SC.nonce` embebido en el HTML puede quedar viejo respecto de la sesión real
+// del visitante; entonces check_ajax_referer falla y devuelve -1 con HTTP 403.
+// También pasa sin caché si una pestaña queda abierta más que la vida del nonce
+// (12–24 h). Este endpoint mina un nonce fresco para la sesión/cookie ACTUAL y
+// el JS reintenta la acción una vez. No lleva check_ajax_referer a propósito:
+// es el camino de recuperación, y un nonce no es secreto (es CSRF atado a la
+// cookie; sin la cookie del usuario solo se obtiene un nonce de invitado).
+// admin-ajax.php (POST) no se cachea, así que la respuesta siempre es fresca.
+// ============================================================
+function sc_ajax_refresh_nonce(): void {
+    wp_send_json_success( [ 'nonce' => wp_create_nonce( 'sc_nonce' ) ] );
+}
+
+add_action( 'wp_ajax_sc_refresh_nonce',        'sc_ajax_refresh_nonce' );
+add_action( 'wp_ajax_nopriv_sc_refresh_nonce', 'sc_ajax_refresh_nonce' );
+
+// ============================================================
 // Cart update — qty / molienda / remove, returns fresh fragments
 // ============================================================
 function sc_ajax_update_cart(): void {
@@ -248,6 +268,9 @@ function sc_ajax_change_password(): void {
     }
     if ( strlen( $new ) < 8 || ! preg_match( '/[A-Za-z]/', $new ) || ! preg_match( '/[0-9]/', $new ) ) {
         wp_send_json_error( [ 'field' => 'password_1', 'message' => 'Mínimo 8 caracteres, con al menos una letra y un número.' ] );
+    }
+    if ( strlen( $new ) > 100 ) {
+        wp_send_json_error( [ 'field' => 'password_1', 'message' => 'La contraseña es demasiado larga (máximo 100 caracteres).' ] );
     }
 
     wp_set_password( $new, $user->ID );

@@ -64,7 +64,7 @@
 
 .btn--outline {
     background: transparent;
-    color: var(--color-dorado);
+    color: var(--color-dorado-suave); /* texto dorado oscuro: contraste AA sobre fondos claros */
     border-color: var(--color-dorado);
 }
 

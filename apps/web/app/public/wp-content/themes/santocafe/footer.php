@@ -22,7 +22,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
                          width="100" height="35">
                 </a>
                 <p class="site-footer__tagline">
-                    Café de especialidad.<br>Del origen a tu taza, en Chile.
+                    Café de especialidad en Santiago de Chile.
                 </p>
                 <div class="site-footer__social">
                     <a href="https://www.instagram.com/santocafespecialtycoffee/"
@@ -48,7 +48,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 
             <!-- Col 2: Navegación principal -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Navegación</h4>
+                <h2 class="site-footer__heading">Navegación</h2>
                 <ul class="site-footer__links">
                     <li><a href="<?php echo esc_url( home_url( '/#catalogo' ) ); ?>">Nuestros Cafés</a></li>
                     <li><a href="<?php echo esc_url( home_url( '/#nosotros' ) ); ?>">Sobre Nosotros</a></li>
@@ -58,7 +58,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 
             <!-- Col 3: Guías -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Guías</h4>
+                <h2 class="site-footer__heading">Guías</h2>
                 <ul class="site-footer__links">
                     <li><a href="<?php echo esc_url( sc_guias_url() ); ?>">Nuestras guías</a></li>
                     <?php
@@ -83,7 +83,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
 
             <!-- Col 4: Legal -->
             <div class="site-footer__col">
-                <h4 class="site-footer__heading">Legal</h4>
+                <h2 class="site-footer__heading">Legal</h2>
                 <ul class="site-footer__links">
                     <?php
                     $sc_legal_pages = [
@@ -107,7 +107,7 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
     <div class="site-footer__bottom">
         <div class="container site-footer__bottom-inner">
             <span>© <?php echo esc_html( date( 'Y' ) ); ?> Santo Café · Café de especialidad en Chile.</span>
-            <span class="site-footer__bottom-tagline">Un buen día, un buen café.</span>
+            <span class="site-footer__bottom-tagline">Un buen día es un buen café.</span>
         </div>
     </div>
 </footer>

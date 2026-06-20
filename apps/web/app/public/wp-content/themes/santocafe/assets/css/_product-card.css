@@ -59,9 +59,9 @@
     gap: 4px;
 }
 
-/* Country name in title — rendered in gold */
+/* Country name in title — rendered in gold (tono oscuro para contraste AA sobre la tarjeta blanca) */
 .product-card__pais {
-    color: var(--color-dorado);
+    color: var(--color-dorado-suave);
 }
 
 /* Inline flag next to country name in the title */

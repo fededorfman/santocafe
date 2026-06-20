@@ -118,7 +118,7 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             </p>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
-            <p class="woocommerce-form-row form-row">
+            <p class="woocommerce-form-row form-row validate-password">
                 <label for="reg_password">Contraseña</label>
                 <input type="password" name="password" id="reg_password" autocomplete="new-password" spellcheck="false"
                        minlength="8" required aria-required="true" />
