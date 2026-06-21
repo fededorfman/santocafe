@@ -143,8 +143,9 @@ while ( have_posts() ) :
                         </span>
                         <?php endif; ?>
                         <?php if ( $pais ) : ?>
-                        <span class="country-badge"><?php echo esc_html( $pais ); ?></span>
+                        <span class="country-badge">Origen <?php echo esc_html( $pais ); ?></span>
                         <?php endif; ?>
+                        <span class="arabica-badge">100% arábica</span>
                     </div>
                     <h1 class="product-detail__title"><?php the_title(); ?></h1>
                 </header>
@@ -426,6 +427,7 @@ while ( have_posts() ) :
                     <?php
                     $info = [
                         'Origen'      => $pais,
+                        'Especie'     => '100% Arábica',
                         'SCA'         => $sca,
                         'Altitud'     => $altitud ? $altitud . 'm' : '',
                         'Proceso'     => $proceso,

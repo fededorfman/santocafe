@@ -3,6 +3,7 @@ defined('ABSPATH') || exit;
 
 $values = [
     [ 'text' => '<strong>Trato directo</strong> con los mejores orígenes del mundo.' ],
+    [ 'text' => '<strong>100% arábica</strong>, la base del café de especialidad.' ],
     [ 'text' => 'Cafés de especialidad con <strong>+82 puntos SCA</strong>.' ],
     [ 'text' => '<strong>Tueste reciente</strong> para una máxima frescura.' ],
     [ 'text' => 'Envíos en la Región Metropolitana de Santiago en <strong>24-48&nbsp;horas hábiles</strong>.' ],
@@ -29,7 +30,8 @@ $values = [
                     <p>
                         Trabajamos mano a mano con productores de Colombia, Perú, Bolivia,
                         Brasil, Guatemala y Costa Rica. Seleccionamos exclusivamente cafés de
-                        especialidad con un <strong>puntaje SCA mínimo de 82 puntos</strong>
+                        especialidad <strong>100% arábica</strong>, con un
+                        <strong>puntaje SCA mínimo de 82 puntos</strong>
                         y optamos siempre por un tueste reciente. Así, garantizamos que la
                         frescura y los descriptores únicos del grano lleguen intactos a tu mesa.
                     </p>

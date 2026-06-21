@@ -30,7 +30,7 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
             <span class="hero__chip">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>SCA 82+
             </span>
-            <span class="hero__chip">8 orígenes latinos</span>
+            <span class="hero__chip">100% arábica</span>
             <span class="hero__chip">Tueste reciente</span>
             <span class="hero__chip">Envío en 24–48 h</span>
         </div>

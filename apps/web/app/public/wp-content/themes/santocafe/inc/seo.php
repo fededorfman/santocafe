@@ -577,7 +577,14 @@ add_filter( 'woocommerce_structured_data_product', function ( array $markup, $pr
 	}
 
 	// Additional properties from specialty meta
-	$props = [];
+	// Especie: constante para todo el catálogo (define al café de especialidad).
+	$props = [
+		[
+			'@type' => 'PropertyValue',
+			'name'  => 'Especie',
+			'value' => '100% Arábica',
+		],
+	];
 
 	$map = [
 		'sca_score' => 'Puntaje SCA',
