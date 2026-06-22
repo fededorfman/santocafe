@@ -618,6 +618,68 @@
     line-height: 1.4;
 }
 
+/* Toggle (switch) con colores de marca — preferencia de correos promocionales. */
+/* Selector con especificidad suficiente para ganarle a
+   `.woocommerce-account .woocommerce-MyAccount-content label { display:block }`. */
+.sc-checkbox,
+.woocommerce-account .woocommerce-MyAccount-content label.sc-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-oscuro, #1a1310);
+}
+
+.sc-checkbox > span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 20px; /* igual a la altura del toggle, para centrar parejo */
+    line-height: 1;
+}
+
+.sc-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    flex: 0 0 auto;
+    position: relative;
+    width: 36px;
+    height: 20px;
+    border-radius: 30px;
+    background: #cfc6b8;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sc-checkbox input[type="checkbox"]::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.sc-checkbox input[type="checkbox"]:checked {
+    background: var(--color-dorado, #dfb33e);
+}
+
+.sc-checkbox input[type="checkbox"]:checked::after {
+    transform: translateX(16px);
+}
+
+.sc-checkbox input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--color-dorado, #dfb33e);
+    outline-offset: 2px;
+}
+
 /* Inline feedback inside a card (e.g. resultado del cambio de contraseña). */
 .sc-form-feedback {
     border-radius: var(--radius-sm);

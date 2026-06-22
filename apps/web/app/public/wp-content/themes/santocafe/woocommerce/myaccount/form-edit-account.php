@@ -65,6 +65,17 @@ do_action( 'woocommerce_before_edit_account_form' );
 					<span class="sc-form-hint">Queremos saber tu fecha de nacimiento, para poder hacerte un regalo el día de tu cumple :)</span>
 				</p>
 			<?php endif; ?>
+
+			<?php // Correos promocionales: el toggle refleja lo contrario del opt-out. ?>
+			<?php $sc_optout = get_user_meta( $user->ID, 'sc_email_optout', true ); ?>
+			<p class="woocommerce-form-row form-row form-row-wide" id="account_promos_field">
+				<label class="sc-checkbox" for="sc_email_promos">
+					<input type="checkbox" name="sc_email_promos" id="sc_email_promos" value="1" <?php checked( ! $sc_optout ); ?> />
+					<span>Recibir correos promocionales</span>
+				</label>
+				<span class="sc-form-hint">Descuentos, promociones y novedades de Santo Café. Los correos sobre tus pedidos los recibirás igual.</span>
+				<input type="hidden" name="sc_email_promos_present" value="1" />
+			</p>
 		</div>
 
 		<?php

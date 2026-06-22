@@ -310,6 +310,65 @@
     color: var(--color-dorado-suave);
 }
 
+/* Cupón aplicado (solo lectura) — antes del subtotal. */
+.mini-cart__coupons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-md);
+}
+
+.mini-cart__coupon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.mini-cart__coupon-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-texto-suave);
+}
+
+.mini-cart__coupon-label strong {
+    color: var(--color-oscuro);
+    letter-spacing: 0.02em;
+}
+
+.mini-cart__coupon-amount {
+    font-weight: 700;
+    color: #2f7d4f;
+    white-space: nowrap;
+}
+
+/* Subtotal con cupón: "Subtotal" + neto en una fila (centrados entre sí);
+   el precio original tachado va en una línea aparte, a la derecha, debajo. */
+.mini-cart__subtotal-was-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2px;
+}
+
+.mini-cart__subtotal-was {
+    font-weight: 400;
+    text-decoration: line-through;
+    color: var(--color-texto-suave);
+}
+
+.mini-cart__subtotal-was .woocommerce-Price-amount {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+/* Con cupón, separamos el subtotal de la línea del cupón. */
+.mini-cart__coupons + .woocommerce-mini-cart__total {
+    margin-top: var(--spacing-md);
+    padding-top: 0;
+}
+
 .mini-cart__shipping {
     display: flex;
     align-items: baseline;

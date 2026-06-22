@@ -30,7 +30,7 @@
 <body style="margin:0; padding:0; background-color:#f3ece1;">
 
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
-    Hace rato no nos vemos. Vuelve con 15% off: {{coupon_code}}.&zwnj;&nbsp;&zwnj;&nbsp;
+    Hace rato no nos vemos. Vuelve con {{coupon_value}} off: {{coupon_code}}.&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
@@ -52,7 +52,7 @@
               <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">{{first_name}}, hace rato no nos vemos</h1>
               <p style="margin:0 0 22px; font-size:16px; line-height:1.65; color:#3a2f27;">
                 Tu taza te está esperando. Para que vuelvas a probar lo más fresco, te dejamos un
-                <strong>15% de descuento</strong> en tu próxima compra.
+                <strong>{{coupon_value}} de descuento</strong> en tu próxima compra.
               </p>
             </td>
           </tr>
@@ -75,15 +75,15 @@
                 <tr>
                   <td align="center" bgcolor="#dfb33e" style="border-radius:30px;">
                     <!--[if mso]>
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{SHOP_URL}}" style="height:50px;v-text-anchor:middle;width:240px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{coupon_url}}" style="height:50px;v-text-anchor:middle;width:240px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
                       <w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Usar mi descuento</center>
                     </v:roundrect>
                     <![endif]-->
-                    <a href="{{SHOP_URL}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:16px; font-weight:700; line-height:50px; text-align:center; text-decoration:none; width:240px; mso-hide:all;">Usar mi descuento</a>
+                    <a href="{{coupon_url}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:16px; font-weight:700; line-height:50px; text-align:center; text-decoration:none; width:240px; mso-hide:all;">Usar mi descuento</a>
                   </td>
                 </tr>
               </table>
-              <p style="margin:12px 0 0; font-size:12px; color:#a89c8a;">Válido hasta el {{expiry_date}}.</p>
+              <p style="margin:14px 0 0; font-size:14px; color:#1a1310; font-weight:600;">Válido hasta el {{expiry_date}}.</p>
             </td>
           </tr>
 

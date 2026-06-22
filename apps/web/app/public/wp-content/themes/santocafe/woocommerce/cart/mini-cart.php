@@ -148,10 +148,48 @@ do_action( 'woocommerce_before_mini_cart' );
         ?>
     </ul>
 
+    <?php
+    // Cupones aplicados: solo lectura (no se puede modificar desde el drawer).
+    $sc_coupons = WC()->cart->get_coupons();
+    ?>
+    <?php if ( $sc_coupons ) : ?>
+    <div class="mini-cart__coupons">
+        <?php foreach ( $sc_coupons as $sc_code => $sc_coupon ) :
+            $sc_disc = WC()->cart->get_coupon_discount_amount( $sc_code, WC()->cart->display_cart_ex_tax );
+            ?>
+        <div class="mini-cart__coupon">
+            <span class="mini-cart__coupon-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                Cupón <strong><?php echo esc_html( strtoupper( $sc_coupon->get_code() ) ); ?></strong>
+            </span>
+            <span class="mini-cart__coupon-amount">−<?php echo wp_kses_post( wc_price( $sc_disc ) ); ?></span>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
     <div class="woocommerce-mini-cart__total total">
         <span>Subtotal</span>
-        <span><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
+        <span>
+        <?php
+        if ( $sc_coupons ) {
+            // Neto = productos − descuentos (IVA incluido), para que el subtotal ya lo refleje.
+            echo wp_kses_post( wc_price( WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax() ) );
+        } else {
+            echo wp_kses_post( WC()->cart->get_cart_subtotal() );
+        }
+        ?>
+        </span>
     </div>
+    <?php if ( $sc_coupons ) : ?>
+    <div class="mini-cart__subtotal-was-row">
+        <span class="mini-cart__subtotal-was"><?php echo wp_kses_post( WC()->cart->get_cart_subtotal() ); ?></span>
+    </div>
+    <?php endif; ?>
 
     <?php $sc_free = function_exists( 'sc_get_shipping_gap' ) && sc_get_shipping_gap() === 0; ?>
     <div class="mini-cart__shipping">

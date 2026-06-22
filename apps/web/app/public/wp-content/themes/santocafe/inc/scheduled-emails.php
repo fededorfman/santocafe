@@ -34,27 +34,27 @@ function sc_auto_email_defs() {
 	return array(
 		'cumpleanos'   => array(
 			'label'    => 'Cumpleaños',
-			'desc'     => 'A quienes cumplen años hoy (según su fecha de nacimiento en la cuenta).',
+			'desc'     => 'A quienes cumplen años hoy (según su fecha de nacimiento en la cuenta). Con cupón único.',
 			'template' => 'cumpleanos.html',
-			'params'   => array( 'coupon' => 'FELIZCUMPLE', 'coupon_days' => 15 ),
+			'params'   => array( 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
 		),
 		'reposicion'   => array(
-			'label'    => 'Reposición',
-			'desc'     => 'A clientes cuyo último pedido fue hace N días (se les acaba el café).',
+			'label'    => 'Reposición (no te quedes sin café)',
+			'desc'     => 'A clientes cuyo último pedido fue hace N días (se les estaría acabando el café).',
 			'template' => 'reposicion.html',
-			'params'   => array( 'days' => 90 ),
+			'params'   => array( 'days' => 21 ),
 		),
 		'resena'       => array(
 			'label'    => 'Solicitud de reseña',
-			'desc'     => 'A quienes recibieron un pedido hace N días, para que reseñen su café.',
+			'desc'     => 'A quienes recibieron su pedido (estado "Entregado") hace N días, para que reseñen su café.',
 			'template' => 'resena.html',
-			'params'   => array( 'days' => 14 ),
+			'params'   => array( 'days' => 3 ),
 		),
 		'reactivacion' => array(
 			'label'    => 'Reactivación (win-back)',
-			'desc'     => 'A clientes que no compran hace N días, con un cupón para volver.',
+			'desc'     => 'A clientes que no compran hace N días, con un cupón único para volver.',
 			'template' => 'reactivacion.html',
-			'params'   => array( 'days' => 120, 'coupon' => 'TEEXTRANAMOS', 'coupon_days' => 15 ),
+			'params'   => array( 'days' => 90, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
 		),
 	);
 }
@@ -119,6 +119,10 @@ add_action(
 		}
 		if ( false === as_next_scheduled_action( 'sc_daily_email_jobs', array(), 'santocafe' ) ) {
 			sc_auto_reschedule( sc_auto_cfg()['send_hour'] );
+		}
+		// Limpieza semanal de cupones automáticos vencidos.
+		if ( false === as_next_scheduled_action( 'sc_cleanup_auto_coupons', array(), 'santocafe' ) ) {
+			as_schedule_recurring_action( time() + HOUR_IN_SECONDS, WEEK_IN_SECONDS, 'sc_cleanup_auto_coupons', array(), 'santocafe' );
 		}
 	}
 );
@@ -425,10 +429,22 @@ function sc_auto_context( $key, $item, $cfg ) {
 	$vars               = sc_auto_common_vars( $item['user_id'] );
 	$vars['first_name'] = esc_html( $item['first_name'] ? $item['first_name'] : 'Hola' );
 
-	if ( in_array( $key, array( 'cumpleanos', 'reactivacion' ), true ) ) {
-		$cd                  = max( 1, (int) ( $cfg['coupon_days'] ?? 15 ) );
-		$vars['coupon_code'] = esc_html( $cfg['coupon'] ?? '' );
-		$vars['expiry_date'] = esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( "+{$cd} days" ) ) );
+	if ( in_array( $key, array( 'cumpleanos', 'reactivacion' ), true ) && ! empty( $item['email'] ) ) {
+		$cd     = max( 1, (int) ( $cfg['coupon_days'] ?? 15 ) );
+		$type   = ( 'fixed_cart' === ( $cfg['coupon_type'] ?? 'percent' ) ) ? 'fixed_cart' : 'percent';
+		$amount = max( 0, (float) ( $cfg['coupon_amount'] ?? 10 ) );
+		$prefix = ( 'cumpleanos' === $key ) ? 'CUMPLE' : 'VUELVE';
+		// Cupón único por cliente (se crea al enviar, no en el preview).
+		$code   = sc_auto_generate_coupon( $prefix, $item['email'], $type, $amount, $cd );
+		$value  = 'percent' === $type
+			? ( ( (float) $amount === floor( $amount ) ? (int) $amount : $amount ) . '%' )
+			: sc_format_clp( (int) $amount );
+		$vars['coupon_code']  = esc_html( $code );
+		$vars['coupon_value'] = esc_html( $value );
+		$vars['expiry_date']  = esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( "+{$cd} days" ) ) );
+		// URL al inicio con el cupón listo para aplicarse solo (?sc_coupon=...).
+		$curl                 = $code ? add_query_arg( 'sc_coupon', rawurlencode( $code ), home_url( '/' ) ) . '#catalogo' : home_url( '/#catalogo' );
+		$vars['coupon_url']   = esc_url( $curl );
 	}
 
 	if ( in_array( $key, array( 'reposicion', 'resena' ), true ) && $item['product'] ) {
@@ -494,6 +510,88 @@ function sc_auto_send_one( $key, $item, $cfg, $def ) {
 }
 
 /* ============================================================
+ * Cupones dinámicos (únicos por cliente, con vencimiento)
+ * ============================================================ */
+
+/**
+ * Crea un cupón WooCommerce único para un cliente y devuelve el código.
+ * Restringido a su email, de un solo uso y con vencimiento. Marcado con
+ * _sc_auto_coupon para poder limpiarlo cuando expira.
+ *
+ * @param string $prefix Prefijo legible (ej. CUMPLE).
+ * @param string $email  Email del beneficiario (restricción).
+ * @param string $type   'percent' o 'fixed_cart'.
+ * @param float  $amount Monto del descuento.
+ * @param int    $days   Días hasta el vencimiento.
+ * @return string Código generado ('' si WooCommerce no está disponible).
+ */
+function sc_auto_generate_coupon( $prefix, $email, $type, $amount, $days ) {
+	if ( ! class_exists( 'WC_Coupon' ) || ! function_exists( 'wc_get_coupon_id_by_code' ) ) {
+		return '';
+	}
+	$prefix = strtoupper( preg_replace( '/[^A-Za-z0-9]/', '', (string) $prefix ) );
+	$prefix = $prefix ? $prefix : 'SANTO';
+
+	// Código único: PREFIJO-XXXXXX. Reintenta si por azar ya existe.
+	$code = '';
+	for ( $i = 0; $i < 5; $i++ ) {
+		$candidate = $prefix . '-' . strtoupper( wp_generate_password( 6, false, false ) );
+		if ( ! wc_get_coupon_id_by_code( $candidate ) ) {
+			$code = $candidate;
+			break;
+		}
+	}
+	if ( '' === $code ) {
+		return '';
+	}
+
+	$coupon = new WC_Coupon();
+	$coupon->set_code( $code );
+	$coupon->set_discount_type( 'fixed_cart' === $type ? 'fixed_cart' : 'percent' );
+	$coupon->set_amount( (float) $amount );
+	$coupon->set_individual_use( true );
+	$coupon->set_usage_limit( 1 ); // un solo uso global: ya es único y personal.
+	// Sin restricción de email a propósito: permite que el cupón se auto-aplique
+	// desde el link del email aunque la persona no haya ingresado su mail aún.
+	// La unicidad + límite de 1 uso lo mantienen efectivamente personal.
+	$coupon->set_date_expires( strtotime( '+' . max( 1, (int) $days ) . ' days' ) );
+	$coupon->set_description( 'Cupón automático Santo Café (' . $prefix . ') para ' . $email );
+	$coupon->add_meta_data( '_sc_auto_coupon', 1, true );
+	$coupon->save();
+
+	return $code;
+}
+
+/** Borra los cupones automáticos ya vencidos (limpieza semanal). */
+function sc_auto_cleanup_coupons() {
+	if ( ! class_exists( 'WC_Coupon' ) ) {
+		return 0;
+	}
+	$ids = get_posts(
+		array(
+			'post_type'      => 'shop_coupon',
+			'post_status'    => 'publish',
+			'posts_per_page' => 500,
+			'fields'         => 'ids',
+			'meta_key'       => '_sc_auto_coupon', // phpcs:ignore WordPress.DB.SlowDBQuery
+			'meta_value'     => 1,                 // phpcs:ignore WordPress.DB.SlowDBQuery
+		)
+	);
+	$now     = time();
+	$deleted = 0;
+	foreach ( $ids as $id ) {
+		$coupon = new WC_Coupon( $id );
+		$exp    = $coupon->get_date_expires();
+		if ( $exp && $exp->getTimestamp() < $now ) {
+			wp_delete_post( $id, true );
+			++$deleted;
+		}
+	}
+	return $deleted;
+}
+add_action( 'sc_cleanup_auto_coupons', 'sc_auto_cleanup_coupons' );
+
+/* ============================================================
  * Opt-out (cancelar suscripción)
  * ============================================================ */
 
@@ -520,16 +618,83 @@ add_action(
 		$uid = absint( $_GET['sc_unsub'] );
 		$k   = isset( $_GET['k'] ) ? sanitize_text_field( wp_unslash( $_GET['k'] ) ) : '';
 		if ( ! $uid || ! hash_equals( sc_auto_unsub_token( $uid ), $k ) ) {
-			wp_die( 'Enlace de baja inválido o vencido.', 'Baja', array( 'response' => 400 ) );
+			sc_unsub_render_page(
+				'Enlace inválido',
+				'<p>Este enlace de baja no es válido o ya expiró.</p>'
+				. '<p><a class="btn btn--ghost" href="' . esc_url( home_url( '/' ) ) . '">Ir al inicio</a></p>',
+				400
+			);
 		}
-		update_user_meta( $uid, 'sc_email_optout', 1 );
-		wp_die(
-			'Listo, te diste de baja de nuestros correos promocionales. Los correos sobre tus pedidos los seguirás recibiendo normalmente.',
-			'Baja confirmada — Santo Café',
-			array( 'response' => 200 )
+
+		// La baja se confirma solo por POST: evita que el prefetch del correo
+		// (Gmail/Outlook) dé de baja a alguien sin que haya hecho clic.
+		$is_post = ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) );
+		if ( $is_post && ! empty( $_POST['sc_unsub_confirm'] ) ) {
+			update_user_meta( $uid, 'sc_email_optout', 1 );
+			sc_unsub_render_page(
+				'Listo, te diste de baja',
+				'<p>No te enviaremos más correos promocionales.</p>'
+				. '<p class="muted">Los correos sobre tus pedidos los seguirás recibiendo normalmente.</p>'
+				. '<p style="margin-top:24px;"><a class="btn" href="' . esc_url( home_url( '/' ) ) . '">Volver al inicio</a></p>'
+			);
+		}
+
+		// GET: pedir confirmación.
+		$user   = get_userdata( $uid );
+		$email  = $user ? $user->user_email : '';
+		$action = esc_url( add_query_arg( array( 'sc_unsub' => $uid, 'k' => $k ), home_url( '/' ) ) );
+		sc_unsub_render_page(
+			'¿Cancelar los correos promocionales?',
+			'<p>Estás por darte de baja de los correos promocionales de Santo Café'
+			. ( $email ? ' <strong>(' . esc_html( $email ) . ')</strong>' : '' ) . '.</p>'
+			. '<p class="muted">Seguirás recibiendo los correos sobre tus pedidos.</p>'
+			. '<form method="post" action="' . $action . '" style="margin-top:24px;">'
+			. '<input type="hidden" name="sc_unsub_confirm" value="1">'
+			. '<button type="submit" class="btn">Sí, darme de baja</button> '
+			. '<a class="btn btn--ghost" href="' . esc_url( home_url( '/' ) ) . '">No, mantenerme</a>'
+			. '</form>'
 		);
 	}
 );
+
+/** Página HTML simple y de marca para el flujo de baja. */
+function sc_unsub_render_page( $title, $body_html, $status = 200 ) {
+	status_header( (int) $status );
+	nocache_headers();
+	$logo = esc_url( get_stylesheet_directory_uri() . '/assets/images/logo.png' );
+	?>
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex,nofollow">
+	<title><?php echo esc_html( $title ); ?> · Santo Café</title>
+	<style>
+		body{margin:0;background:#1a1310;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#2c1d11;}
+		.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;}
+		.card{background:#fcfaf7;max-width:480px;width:100%;border-radius:16px;padding:40px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+		.card img{height:54px;width:auto;margin:0 0 22px;}
+		h1{font-size:22px;line-height:1.3;margin:0 0 14px;color:#1a1310;}
+		p{font-size:15px;line-height:1.6;margin:0 0 12px;}
+		.muted{color:#7a6c5b;font-size:13px;}
+		.btn{display:inline-block;margin:6px;padding:12px 22px;border-radius:30px;font-weight:700;font-size:15px;text-decoration:none;border:0;cursor:pointer;background:#1a1310;color:#fff;}
+		.btn--ghost{background:transparent;color:#1a1310;border:1px solid #d9cdb8;}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="card">
+			<img src="<?php echo $logo; // phpcs:ignore WordPress.Security.EscapeOutput ?>" alt="Santo Café">
+			<h1><?php echo esc_html( $title ); ?></h1>
+			<?php echo $body_html; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML controlado, ya escapado arriba. ?>
+		</div>
+	</div>
+</body>
+</html>
+	<?php
+	exit;
+}
 
 /* ============================================================
  * Admin: WooCommerce → Emails automáticos
@@ -623,8 +788,14 @@ function sc_auto_admin_page() {
 							<?php if ( isset( $def['params']['days'] ) ) : ?>
 								<label>Días: <input type="number" min="1" max="3650" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][days]" value="<?php echo esc_attr( $row['days'] ); ?>"></label><br>
 							<?php endif; ?>
-							<?php if ( isset( $def['params']['coupon'] ) ) : ?>
-								<label>Cupón: <input type="text" class="regular-text" style="width:140px" name="sc[items][<?php echo esc_attr( $key ); ?>][coupon]" value="<?php echo esc_attr( $row['coupon'] ); ?>"></label><br>
+							<?php if ( isset( $def['params']['coupon_type'] ) ) : ?>
+								<label>Descuento:
+									<select name="sc[items][<?php echo esc_attr( $key ); ?>][coupon_type]">
+										<option value="percent" <?php selected( $row['coupon_type'], 'percent' ); ?>>%</option>
+										<option value="fixed_cart" <?php selected( $row['coupon_type'], 'fixed_cart' ); ?>>$ fijo</option>
+									</select>
+									<input type="number" min="0" step="1" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][coupon_amount]" value="<?php echo esc_attr( $row['coupon_amount'] ); ?>">
+								</label><br>
 								<label>Vence en (días): <input type="number" min="1" max="365" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][coupon_days]" value="<?php echo esc_attr( $row['coupon_days'] ); ?>"></label>
 							<?php endif; ?>
 						</td>
@@ -644,7 +815,7 @@ function sc_auto_admin_page() {
 			<?php submit_button( 'Guardar cambios' ); ?>
 		</form>
 
-		<p class="description">El cupón se muestra en el email tal cual: creá ese código en <em>WooCommerce → Cupones</em> con el descuento que quieras. Los envíos masivos (newsletter/promo) y carrito abandonado / aviso de stock no van por acá (necesitan otra herramienta).</p>
+		<p class="description">Los cupones se generan <strong>solos y únicos por cliente</strong> al enviar el email (código tipo <code>CUMPLE-AB12CD</code>), restringidos a su mail, de un solo uso y con el vencimiento indicado. Los vencidos se borran en una limpieza semanal automática. Los envíos masivos (newsletter/promo) y aviso de stock no van por acá (necesitan otra herramienta).</p>
 	</div>
 
 	<script>
@@ -707,6 +878,10 @@ function sc_auto_save() {
 		foreach ( $def['params'] as $pk => $pv ) {
 			if ( in_array( $pk, array( 'days', 'coupon_days' ), true ) ) {
 				$row[ $pk ] = max( 1, (int) ( $i[ $pk ] ?? $pv ) );
+			} elseif ( 'coupon_amount' === $pk ) {
+				$row[ $pk ] = max( 0, (float) ( $i[ $pk ] ?? $pv ) );
+			} elseif ( 'coupon_type' === $pk ) {
+				$row[ $pk ] = ( 'fixed_cart' === ( $i[ $pk ] ?? $pv ) ) ? 'fixed_cart' : 'percent';
 			} else {
 				$row[ $pk ] = sanitize_text_field( $i[ $pk ] ?? $pv );
 			}

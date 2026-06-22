@@ -296,6 +296,19 @@ add_action( 'woocommerce_save_account_details', function ( $user_id ): void {
     }
 } );
 
+// Preferencia de correos promocionales (toggle en Mi cuenta).
+// El nonce de la cuenta ya lo valida WooCommerce antes de este hook.
+add_action( 'woocommerce_save_account_details', function ( $user_id ): void {
+    if ( ! isset( $_POST['sc_email_promos_present'] ) ) {
+        return; // el form no incluía el toggle
+    }
+    if ( ! empty( $_POST['sc_email_promos'] ) ) {
+        delete_user_meta( $user_id, 'sc_email_optout' ); // suscripto
+    } else {
+        update_user_meta( $user_id, 'sc_email_optout', 1 ); // dado de baja
+    }
+} );
+
 // Notices: don't print them above the login/register forms — the templates
 // print them inside the relevant form instead.
 add_action( 'init', function (): void {
@@ -530,3 +543,49 @@ add_filter( 'body_class', function ( array $classes ): array {
     }
     return $classes;
 } );
+
+// ============================================================
+// Aplicar cupón desde la URL (?sc_coupon=CODE) — lo usan los emails.
+// Se guarda en la sesión y se aplica solo cuando el carrito tiene productos,
+// así el botón del email puede llevar al inicio aunque no haya carrito todavía.
+// ============================================================
+// Aplica el cupón pendiente de la sesión cuando el carrito tiene productos.
+function sc_apply_pending_coupon(): void {
+    if ( ! function_exists( 'WC' ) ) {
+        return;
+    }
+    $wc = WC();
+    if ( ! $wc->session || ! $wc->cart ) {
+        return;
+    }
+    $code = $wc->session->get( 'sc_pending_coupon' );
+    if ( ! $code || $wc->cart->is_empty() || $wc->cart->has_discount( $code ) ) {
+        return;
+    }
+    // Un solo intento: si el código no es válido, no reintentar (evita spamear el aviso).
+    $wc->cart->apply_coupon( $code );
+    $wc->session->set( 'sc_pending_coupon', null );
+}
+
+add_action( 'wp_loaded', function () {
+    if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+        return;
+    }
+    // 1) Capturar el código de la URL (?sc_coupon=CODE) y guardarlo en la sesión.
+    if ( ! empty( $_GET['sc_coupon'] ) && ! is_admin() ) {
+        $code = sanitize_text_field( wp_unslash( $_GET['sc_coupon'] ) );
+        if ( '' !== $code ) {
+            if ( ! WC()->session->has_session() ) {
+                WC()->session->set_customer_session_cookie( true ); // persistir para invitados
+            }
+            WC()->session->set( 'sc_pending_coupon', $code );
+        }
+    }
+    // 2) Aplicarlo si ya hay productos (front-end: carrito, checkout, etc.).
+    if ( ! is_admin() ) {
+        sc_apply_pending_coupon();
+    }
+}, 20 );
+
+// También al agregar un producto (cubre el alta por AJAX).
+add_action( 'woocommerce_add_to_cart', 'sc_apply_pending_coupon' );
