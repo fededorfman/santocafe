@@ -30,7 +30,7 @@
 <body style="margin:0; padding:0; background-color:#f3ece1;">
 
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
-    Calculamos que tu {{product_name}} se está por terminar. Repón fresco.&zwnj;&nbsp;&zwnj;&nbsp;
+    Hace unas semanas hiciste un pedido. ¿Lo repetimos antes de que se acabe?&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
@@ -48,18 +48,26 @@
 
           <tr>
             <td class="px" style="padding:40px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
-              <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Hora de reponer</p>
-              <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">¿Se te está acabando? ☕</h1>
+              <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Tu próximo pedido</p>
+              <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">Que no te falte el café</h1>
               <p style="margin:0 0 22px; font-size:16px; line-height:1.65; color:#3a2f27;">
-                Hola {{first_name}}, hace unas semanas pediste <strong>{{product_name}}</strong>. Si va como pensamos,
-                ya debe estar por terminarse. Repón fresco y que no te falte tu café de todos los días.
+                Hola {{first_name}}, hace unas semanas hiciste un pedido. Si va como pensamos,
+                ya debe estar por terminarse. Te dejamos lo que llevaste para que lo repitas en un clic:
               </p>
             </td>
           </tr>
 
+          <!-- resumen del pedido -->
           <tr>
-            <td class="px" align="center" style="padding:0 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
-              <img src="{{product_image}}" width="130" height="130" alt="{{product_name}}" style="display:block; width:130px; height:130px; border-radius:12px; background-color:#f3ece1; margin:0 auto;">
+            <td class="px" style="padding:6px 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1; border-radius:12px;">
+                <tr><td style="padding:14px 18px;">
+                  <p style="margin:0 0 8px; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#8a7d6b;">Tu pedido</p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    {{order_summary}}
+                  </table>
+                </td></tr>
+              </table>
             </td>
           </tr>
 
@@ -69,15 +77,15 @@
                 <tr>
                   <td align="center" bgcolor="#dfb33e" style="border-radius:30px;">
                     <!--[if mso]>
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{product_url}}" style="height:50px;v-text-anchor:middle;width:240px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
-                      <w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Volver a pedir</center>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{reorder_url}}" style="height:50px;v-text-anchor:middle;width:240px;" arcsize="60%" stroke="f" fillcolor="#dfb33e">
+                      <w:anchorlock/><center style="color:#1a1310;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Repetir pedido</center>
                     </v:roundrect>
                     <![endif]-->
-                    <a href="{{product_url}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:16px; font-weight:700; line-height:50px; text-align:center; text-decoration:none; width:240px; mso-hide:all;">Volver a pedir</a>
+                    <a href="{{reorder_url}}" style="background-color:#dfb33e; border-radius:30px; color:#1a1310; display:inline-block; font-family:'Hanken Grotesk',Arial,sans-serif; font-size:16px; font-weight:700; line-height:50px; text-align:center; text-decoration:none; width:240px; mso-hide:all;">Repetir pedido</a>
                   </td>
                 </tr>
               </table>
-              <p style="margin:14px 0 0; font-size:13px; color:#8a7d6b;">¿Quieres probar otro origen? <a href="{{SHOP_URL}}" style="color:#8a6d1f; text-decoration:underline;">Mira el catálogo</a></p>
+              <p style="margin:14px 0 0; font-size:15px; color:#8a7d6b;">¿Quieres probar otro origen? <a href="{{catalog_url}}" style="color:#8a6d1f; text-decoration:underline;">Mira el catálogo</a></p>
             </td>
           </tr>
 

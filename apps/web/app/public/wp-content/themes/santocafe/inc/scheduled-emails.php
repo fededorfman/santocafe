@@ -1,6 +1,6 @@
 <?php
 /**
- * Emails automáticos (lifecycle) — Santo Café.
+ * Emails automáticos (lifecycle) de Santo Café.
  *
  * Motor de envíos programados por consulta a la base, gestionable desde el admin
  * (WooCommerce → Emails automáticos). Usa Action Scheduler (incluido en
@@ -75,9 +75,10 @@ function sc_auto_cfg() {
 	$defs  = sc_auto_email_defs();
 	$saved = get_option( 'sc_auto_emails', array() );
 	$cfg   = array(
-		'send_hour'  => isset( $saved['send_hour'] ) ? (int) $saved['send_hour'] : 9,
-		'test_email' => isset( $saved['test_email'] ) ? $saved['test_email'] : '',
-		'items'      => array(),
+		'send_hour'         => isset( $saved['send_hour'] ) ? (int) $saved['send_hour'] : 9,
+		'test_email'        => isset( $saved['test_email'] ) ? $saved['test_email'] : '',
+		'google_review_url' => isset( $saved['google_review_url'] ) ? $saved['google_review_url'] : '',
+		'items'             => array(),
 	);
 	foreach ( $defs as $key => $def ) {
 		$row = array_merge( array( 'enabled' => false ), $def['params'] );
@@ -172,7 +173,7 @@ function sc_run_daily_email_jobs() {
 }
 
 /* ============================================================
- * Criterios (quién califica) — devuelven la lista REAL de envío
+ * Criterios (quién califica): devuelven la lista REAL de envío
  * (criterio + sin opt-out + sin duplicar).
  * ============================================================ */
 
@@ -306,16 +307,16 @@ function sc_auto_recipients_resena( $cfg, $limit = 0 ) {
 		if ( $sent ) {
 			continue;
 		}
-		$product = sc_auto_first_product( $order );
-		if ( ! $product || ! $email ) {
+		if ( ! $email ) {
 			continue;
 		}
+		// La reseña es del PEDIDO, no de un producto.
 		$out[] = array(
 			'user_id'    => (int) $cid,
 			'email'      => $email,
 			'first_name' => $order->get_billing_first_name(),
 			'order'      => $order,
-			'product'    => $product,
+			'product'    => null,
 		);
 		if ( $limit && count( $out ) >= $limit ) {
 			break;
@@ -551,19 +552,25 @@ function sc_auto_context( $key, $item, $cfg ) {
 		$vars['coupon_code']  = esc_html( $code );
 		$vars['coupon_value'] = esc_html( $value );
 		$vars['expiry_date']  = esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( "+{$cd} days" ) ) );
-		// Carrito abandonado: el cupón vuelve al CARRITO (ya tiene productos);
-		// el resto, al inicio/#catalogo. Se auto-aplica vía ?sc_coupon=...
-		$base                 = ( 'carrito_abandonado' === $key && function_exists( 'wc_get_cart_url' ) ) ? wc_get_cart_url() : home_url( '/' );
-		$frag                 = 'carrito_abandonado' === $key ? '' : '#catalogo';
-		$curl                 = $code ? add_query_arg( 'sc_coupon', rawurlencode( $code ), $base ) . $frag : $base . $frag;
-		$vars['coupon_url']   = esc_url( $curl );
+		// Se auto-aplica vía ?sc_coupon=... El carrito abandonado abre el drawer
+		// (ya tiene productos); el resto baja al catálogo de la home.
+		if ( 'carrito_abandonado' === $key ) {
+			$args = array( 'sc_opencart' => 1 );
+			if ( $code ) {
+				$args['sc_coupon'] = $code;
+			}
+			$vars['coupon_url'] = esc_url( add_query_arg( $args, home_url( '/' ) ) );
+		} else {
+			$curl               = $code ? add_query_arg( 'sc_coupon', $code, home_url( '/' ) ) . '#catalogo' : home_url( '/#catalogo' );
+			$vars['coupon_url'] = esc_url( $curl );
+		}
 	}
 
 	if ( 'carrito_abandonado' === $key ) {
-		$vars['cart_url'] = esc_url( function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' ) );
+		$vars['cart_url'] = esc_url( home_url( '/?sc_opencart=1' ) );
 	}
 
-	if ( in_array( $key, array( 'reposicion', 'resena', 'carrito_abandonado' ), true ) && $item['product'] ) {
+	if ( 'carrito_abandonado' === $key && $item['product'] ) {
 		$p     = $item['product'];
 		$img   = $p->get_image_id() ? wp_get_attachment_image_url( $p->get_image_id(), 'woocommerce_thumbnail' ) : '';
 		if ( ! $img && function_exists( 'wc_placeholder_img_src' ) ) {
@@ -572,10 +579,48 @@ function sc_auto_context( $key, $item, $cfg ) {
 		$vars['product_name']  = esc_html( $p->get_name() );
 		$vars['product_image'] = esc_url( $img );
 		$vars['product_url']   = esc_url( $p->get_permalink() );
-		// rating=5 pre-selecciona 5 estrellas en el formulario de reseña (JS en el detalle).
-		$vars['review_url']    = esc_url( add_query_arg( 'rating', 5, $p->get_permalink() ) . '#reviews' );
 	}
+
+	// Reposición: habla del PEDIDO completo. Resumen con fotos + recomprar en 1 clic.
+	if ( 'reposicion' === $key && $item['order'] ) {
+		$order                 = $item['order'];
+		$vars['order_summary'] = sc_email_order_rows( $order );
+		$vars['reorder_url']   = esc_url( function_exists( 'sc_reorder_url' ) ? sc_reorder_url( $order->get_id() ) : ( function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' ) ) );
+		$vars['catalog_url']   = esc_url( home_url( '/#catalogo' ) );
+	}
+
+	// Reseña: es del PEDIDO. Resumen de items + estrellas clickeables a la página propia.
+	if ( 'resena' === $key && $item['order'] && function_exists( 'sc_review_url' ) ) {
+		$order = $item['order'];
+		$oid   = $order->get_id();
+		$stars = '';
+		for ( $i = 1; $i <= 5; $i++ ) {
+			$stars .= '<a href="' . esc_url( sc_review_url( $oid, $i ) ) . '" '
+				. 'style="text-decoration:none;color:#dfb33e;font-size:34px;line-height:1;padding:0 3px;">&#9733;</a>';
+		}
+		$vars['order_number']  = esc_html( $order->get_order_number() );
+		$vars['order_summary'] = sc_email_order_rows( $order );
+		$vars['stars']         = $stars;
+		$vars['review_url']    = esc_url( sc_review_url( $oid ) );
+	}
+
 	return $vars;
+}
+
+/** Filas HTML (con miniatura) de los items de un pedido, para los emails. */
+function sc_email_order_rows( $order ) {
+	$rows = '';
+	if ( ! function_exists( 'sc_order_items_detailed' ) ) {
+		return $rows;
+	}
+	foreach ( sc_order_items_detailed( $order ) as $it ) {
+		$imgcell = $it['img']
+			? '<td width="52" valign="middle" style="padding:5px 12px 5px 0;"><img src="' . esc_url( $it['img'] ) . '" width="44" height="44" alt="" style="display:block;width:44px;height:44px;border-radius:8px;"></td>'
+			: '';
+		$rows   .= '<tr>' . $imgcell . '<td valign="middle" style="padding:5px 0;font-size:15px;color:#3a2f27;font-family:\'Hanken Grotesk\',Arial,sans-serif;">'
+			. esc_html( $it['label'] ) . '</td></tr>';
+	}
+	return $rows;
 }
 
 /** Carga un template de /emails y reemplaza {{placeholders}}. */
@@ -867,7 +912,7 @@ function sc_auto_admin_page() {
 				<tr>
 					<td style="width:42%"><strong>Escaneo diario de emails</strong><br><span class="description"><code>sc_daily_email_jobs</code></span></td>
 					<td>
-						Próxima: <strong><?php echo $next ? esc_html( wp_date( 'd/m/Y H:i', $next ) ) : '— (no programada)'; ?></strong>
+						Próxima: <strong><?php echo $next ? esc_html( wp_date( 'd/m/Y H:i', $next ) ) : 'sin programar'; ?></strong>
 						<?php if ( ! empty( $last['time'] ) ) : ?>
 							<br><span class="description">Última: <?php echo esc_html( wp_date( 'd/m/Y H:i', $last['time'] ) ); ?>
 							<?php if ( isset( $last['log'] ) ) : $tot = 0; foreach ( $last['log'] as $l ) { $tot += (int) ( $l['sent'] ?? 0 ); } ?>
@@ -879,7 +924,7 @@ function sc_auto_admin_page() {
 				</tr>
 				<tr>
 					<td><strong>Limpieza de cupones vencidos</strong><br><span class="description"><code>sc_cleanup_auto_coupons</code> · semanal</span></td>
-					<td>Próxima: <strong><?php echo $next_cl ? esc_html( wp_date( 'd/m/Y H:i', $next_cl ) ) : '— (no programada)'; ?></strong></td>
+					<td>Próxima: <strong><?php echo $next_cl ? esc_html( wp_date( 'd/m/Y H:i', $next_cl ) ) : 'sin programar'; ?></strong></td>
 				</tr>
 			</tbody>
 		</table>
@@ -907,6 +952,13 @@ function sc_auto_admin_page() {
 					<td>
 						<input name="sc[test_email]" id="sc-test-email" type="email" class="regular-text" value="<?php echo esc_attr( $cfg['test_email'] ? $cfg['test_email'] : wp_get_current_user()->user_email ); ?>" placeholder="hola@santocafe.cl">
 						<p class="description">A esta dirección se envían las pruebas (botón "Enviar prueba"). No afecta los envíos reales.</p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="sc-google-url">URL de reseña en Google</label></th>
+					<td>
+						<input name="sc[google_review_url]" id="sc-google-url" type="url" class="regular-text" value="<?php echo esc_attr( $cfg['google_review_url'] ); ?>" placeholder="https://search.google.com/local/writereview?placeid=...">
+						<p class="description">Cuando un cliente puntúa 5 estrellas, se le invita a dejar una reseña en este enlace. Lo obtenés desde tu ficha de Google Business (botón "Pide reseñas").</p>
 					</td>
 				</tr>
 			</table>
@@ -991,7 +1043,7 @@ function sc_auto_admin_page() {
 				post('sc_auto_preview', key, function(res){
 					if(!res.success){ el.textContent='Error.'; return; }
 					var d=res.data; var t='Elegibles ahora: '+d.total;
-					if(d.sample && d.sample.length){ t+=' — '+d.sample.join(', ')+(d.total>d.sample.length?'…':''); }
+					if(d.sample && d.sample.length){ t+=' · '+d.sample.join(', ')+(d.total>d.sample.length?'…':''); }
 					el.textContent=t;
 				});
 			});
@@ -1034,9 +1086,10 @@ function sc_auto_save() {
 	$in   = isset( $_POST['sc'] ) ? wp_unslash( $_POST['sc'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- saneado campo por campo abajo.
 	$prev = sc_auto_cfg();
 	$out  = array(
-		'send_hour'  => max( 0, min( 23, (int) ( $in['send_hour'] ?? 9 ) ) ),
-		'test_email' => sanitize_email( $in['test_email'] ?? '' ),
-		'items'      => array(),
+		'send_hour'         => max( 0, min( 23, (int) ( $in['send_hour'] ?? 9 ) ) ),
+		'test_email'        => sanitize_email( $in['test_email'] ?? '' ),
+		'google_review_url' => esc_url_raw( $in['google_review_url'] ?? '' ),
+		'items'             => array(),
 	);
 	foreach ( $defs as $key => $def ) {
 		$i   = isset( $in['items'][ $key ] ) && is_array( $in['items'][ $key ] ) ? $in['items'][ $key ] : array();

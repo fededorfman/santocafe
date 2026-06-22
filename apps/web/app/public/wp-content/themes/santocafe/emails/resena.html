@@ -30,7 +30,7 @@
 <body style="margin:0; padding:0; background-color:#f3ece1;">
 
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
-    Cuéntanos qué te pareció {{product_name}}. Te toma 1 minuto.&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    ¿Cómo estuvo tu pedido #{{order_number}}? Cuéntanos en 1 minuto.&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
@@ -50,18 +50,32 @@
             <td class="px" style="padding:40px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
               <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Tu opinión</p>
               <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">{{first_name}}, ¿qué te pareció?</h1>
-              <p style="margin:0 0 24px; font-size:16px; line-height:1.65; color:#3a2f27;">
-                Ya pasaron unos días desde que recibiste <strong>{{product_name}}</strong>. Nos encantaría saber qué te pareció —
-                tu reseña ayuda a otros a elegir y a nosotros a seguir mejorando.
+              <p style="margin:0 0 22px; font-size:16px; line-height:1.65; color:#3a2f27;">
+                Ya pasaron unos días desde que recibiste tu pedido. Nos encantaría saber cómo estuvo.
+                Tu reseña nos ayuda a seguir mejorando en cada entrega.
               </p>
             </td>
           </tr>
 
-          <!-- producto + estrellas -->
+          <!-- resumen del pedido -->
           <tr>
-            <td class="px" align="center" style="padding:0 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
-              <img src="{{product_image}}" width="120" height="120" alt="{{product_name}}" style="display:block; width:120px; height:120px; border-radius:12px; background-color:#f3ece1; margin:0 auto 14px;">
-              <div style="font-size:26px; letter-spacing:4px; color:#dfb33e;">★ ★ ★ ★ ★</div>
+            <td class="px" style="padding:0 44px 6px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1; border-radius:12px;">
+                <tr><td style="padding:14px 18px;">
+                  <p style="margin:0 0 6px; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#8a7d6b;">Tu pedido #{{order_number}}</p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    {{order_summary}}
+                  </table>
+                </td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- estrellas clickeables -->
+          <tr>
+            <td class="px" align="center" style="padding:20px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <p style="margin:0 0 8px; font-size:14px; color:#3a2f27;">Toca las estrellas para puntuar tu pedido:</p>
+              <div style="line-height:1;">{{stars}}</div>
             </td>
           </tr>
 

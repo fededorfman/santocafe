@@ -112,6 +112,7 @@ $modules = [
     'inc/emails.php',
     'inc/scheduled-emails.php',
     'inc/email-tracking.php',
+    'inc/order-review.php',
 ];
 
 foreach ($modules as $module) {

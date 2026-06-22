@@ -205,7 +205,7 @@ function sc_seo_resolve_context(): array {
 			}
 			// Último recurso: descripción única basada en el nombre (nunca vacía/duplicada).
 			if ( empty( $desc ) ) {
-				$desc = $product->get_name() . ' — café de especialidad en granos y molido. Tueste reciente. Envío en Región Metropolitana.';
+				$desc = $product->get_name() . ': café de especialidad en granos y molido. Tueste reciente. Envío en Región Metropolitana.';
 			}
 
 			$image = $fallback;
@@ -279,7 +279,7 @@ function sc_seo_resolve_context(): array {
 
 	// --- Fallback ---
 	return [
-		'Santo Café — Café de especialidad en Chile. 8 single origins latinoamericanos. Envío en Región Metropolitana.',
+		'Santo Café. Café de especialidad en Chile. 8 single origins latinoamericanos. Envío en Región Metropolitana.',
 		$site,
 		'website',
 		home_url( '/' ),

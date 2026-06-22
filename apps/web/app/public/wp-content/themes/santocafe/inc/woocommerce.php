@@ -591,6 +591,79 @@ add_action( 'wp_loaded', function () {
 add_action( 'woocommerce_add_to_cart', 'sc_apply_pending_coupon' );
 
 // ============================================================
+// Recomprar un pedido (?sc_reorder=ID&k=TOKEN): rellena el carrito con los
+// mismos productos (peso + molienda) y manda al carrito. Lo usa el email de
+// reposición ("Volver a pedir").
+// ============================================================
+function sc_reorder_token( $order_id ) {
+    return wp_hash( 'sc_reorder_' . (int) $order_id );
+}
+
+function sc_reorder_url( $order_id ) {
+    return add_query_arg(
+        array( 'sc_reorder' => (int) $order_id, 'k' => sc_reorder_token( $order_id ) ),
+        home_url( '/' )
+    );
+}
+
+add_action( 'wp_loaded', function () {
+    if ( empty( $_GET['sc_reorder'] ) || is_admin() || ! function_exists( 'WC' ) ) {
+        return;
+    }
+    $oid = absint( $_GET['sc_reorder'] );
+    $k   = isset( $_GET['k'] ) ? sanitize_text_field( wp_unslash( $_GET['k'] ) ) : '';
+    if ( ! $oid || ! hash_equals( sc_reorder_token( $oid ), $k ) ) {
+        return;
+    }
+    $order = wc_get_order( $oid );
+    if ( ! $order || ! WC()->cart ) {
+        return;
+    }
+    foreach ( $order->get_items() as $item ) {
+        $product = $item->get_product();
+        if ( ! $product || ! $product->exists() ) {
+            continue;
+        }
+        $variation_id = $item->get_variation_id();
+        $variation    = array();
+        if ( $variation_id ) {
+            $vp = wc_get_product( $variation_id );
+            if ( $vp ) {
+                $variation = $vp->get_variation_attributes();
+            }
+        }
+        $cart_item_data = array();
+        $molienda       = $item->get_meta( 'Molienda' );
+        if ( $molienda ) {
+            $cart_item_data['molienda'] = $molienda;
+        }
+        WC()->cart->add_to_cart(
+            $item->get_product_id(),
+            max( 1, (int) $item->get_quantity() ),
+            $variation_id,
+            $variation,
+            $cart_item_data
+        );
+    }
+    // A la home con el drawer del carrito abierto (no usamos /cart).
+    wp_safe_redirect( home_url( '/?sc_opencart=1' ) );
+    exit;
+}, 20 );
+
+// ============================================================
+// /cart y /shop no se usan: redirigir a la home (el carrito vive en el drawer).
+// ============================================================
+add_action( 'template_redirect', function () {
+    if ( is_admin() || ! function_exists( 'is_cart' ) ) {
+        return;
+    }
+    if ( is_cart() || is_shop() ) {
+        wp_safe_redirect( home_url( '/' ), 302 );
+        exit;
+    }
+} );
+
+// ============================================================
 // Estado de pedido "Entregado" (posterior a "Completado").
 // Lo marca el admin al entregar; dispara el email de reseña a los N días.
 // ============================================================

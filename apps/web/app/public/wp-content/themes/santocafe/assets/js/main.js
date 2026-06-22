@@ -478,6 +478,11 @@
     // Initial empty-state sync (hides footer when the cart is empty on load)
     syncCartDrawerEmpty();
 
+    // Abrir el drawer al volver de "Repetir pedido" (?sc_opencart=1).
+    if (/[?&]sc_opencart=1(?:&|$)/.test(window.location.search)) {
+        openCartDrawer();
+    }
+
     // POST to sc_add_to_cart, refresh fragments and open the drawer
     function addToCart(data, $btn) {
         if ($btn && $btn.length) $btn.addClass('is-loading').prop('disabled', true);
@@ -1100,29 +1105,6 @@
                 window.alert('Hubo un error. Intenta de nuevo.');
                 $btn.prop('disabled', false).text(original);
             });
-    });
-
-    /* Reseñas: pre-seleccionar estrellas desde el link del email (?rating=N).
-       WooCommerce convierte el <select#rating> en <p class="stars">…</p> vía JS,
-       así que reintentamos hasta que las estrellas existan y "clickeamos" la que toca. */
-    $(function () {
-        var r = new URLSearchParams(window.location.search).get('rating');
-        if (!r || !/^[1-5]$/.test(r)) {
-            return;
-        }
-        var tries = 0;
-        (function trySet() {
-            var $star = $('#respond p.stars a.star-' + r);
-            if ($star.length) {
-                $star.trigger('click');
-                return;
-            }
-            if (++tries < 20) {
-                window.setTimeout(trySet, 150);
-                return;
-            }
-            $('#rating').val(r); // fallback si nunca se generaron las estrellas
-        })();
     });
 
 })(jQuery);
