@@ -1102,4 +1102,27 @@
             });
     });
 
+    /* Reseñas: pre-seleccionar estrellas desde el link del email (?rating=N).
+       WooCommerce convierte el <select#rating> en <p class="stars">…</p> vía JS,
+       así que reintentamos hasta que las estrellas existan y "clickeamos" la que toca. */
+    $(function () {
+        var r = new URLSearchParams(window.location.search).get('rating');
+        if (!r || !/^[1-5]$/.test(r)) {
+            return;
+        }
+        var tries = 0;
+        (function trySet() {
+            var $star = $('#respond p.stars a.star-' + r);
+            if ($star.length) {
+                $star.trigger('click');
+                return;
+            }
+            if (++tries < 20) {
+                window.setTimeout(trySet, 150);
+                return;
+            }
+            $('#rating').val(r); // fallback si nunca se generaron las estrellas
+        })();
+    });
+
 })(jQuery);

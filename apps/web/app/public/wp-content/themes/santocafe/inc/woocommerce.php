@@ -589,3 +589,40 @@ add_action( 'wp_loaded', function () {
 
 // También al agregar un producto (cubre el alta por AJAX).
 add_action( 'woocommerce_add_to_cart', 'sc_apply_pending_coupon' );
+
+// ============================================================
+// Estado de pedido "Entregado" (posterior a "Completado").
+// Lo marca el admin al entregar; dispara el email de reseña a los N días.
+// ============================================================
+add_action( 'init', function () {
+    register_post_status( 'wc-entregado', array(
+        'label'                     => 'Entregado',
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        /* translators: %s: cantidad de pedidos */
+        'label_count'               => _n_noop( 'Entregado <span class="count">(%s)</span>', 'Entregado <span class="count">(%s)</span>' ),
+    ) );
+} );
+
+// Agregar "Entregado" al selector de estados, justo después de "Completado".
+add_filter( 'wc_order_statuses', function ( array $statuses ): array {
+    $out = array();
+    foreach ( $statuses as $key => $label ) {
+        $out[ $key ] = $label;
+        if ( 'wc-completed' === $key ) {
+            $out['wc-entregado'] = 'Entregado';
+        }
+    }
+    return $out;
+} );
+
+// Guardar la fecha de entrega la primera vez que el pedido pasa a "Entregado".
+add_action( 'woocommerce_order_status_entregado', function ( $order_id ) {
+    $order = wc_get_order( $order_id );
+    if ( $order && ! $order->get_meta( '_sc_delivered_at' ) ) {
+        $order->update_meta_data( '_sc_delivered_at', time() );
+        $order->save();
+    }
+} );

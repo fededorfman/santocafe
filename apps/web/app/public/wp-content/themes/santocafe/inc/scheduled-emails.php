@@ -8,13 +8,14 @@
  * templates de marca de /emails, con deduplicación y opt-out.
  *
  * Automatizaciones (todas consultables, sin infra extra):
- *   - cumpleanos    : a quienes cumplen años hoy (meta sc_birthday).
- *   - reposicion    : clientes cuyo ÚLTIMO pedido fue hace N días.
- *   - resena        : pedidos completados hace N días (pide reseña del producto).
- *   - reactivacion  : clientes sin comprar hace N días (win-back).
+ *   - cumpleanos          : a quienes cumplen años hoy (meta sc_birthday).
+ *   - reposicion          : clientes cuyo ÚLTIMO pedido fue hace N días.
+ *   - resena              : pedidos "Entregado" hace N días (pide reseña del producto).
+ *   - reactivacion        : clientes sin comprar hace N días (win-back).
+ *   - carrito_abandonado  : clientes logueados con carrito persistente inactivo hace N horas.
  *
  * NO incluidas (requieren captura adicional, se hacen con plugin/ESP):
- *   carrito abandonado, volvió-stock, newsletter/promo masivos.
+ *   carrito abandonado de invitados, volvió-stock, newsletter/promo masivos.
  *
  * @package santocafe
  */
@@ -55,6 +56,12 @@ function sc_auto_email_defs() {
 			'desc'     => 'A clientes que no compran hace N días, con un cupón único para volver.',
 			'template' => 'reactivacion.html',
 			'params'   => array( 'days' => 90, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
+		),
+		'carrito_abandonado' => array(
+			'label'    => 'Carrito abandonado',
+			'desc'     => 'A clientes logueados que dejaron productos en el carrito hace N horas sin comprar. Con cupón único.',
+			'template' => 'carrito-abandonado.html',
+			'params'   => array( 'hours' => 24, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
 		),
 	);
 }
@@ -185,6 +192,8 @@ function sc_auto_recipients( $key, $cfg, $limit = 0 ) {
 			return sc_auto_recipients_resena( $cfg, $limit );
 		case 'reactivacion':
 			return sc_auto_recipients_reactivacion( $cfg, $limit );
+		case 'carrito_abandonado':
+			return sc_auto_recipients_carrito_abandonado( $cfg, $limit );
 	}
 	return array();
 }
@@ -269,19 +278,23 @@ function sc_auto_recipients_resena( $cfg, $limit = 0 ) {
 	if ( ! function_exists( 'wc_get_orders' ) ) {
 		return array();
 	}
-	$days = max( 1, (int) ( $cfg['days'] ?? 14 ) );
+	$days = max( 1, (int) ( $cfg['days'] ?? 3 ) );
 	$ini  = strtotime( wp_date( 'Y-m-d', strtotime( "-{$days} days" ) ) . ' 00:00:00' );
 	$fin  = strtotime( wp_date( 'Y-m-d', strtotime( "-{$days} days" ) ) . ' 23:59:59' );
 	$out  = array();
 
+	// Pedidos marcados "Entregado"; filtramos por la FECHA DE ENTREGA (no la de creación).
 	$orders = wc_get_orders(
 		array(
-			'status'       => array( 'wc-completed' ),
-			'date_created' => $ini . '...' . $fin,
-			'limit'        => -1,
+			'status' => array( 'wc-entregado' ),
+			'limit'  => -1,
 		)
 	);
 	foreach ( $orders as $order ) {
+		$delivered = (int) $order->get_meta( '_sc_delivered_at' );
+		if ( ! $delivered || $delivered < $ini || $delivered > $fin ) {
+			continue; // no fue entregado hace exactamente N días
+		}
 		$cid   = $order->get_customer_id();
 		$email = $order->get_billing_email();
 		if ( $cid && get_user_meta( $cid, 'sc_email_optout', true ) ) {
@@ -349,6 +362,97 @@ function sc_auto_recipients_reactivacion( $cfg, $limit = 0 ) {
 	return $out;
 }
 
+/**
+ * Carrito abandonado (solo clientes logueados): usamos el carrito persistente de
+ * WooCommerce + un timestamp de última actividad (_sc_cart_updated). Elegibles:
+ * carrito no vacío, última actividad hace ≥ N horas (y ≤ 7 días), sin opt-out y
+ * sin haberle mandado ya este mismo carrito.
+ */
+function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0 ) {
+	$hours   = max( 1, (int) ( $cfg['hours'] ?? 24 ) );
+	$min_age = $hours * HOUR_IN_SECONDS;
+	$max_age = 7 * DAY_IN_SECONDS; // no perseguir carritos muy viejos
+	$now     = time();
+	$pc_key  = '_woocommerce_persistent_cart_' . get_current_blog_id();
+	$out     = array();
+
+	$users = get_users( array(
+		'meta_key' => '_sc_cart_updated', // phpcs:ignore WordPress.DB.SlowDBQuery
+		'fields'   => array( 'ID', 'user_email', 'display_name' ),
+	) );
+	foreach ( $users as $u ) {
+		if ( get_user_meta( $u->ID, 'sc_email_optout', true ) ) {
+			continue;
+		}
+		$updated = (int) get_user_meta( $u->ID, '_sc_cart_updated', true );
+		$age     = $now - $updated;
+		if ( ! $updated || $age < $min_age || $age > $max_age ) {
+			continue;
+		}
+		$pc   = get_user_meta( $u->ID, $pc_key, true );
+		$cart = ( is_array( $pc ) && ! empty( $pc['cart'] ) ) ? $pc['cart'] : array();
+		if ( empty( $cart ) ) {
+			continue;
+		}
+		$product = sc_auto_product_from_cart( $cart );
+		if ( ! $product ) {
+			continue;
+		}
+		// Hash del contenido: si cambia el carrito, vuelve a ser elegible.
+		$hash = md5( wp_json_encode( array_keys( $cart ) ) . count( $cart ) );
+		if ( (string) get_user_meta( $u->ID, '_sc_abandoned_sent', true ) === $hash ) {
+			continue;
+		}
+		$out[] = array(
+			'user_id'    => (int) $u->ID,
+			'email'      => $u->user_email,
+			'first_name' => sc_auto_first_name( $u->ID, $u->display_name ),
+			'order'      => null,
+			'product'    => $product,
+			'cart_hash'  => $hash,
+		);
+		if ( $limit && count( $out ) >= $limit ) {
+			break;
+		}
+	}
+	return $out;
+}
+
+/** Primer producto comprable de un carrito persistente (array de items). */
+function sc_auto_product_from_cart( $cart ) {
+	if ( ! function_exists( 'wc_get_product' ) ) {
+		return null;
+	}
+	foreach ( (array) $cart as $item ) {
+		$pid = ! empty( $item['variation_id'] ) ? $item['variation_id'] : ( $item['product_id'] ?? 0 );
+		$p   = $pid ? wc_get_product( $pid ) : null;
+		if ( $p ) {
+			return $p;
+		}
+	}
+	return null;
+}
+
+/* Tracking de actividad del carrito (solo logueados) para el carrito abandonado. */
+add_action( 'woocommerce_cart_updated', function () {
+	if ( ! is_user_logged_in() || ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return;
+	}
+	$uid = get_current_user_id();
+	if ( WC()->cart->is_empty() ) {
+		delete_user_meta( $uid, '_sc_cart_updated' );
+		delete_user_meta( $uid, '_sc_abandoned_sent' );
+	} else {
+		update_user_meta( $uid, '_sc_cart_updated', time() );
+	}
+} );
+
+add_action( 'woocommerce_cart_emptied', function () {
+	if ( is_user_logged_in() ) {
+		delete_user_meta( get_current_user_id(), '_sc_cart_updated' );
+	}
+} );
+
 /** Marca el envío para no repetir. */
 function sc_auto_mark_sent( $key, $item ) {
 	$uid   = (int) $item['user_id'];
@@ -377,6 +481,11 @@ function sc_auto_mark_sent( $key, $item ) {
 		case 'reactivacion':
 			if ( $uid ) {
 				update_user_meta( $uid, '_sc_sent_reactivacion', time() );
+			}
+			break;
+		case 'carrito_abandonado':
+			if ( $uid && ! empty( $item['cart_hash'] ) ) {
+				update_user_meta( $uid, '_sc_abandoned_sent', $item['cart_hash'] );
 			}
 			break;
 	}
@@ -429,11 +538,11 @@ function sc_auto_context( $key, $item, $cfg ) {
 	$vars               = sc_auto_common_vars( $item['user_id'] );
 	$vars['first_name'] = esc_html( $item['first_name'] ? $item['first_name'] : 'Hola' );
 
-	if ( in_array( $key, array( 'cumpleanos', 'reactivacion' ), true ) && ! empty( $item['email'] ) ) {
+	if ( in_array( $key, array( 'cumpleanos', 'reactivacion', 'carrito_abandonado' ), true ) && ! empty( $item['email'] ) ) {
 		$cd     = max( 1, (int) ( $cfg['coupon_days'] ?? 15 ) );
 		$type   = ( 'fixed_cart' === ( $cfg['coupon_type'] ?? 'percent' ) ) ? 'fixed_cart' : 'percent';
 		$amount = max( 0, (float) ( $cfg['coupon_amount'] ?? 10 ) );
-		$prefix = ( 'cumpleanos' === $key ) ? 'CUMPLE' : 'VUELVE';
+		$prefix = 'cumpleanos' === $key ? 'CUMPLE' : ( 'reactivacion' === $key ? 'VUELVE' : 'CARRITO' );
 		// Cupón único por cliente (se crea al enviar, no en el preview).
 		$code   = sc_auto_generate_coupon( $prefix, $item['email'], $type, $amount, $cd );
 		$value  = 'percent' === $type
@@ -442,12 +551,19 @@ function sc_auto_context( $key, $item, $cfg ) {
 		$vars['coupon_code']  = esc_html( $code );
 		$vars['coupon_value'] = esc_html( $value );
 		$vars['expiry_date']  = esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( "+{$cd} days" ) ) );
-		// URL al inicio con el cupón listo para aplicarse solo (?sc_coupon=...).
-		$curl                 = $code ? add_query_arg( 'sc_coupon', rawurlencode( $code ), home_url( '/' ) ) . '#catalogo' : home_url( '/#catalogo' );
+		// Carrito abandonado: el cupón vuelve al CARRITO (ya tiene productos);
+		// el resto, al inicio/#catalogo. Se auto-aplica vía ?sc_coupon=...
+		$base                 = ( 'carrito_abandonado' === $key && function_exists( 'wc_get_cart_url' ) ) ? wc_get_cart_url() : home_url( '/' );
+		$frag                 = 'carrito_abandonado' === $key ? '' : '#catalogo';
+		$curl                 = $code ? add_query_arg( 'sc_coupon', rawurlencode( $code ), $base ) . $frag : $base . $frag;
 		$vars['coupon_url']   = esc_url( $curl );
 	}
 
-	if ( in_array( $key, array( 'reposicion', 'resena' ), true ) && $item['product'] ) {
+	if ( 'carrito_abandonado' === $key ) {
+		$vars['cart_url'] = esc_url( function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' ) );
+	}
+
+	if ( in_array( $key, array( 'reposicion', 'resena', 'carrito_abandonado' ), true ) && $item['product'] ) {
 		$p     = $item['product'];
 		$img   = $p->get_image_id() ? wp_get_attachment_image_url( $p->get_image_id(), 'woocommerce_thumbnail' ) : '';
 		if ( ! $img && function_exists( 'wc_placeholder_img_src' ) ) {
@@ -456,7 +572,8 @@ function sc_auto_context( $key, $item, $cfg ) {
 		$vars['product_name']  = esc_html( $p->get_name() );
 		$vars['product_image'] = esc_url( $img );
 		$vars['product_url']   = esc_url( $p->get_permalink() );
-		$vars['review_url']    = esc_url( $p->get_permalink() . '#reviews' );
+		// rating=5 pre-selecciona 5 estrellas en el formulario de reseña (JS en el detalle).
+		$vars['review_url']    = esc_url( add_query_arg( 'rating', 5, $p->get_permalink() ) . '#reviews' );
 	}
 	return $vars;
 }
@@ -486,18 +603,28 @@ function sc_auto_subject( $key ) {
 			return '¿Qué te pareció tu café?';
 		case 'reactivacion':
 			return 'Te extrañamos en Santo Café';
+		case 'carrito_abandonado':
+			return '¿Te quedó algo en el carrito? ☕';
 	}
 	return 'Santo Café';
 }
 
-/** Envía un email de una automatización a un destinatario. */
-function sc_auto_send_one( $key, $item, $cfg, $def ) {
+/**
+ * Envía un email de una automatización a un destinatario.
+ *
+ * @param bool $track Registrar apertura/clic (false para las pruebas del panel).
+ */
+function sc_auto_send_one( $key, $item, $cfg, $def, $track = true ) {
 	if ( empty( $item['email'] ) ) {
 		return false;
 	}
 	$html = sc_auto_render( $def['template'], sc_auto_context( $key, $item, $cfg ) );
 	if ( '' === $html ) {
 		return false;
+	}
+	// Open + click tracking (pixel + redirect de links).
+	if ( $track && function_exists( 'sc_email_apply_tracking' ) ) {
+		$html = sc_email_apply_tracking( $html, $key, (int) $item['user_id'], $item['email'] );
 	}
 	$from_email = apply_filters( 'sc_contact_from_email', 'no-reply@santocafe.cl' );
 	$from_name  = apply_filters( 'sc_contact_from_name', 'Santo Café' );
@@ -722,6 +849,7 @@ function sc_auto_admin_page() {
 	$defs    = sc_auto_email_defs();
 	$last    = get_option( 'sc_auto_emails_last', array() );
 	$next    = function_exists( 'as_next_scheduled_action' ) ? as_next_scheduled_action( 'sc_daily_email_jobs', array(), 'santocafe' ) : false;
+	$next_cl = function_exists( 'as_next_scheduled_action' ) ? as_next_scheduled_action( 'sc_cleanup_auto_coupons', array(), 'santocafe' ) : false;
 	$ajax_nonce = wp_create_nonce( 'sc_auto_ajax' );
 	?>
 	<div class="wrap">
@@ -734,12 +862,32 @@ function sc_auto_admin_page() {
 			<div class="notice notice-error"><p>WooCommerce / Action Scheduler no está activo: el envío automático no correrá.</p></div>
 		<?php endif; ?>
 
+		<table class="widefat" style="max-width:760px;margin:12px 0;">
+			<tbody>
+				<tr>
+					<td style="width:42%"><strong>Escaneo diario de emails</strong><br><span class="description"><code>sc_daily_email_jobs</code></span></td>
+					<td>
+						Próxima: <strong><?php echo $next ? esc_html( wp_date( 'd/m/Y H:i', $next ) ) : '— (no programada)'; ?></strong>
+						<?php if ( ! empty( $last['time'] ) ) : ?>
+							<br><span class="description">Última: <?php echo esc_html( wp_date( 'd/m/Y H:i', $last['time'] ) ); ?>
+							<?php if ( isset( $last['log'] ) ) : $tot = 0; foreach ( $last['log'] as $l ) { $tot += (int) ( $l['sent'] ?? 0 ); } ?>
+								· enviados: <?php echo (int) $tot; ?>
+							<?php endif; ?>
+							</span>
+						<?php endif; ?>
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Limpieza de cupones vencidos</strong><br><span class="description"><code>sc_cleanup_auto_coupons</code> · semanal</span></td>
+					<td>Próxima: <strong><?php echo $next_cl ? esc_html( wp_date( 'd/m/Y H:i', $next_cl ) ) : '— (no programada)'; ?></strong></td>
+				</tr>
+			</tbody>
+		</table>
+
 		<p>
-			<strong>Próxima corrida:</strong>
-			<?php echo $next ? esc_html( wp_date( 'd/m/Y H:i', $next ) ) : '—'; ?>
-			<?php if ( ! empty( $last['time'] ) ) : ?>
-				&nbsp;·&nbsp; <strong>Última:</strong> <?php echo esc_html( wp_date( 'd/m/Y H:i', $last['time'] ) ); ?>
-			<?php endif; ?>
+			<button type="button" class="button button-primary" id="sc-run-now">Ejecutar escaneo ahora</button>
+			<span id="sc-run-now-result" style="margin-left:10px;font-size:13px;color:#555;"></span>
+			<br><span class="description">Corre el escaneo de inmediato y <strong>envía los emails reales</strong> a quien califique ahora (respeta el tope por corrida). Útil para no esperar a la hora programada.</span>
 		</p>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -783,10 +931,16 @@ function sc_auto_admin_page() {
 							<?php if ( ! empty( $last['log'][ $key ]['sent'] ) ) : ?>
 								<br><span class="description">Último envío: <?php echo (int) $last['log'][ $key ]['sent']; ?></span>
 							<?php endif; ?>
+							<?php if ( function_exists( 'sc_email_log_stats_text' ) ) : ?>
+								<br><span class="description" style="color:#1d6b3f;">📊 <?php echo esc_html( sc_email_log_stats_text( $key ) ); ?></span>
+							<?php endif; ?>
 						</td>
 						<td>
 							<?php if ( isset( $def['params']['days'] ) ) : ?>
 								<label>Días: <input type="number" min="1" max="3650" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][days]" value="<?php echo esc_attr( $row['days'] ); ?>"></label><br>
+							<?php endif; ?>
+							<?php if ( isset( $def['params']['hours'] ) ) : ?>
+								<label>Horas: <input type="number" min="1" max="720" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][hours]" value="<?php echo esc_attr( $row['hours'] ); ?>"></label><br>
 							<?php endif; ?>
 							<?php if ( isset( $def['params']['coupon_type'] ) ) : ?>
 								<label>Descuento:
@@ -815,7 +969,7 @@ function sc_auto_admin_page() {
 			<?php submit_button( 'Guardar cambios' ); ?>
 		</form>
 
-		<p class="description">Los cupones se generan <strong>solos y únicos por cliente</strong> al enviar el email (código tipo <code>CUMPLE-AB12CD</code>), restringidos a su mail, de un solo uso y con el vencimiento indicado. Los vencidos se borran en una limpieza semanal automática. Los envíos masivos (newsletter/promo) y aviso de stock no van por acá (necesitan otra herramienta).</p>
+		<p class="description">Los cupones se generan <strong>solos y únicos por cliente</strong> al enviar el email (código tipo <code>CUMPLE-AB12CD</code>), de un solo uso y con el vencimiento indicado. Los vencidos se borran en una limpieza semanal automática. Los envíos masivos (newsletter/promo) y aviso de stock no van por acá (necesitan otra herramienta).</p>
 	</div>
 
 	<script>
@@ -851,6 +1005,18 @@ function sc_auto_admin_page() {
 				}, { test_email: te ? te.value : '' });
 			});
 		});
+			var runBtn = document.getElementById('sc-run-now');
+			if (runBtn) {
+				runBtn.addEventListener('click', function(){
+					if (!window.confirm('Esto envía emails REALES a quien califique ahora. ¿Continuar?')) { return; }
+					var el = document.getElementById('sc-run-now-result');
+					runBtn.disabled = true; el.textContent = 'Ejecutando…';
+					post('sc_auto_run_now', '', function(res){
+						runBtn.disabled = false;
+						el.textContent = (res.data && res.data.message) ? res.data.message : (res.success ? 'Listo' : 'Error');
+					});
+				});
+			}
 	})();
 	</script>
 	<?php
@@ -876,7 +1042,7 @@ function sc_auto_save() {
 		$i   = isset( $in['items'][ $key ] ) && is_array( $in['items'][ $key ] ) ? $in['items'][ $key ] : array();
 		$row = array( 'enabled' => ! empty( $i['enabled'] ) );
 		foreach ( $def['params'] as $pk => $pv ) {
-			if ( in_array( $pk, array( 'days', 'coupon_days' ), true ) ) {
+			if ( in_array( $pk, array( 'days', 'coupon_days', 'hours' ), true ) ) {
 				$row[ $pk ] = max( 1, (int) ( $i[ $pk ] ?? $pv ) );
 			} elseif ( 'coupon_amount' === $pk ) {
 				$row[ $pk ] = max( 0, (float) ( $i[ $pk ] ?? $pv ) );
@@ -948,7 +1114,7 @@ function sc_auto_ajax_test() {
 		'product'    => null,
 	);
 	// Para reposición/reseña usamos un pedido/producto de ejemplo.
-	if ( in_array( $key, array( 'reposicion', 'resena' ), true ) ) {
+	if ( in_array( $key, array( 'reposicion', 'resena', 'carrito_abandonado' ), true ) ) {
 		if ( function_exists( 'wc_get_orders' ) ) {
 			$os = wc_get_orders( array( 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
 			if ( $os ) {
@@ -963,9 +1129,26 @@ function sc_auto_ajax_test() {
 			}
 		}
 	}
-	$ok = sc_auto_send_one( $key, $item, $cfg, $defs[ $key ] );
+	$ok = sc_auto_send_one( $key, $item, $cfg, $defs[ $key ], false );
 	if ( $ok ) {
 		wp_send_json_success( array( 'message' => 'Prueba enviada a ' . $item['email'] ) );
 	}
 	wp_send_json_error( array( 'message' => 'No se pudo enviar (revisá SMTP / que el template exista).' ) );
+}
+
+add_action( 'wp_ajax_sc_auto_run_now', 'sc_auto_ajax_run_now' );
+function sc_auto_ajax_run_now() {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		wp_send_json_error( array( 'message' => 'No autorizado' ) );
+	}
+	check_ajax_referer( 'sc_auto_ajax', 'nonce' );
+	sc_run_daily_email_jobs();
+	$last = get_option( 'sc_auto_emails_last', array() );
+	$tot  = 0;
+	if ( ! empty( $last['log'] ) ) {
+		foreach ( $last['log'] as $l ) {
+			$tot += (int) ( $l['sent'] ?? 0 );
+		}
+	}
+	wp_send_json_success( array( 'message' => 'Escaneo ejecutado. Emails enviados: ' . $tot ) );
 }
