@@ -12,7 +12,7 @@
  *   - reposicion          : clientes cuyo ÚLTIMO pedido fue hace N días.
  *   - resena              : pedidos "Entregado" hace N días (pide reseña del producto).
  *   - reactivacion        : clientes sin comprar hace N días (win-back).
- *   - carrito_abandonado  : clientes logueados con carrito persistente inactivo hace N horas.
+ *   - carrito_abandonado  : clientes logueados con carrito persistente inactivo hace N días.
  *
  * NO incluidas (requieren captura adicional, se hacen con plugin/ESP):
  *   carrito abandonado de invitados, volvió-stock, newsletter/promo masivos.
@@ -58,16 +58,16 @@ function sc_auto_email_defs() {
 			'params'   => array( 'days' => 90, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
 		),
 		'carrito_abandonado' => array(
-			'label'    => 'Carrito abandonado (24 h)',
-			'desc'     => 'Logueados con carrito inactivo hace ~24 h (hasta 7 días). Cupón único 5%.',
+			'label'    => 'Carrito abandonado (1 día)',
+			'desc'     => 'Logueados con carrito inactivo hace ~1 día (hasta 7 días). Cupón único 5%.',
 			'template' => 'carrito-abandonado.html',
-			'params'   => array( 'hours' => 24, 'coupon_type' => 'percent', 'coupon_amount' => 5, 'coupon_days' => 7 ),
+			'params'   => array( 'days' => 1, 'coupon_type' => 'percent', 'coupon_amount' => 5, 'coupon_days' => 7 ),
 		),
 		'carrito_abandonado_7d' => array(
 			'label'    => 'Carrito abandonado (7 días)',
 			'desc'     => 'Logueados con carrito inactivo hace ~7 días sin comprar. Cupón único 10%.',
 			'template' => 'carrito-abandonado.html',
-			'params'   => array( 'hours' => 168, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 7 ),
+			'params'   => array( 'days' => 7, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 7 ),
 		),
 	);
 }
@@ -374,16 +374,16 @@ function sc_auto_recipients_reactivacion( $cfg, $limit = 0 ) {
 /**
  * Carrito abandonado (solo clientes logueados): usamos el carrito persistente de
  * WooCommerce + un timestamp de última actividad (_sc_cart_updated). Elegibles:
- * carrito no vacío, última actividad hace ≥ N horas (y ≤ 7 días), sin opt-out y
+ * carrito no vacío, última actividad hace ≥ N días (según etapa), sin opt-out y
  * sin haberle mandado ya este mismo carrito.
  */
 function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0, $stage = 'a' ) {
-	// Etapa A: [N horas, 7 días). Etapa B: [N horas, 14 días). Dedup por etapa.
-	$default_hours = ( 'b' === $stage ) ? 168 : 24;
-	$hours         = max( 1, (int) ( $cfg['hours'] ?? $default_hours ) );
-	$min_age       = $hours * HOUR_IN_SECONDS;
-	$max_age       = ( 'b' === $stage ) ? 14 * DAY_IN_SECONDS : 7 * DAY_IN_SECONDS;
-	$sent_meta     = ( 'b' === $stage ) ? '_sc_ab_sent_b' : '_sc_ab_sent_a';
+	// Etapa A: [N días, 7 días). Etapa B: [N días, 14 días). Dedup por etapa.
+	$default_days = ( 'b' === $stage ) ? 7 : 1;
+	$days         = max( 1, (int) ( $cfg['days'] ?? $default_days ) );
+	$min_age      = $days * DAY_IN_SECONDS;
+	$max_age      = ( 'b' === $stage ) ? 14 * DAY_IN_SECONDS : 7 * DAY_IN_SECONDS;
+	$sent_meta    = ( 'b' === $stage ) ? '_sc_ab_sent_b' : '_sc_ab_sent_a';
 	$now           = time();
 	$pc_key        = '_woocommerce_persistent_cart_' . get_current_blog_id();
 	$out           = array();
@@ -942,7 +942,7 @@ function sc_auto_admin_page() {
 	?>
 	<div class="wrap">
 		<h1>Emails automáticos</h1>
-		<p>Envíos programados que <strong>no</strong> hace WooCommerce. Un job diario revisa quién califica y envía el template correspondiente. Solo se envía a quien no se dio de baja y a cada persona una sola vez por evento.</p>
+		<p>Un job diario revisa quién califica y envía el template correspondiente. Solo se envía a quien no se dio de baja y a cada persona una sola vez por evento.</p>
 		<?php if ( ! empty( $_GET['updated'] ) ) : ?>
 			<div class="notice notice-success is-dismissible"><p>Cambios guardados.</p></div>
 		<?php endif; ?>
@@ -975,7 +975,7 @@ function sc_auto_admin_page() {
 		<p>
 			<button type="button" class="button button-primary" id="sc-run-now">Ejecutar escaneo ahora</button>
 			<span id="sc-run-now-result" style="margin-left:10px;font-size:13px;color:#555;"></span>
-			<br><span class="description">Corre el escaneo de inmediato y <strong>envía los emails reales</strong> a quien califique ahora (respeta el tope por corrida). Útil para no esperar a la hora programada.</span>
+			<br><span class="description">Corre el escaneo de inmediato y <strong>envía los emails reales</strong> a quien califique ahora (respeta el tope por corrida).</span>
 		</p>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -1001,12 +1001,17 @@ function sc_auto_admin_page() {
 					<th scope="row"><label for="sc-google-url">URL de reseña en Google</label></th>
 					<td>
 						<input name="sc[google_review_url]" id="sc-google-url" type="url" class="regular-text" value="<?php echo esc_attr( $cfg['google_review_url'] ); ?>" placeholder="https://search.google.com/local/writereview?placeid=...">
-						<p class="description">Cuando un cliente puntúa 5 estrellas, se le invita a dejar una reseña en este enlace. Lo obtenés desde tu ficha de Google Business (botón "Pide reseñas").</p>
+						<p class="description">Cuando un cliente puntúa 5 estrellas, se le invita a dejar una reseña en este enlace.</p>
 					</td>
 				</tr>
 			</table>
 
 			<h2>Automatizaciones</h2>
+			<style>
+				.sc-auto-params label { display:block; margin:0 0 8px; }
+				.sc-auto-params label:last-child { margin-bottom:0; }
+				.sc-auto-params select { margin-right:4px; }
+			</style>
 			<table class="widefat striped">
 				<thead>
 					<tr>
@@ -1030,12 +1035,13 @@ function sc_auto_admin_page() {
 								<br><span class="description" style="color:#1d6b3f;">📊 <?php echo esc_html( sc_email_log_stats_text( $key ) ); ?></span>
 							<?php endif; ?>
 						</td>
-						<td>
-							<?php if ( isset( $def['params']['days'] ) ) : ?>
-								<label>Días: <input type="number" min="1" max="3650" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][days]" value="<?php echo esc_attr( $row['days'] ); ?>"></label><br>
-							<?php endif; ?>
-							<?php if ( isset( $def['params']['hours'] ) ) : ?>
-								<label>Horas: <input type="number" min="1" max="720" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][hours]" value="<?php echo esc_attr( $row['hours'] ); ?>"></label><br>
+						<td class="sc-auto-params">
+							<?php if ( isset( $def['params']['days'] ) ) :
+								$sc_when = in_array( $key, array( 'carrito_abandonado', 'carrito_abandonado_7d' ), true )
+									? 'luego de carrito abandonado'
+									: 'luego de entrega';
+							?>
+								<label>Enviar <input type="number" min="1" max="3650" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][days]" value="<?php echo esc_attr( $row['days'] ); ?>"> días <?php echo esc_html( $sc_when ); ?>.</label>
 							<?php endif; ?>
 							<?php if ( isset( $def['params']['coupon_type'] ) ) : ?>
 								<label>Descuento:
@@ -1044,7 +1050,7 @@ function sc_auto_admin_page() {
 										<option value="fixed_cart" <?php selected( $row['coupon_type'], 'fixed_cart' ); ?>>$ fijo</option>
 									</select>
 									<input type="number" min="0" step="1" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][coupon_amount]" value="<?php echo esc_attr( $row['coupon_amount'] ); ?>">
-								</label><br>
+								</label>
 								<label>Vence en (días): <input type="number" min="1" max="365" class="small-text" name="sc[items][<?php echo esc_attr( $key ); ?>][coupon_days]" value="<?php echo esc_attr( $row['coupon_days'] ); ?>"></label>
 							<?php endif; ?>
 						</td>
@@ -1064,7 +1070,6 @@ function sc_auto_admin_page() {
 			<?php submit_button( 'Guardar cambios' ); ?>
 		</form>
 
-		<p class="description">Los cupones se generan <strong>solos y únicos por cliente</strong> al enviar el email (código tipo <code>CUMPLE-AB12CD</code>), de un solo uso y con el vencimiento indicado. Los vencidos se borran en una limpieza semanal automática. Los envíos masivos (newsletter/promo) y aviso de stock no van por acá (necesitan otra herramienta).</p>
 	</div>
 
 	<script>
