@@ -58,10 +58,16 @@ function sc_auto_email_defs() {
 			'params'   => array( 'days' => 90, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
 		),
 		'carrito_abandonado' => array(
-			'label'    => 'Carrito abandonado',
-			'desc'     => 'A clientes logueados que dejaron productos en el carrito hace N horas sin comprar. Con cupón único.',
+			'label'    => 'Carrito abandonado (24 h)',
+			'desc'     => 'Logueados con carrito inactivo hace ~24 h (hasta 7 días). Cupón único 5%.',
 			'template' => 'carrito-abandonado.html',
-			'params'   => array( 'hours' => 24, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 15 ),
+			'params'   => array( 'hours' => 24, 'coupon_type' => 'percent', 'coupon_amount' => 5, 'coupon_days' => 7 ),
+		),
+		'carrito_abandonado_7d' => array(
+			'label'    => 'Carrito abandonado (7 días)',
+			'desc'     => 'Logueados con carrito inactivo hace ~7 días sin comprar. Cupón único 10%.',
+			'template' => 'carrito-abandonado.html',
+			'params'   => array( 'hours' => 168, 'coupon_type' => 'percent', 'coupon_amount' => 10, 'coupon_days' => 7 ),
 		),
 	);
 }
@@ -194,7 +200,9 @@ function sc_auto_recipients( $key, $cfg, $limit = 0 ) {
 		case 'reactivacion':
 			return sc_auto_recipients_reactivacion( $cfg, $limit );
 		case 'carrito_abandonado':
-			return sc_auto_recipients_carrito_abandonado( $cfg, $limit );
+			return sc_auto_recipients_carrito_abandonado( $cfg, $limit, 'a' );
+		case 'carrito_abandonado_7d':
+			return sc_auto_recipients_carrito_abandonado( $cfg, $limit, 'b' );
 	}
 	return array();
 }
@@ -369,13 +377,16 @@ function sc_auto_recipients_reactivacion( $cfg, $limit = 0 ) {
  * carrito no vacío, última actividad hace ≥ N horas (y ≤ 7 días), sin opt-out y
  * sin haberle mandado ya este mismo carrito.
  */
-function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0 ) {
-	$hours   = max( 1, (int) ( $cfg['hours'] ?? 24 ) );
-	$min_age = $hours * HOUR_IN_SECONDS;
-	$max_age = 7 * DAY_IN_SECONDS; // no perseguir carritos muy viejos
-	$now     = time();
-	$pc_key  = '_woocommerce_persistent_cart_' . get_current_blog_id();
-	$out     = array();
+function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0, $stage = 'a' ) {
+	// Etapa A: [N horas, 7 días). Etapa B: [N horas, 14 días). Dedup por etapa.
+	$default_hours = ( 'b' === $stage ) ? 168 : 24;
+	$hours         = max( 1, (int) ( $cfg['hours'] ?? $default_hours ) );
+	$min_age       = $hours * HOUR_IN_SECONDS;
+	$max_age       = ( 'b' === $stage ) ? 14 * DAY_IN_SECONDS : 7 * DAY_IN_SECONDS;
+	$sent_meta     = ( 'b' === $stage ) ? '_sc_ab_sent_b' : '_sc_ab_sent_a';
+	$now           = time();
+	$pc_key        = '_woocommerce_persistent_cart_' . get_current_blog_id();
+	$out           = array();
 
 	$users = get_users( array(
 		'meta_key' => '_sc_cart_updated', // phpcs:ignore WordPress.DB.SlowDBQuery
@@ -392,16 +403,12 @@ function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0 ) {
 		}
 		$pc   = get_user_meta( $u->ID, $pc_key, true );
 		$cart = ( is_array( $pc ) && ! empty( $pc['cart'] ) ) ? $pc['cart'] : array();
-		if ( empty( $cart ) ) {
-			continue;
-		}
-		$product = sc_auto_product_from_cart( $cart );
-		if ( ! $product ) {
+		if ( empty( $cart ) || ! sc_auto_product_from_cart( $cart ) ) {
 			continue;
 		}
 		// Hash del contenido: si cambia el carrito, vuelve a ser elegible.
 		$hash = md5( wp_json_encode( array_keys( $cart ) ) . count( $cart ) );
-		if ( (string) get_user_meta( $u->ID, '_sc_abandoned_sent', true ) === $hash ) {
+		if ( (string) get_user_meta( $u->ID, $sent_meta, true ) === $hash ) {
 			continue;
 		}
 		$out[] = array(
@@ -409,7 +416,8 @@ function sc_auto_recipients_carrito_abandonado( $cfg, $limit = 0 ) {
 			'email'      => $u->user_email,
 			'first_name' => sc_auto_first_name( $u->ID, $u->display_name ),
 			'order'      => null,
-			'product'    => $product,
+			'product'    => null,
+			'cart'       => $cart,
 			'cart_hash'  => $hash,
 		);
 		if ( $limit && count( $out ) >= $limit ) {
@@ -442,7 +450,8 @@ add_action( 'woocommerce_cart_updated', function () {
 	$uid = get_current_user_id();
 	if ( WC()->cart->is_empty() ) {
 		delete_user_meta( $uid, '_sc_cart_updated' );
-		delete_user_meta( $uid, '_sc_abandoned_sent' );
+		delete_user_meta( $uid, '_sc_ab_sent_a' );
+		delete_user_meta( $uid, '_sc_ab_sent_b' );
 	} else {
 		update_user_meta( $uid, '_sc_cart_updated', time() );
 	}
@@ -486,7 +495,12 @@ function sc_auto_mark_sent( $key, $item ) {
 			break;
 		case 'carrito_abandonado':
 			if ( $uid && ! empty( $item['cart_hash'] ) ) {
-				update_user_meta( $uid, '_sc_abandoned_sent', $item['cart_hash'] );
+				update_user_meta( $uid, '_sc_ab_sent_a', $item['cart_hash'] );
+			}
+			break;
+		case 'carrito_abandonado_7d':
+			if ( $uid && ! empty( $item['cart_hash'] ) ) {
+				update_user_meta( $uid, '_sc_ab_sent_b', $item['cart_hash'] );
 			}
 			break;
 	}
@@ -539,7 +553,9 @@ function sc_auto_context( $key, $item, $cfg ) {
 	$vars               = sc_auto_common_vars( $item['user_id'] );
 	$vars['first_name'] = esc_html( $item['first_name'] ? $item['first_name'] : 'Hola' );
 
-	if ( in_array( $key, array( 'cumpleanos', 'reactivacion', 'carrito_abandonado' ), true ) && ! empty( $item['email'] ) ) {
+	$is_abandoned = in_array( $key, array( 'carrito_abandonado', 'carrito_abandonado_7d' ), true );
+
+	if ( ( in_array( $key, array( 'cumpleanos', 'reactivacion' ), true ) || $is_abandoned ) && ! empty( $item['email'] ) ) {
 		$cd     = max( 1, (int) ( $cfg['coupon_days'] ?? 15 ) );
 		$type   = ( 'fixed_cart' === ( $cfg['coupon_type'] ?? 'percent' ) ) ? 'fixed_cart' : 'percent';
 		$amount = max( 0, (float) ( $cfg['coupon_amount'] ?? 10 ) );
@@ -554,7 +570,7 @@ function sc_auto_context( $key, $item, $cfg ) {
 		$vars['expiry_date']  = esc_html( date_i18n( 'j \d\e F \d\e Y', strtotime( "+{$cd} days" ) ) );
 		// Se auto-aplica vía ?sc_coupon=... El carrito abandonado abre el drawer
 		// (ya tiene productos); el resto baja al catálogo de la home.
-		if ( 'carrito_abandonado' === $key ) {
+		if ( $is_abandoned ) {
 			$args = array( 'sc_opencart' => 1 );
 			if ( $code ) {
 				$args['sc_coupon'] = $code;
@@ -566,19 +582,14 @@ function sc_auto_context( $key, $item, $cfg ) {
 		}
 	}
 
-	if ( 'carrito_abandonado' === $key ) {
+	// Carrito abandonado: resumen del carrito completo con miniaturas.
+	if ( $is_abandoned ) {
 		$vars['cart_url'] = esc_url( home_url( '/?sc_opencart=1' ) );
-	}
-
-	if ( 'carrito_abandonado' === $key && $item['product'] ) {
-		$p     = $item['product'];
-		$img   = $p->get_image_id() ? wp_get_attachment_image_url( $p->get_image_id(), 'woocommerce_thumbnail' ) : '';
-		if ( ! $img && function_exists( 'wc_placeholder_img_src' ) ) {
-			$img = wc_placeholder_img_src();
+		if ( ! empty( $item['cart'] ) ) {
+			$vars['order_summary'] = sc_email_cart_rows( $item['cart'] );
+		} elseif ( ! empty( $item['order'] ) ) {
+			$vars['order_summary'] = sc_email_order_rows( $item['order'] ); // fallback (prueba)
 		}
-		$vars['product_name']  = esc_html( $p->get_name() );
-		$vars['product_image'] = esc_url( $img );
-		$vars['product_url']   = esc_url( $p->get_permalink() );
 	}
 
 	// Reposición: habla del PEDIDO completo. Resumen con fotos + recomprar en 1 clic.
@@ -623,6 +634,36 @@ function sc_email_order_rows( $order ) {
 	return $rows;
 }
 
+/** Filas HTML (con miniatura) de los items de un carrito persistente, para los emails. */
+function sc_email_cart_rows( $cart ) {
+	$rows = '';
+	if ( ! function_exists( 'wc_get_product' ) ) {
+		return $rows;
+	}
+	foreach ( (array) $cart as $ci ) {
+		$pid = ! empty( $ci['variation_id'] ) ? $ci['variation_id'] : ( $ci['product_id'] ?? 0 );
+		$p   = $pid ? wc_get_product( $pid ) : null;
+		if ( ! $p ) {
+			continue;
+		}
+		$img_id = $p->get_image_id();
+		if ( ! $img_id && $p->get_parent_id() ) {
+			$img_id = get_post_thumbnail_id( $p->get_parent_id() );
+		}
+		$img = $img_id ? wp_get_attachment_image_url( $img_id, 'woocommerce_thumbnail' ) : '';
+		if ( ! $img && function_exists( 'wc_placeholder_img_src' ) ) {
+			$img = wc_placeholder_img_src( 'woocommerce_thumbnail' );
+		}
+		$qty     = max( 1, (int) ( $ci['quantity'] ?? 1 ) );
+		$imgcell = $img
+			? '<td width="52" valign="middle" style="padding:5px 12px 5px 0;"><img src="' . esc_url( $img ) . '" width="44" height="44" alt="" style="display:block;width:44px;height:44px;border-radius:8px;"></td>'
+			: '';
+		$rows   .= '<tr>' . $imgcell . '<td valign="middle" style="padding:5px 0;font-size:15px;color:#3a2f27;font-family:\'Hanken Grotesk\',Arial,sans-serif;">'
+			. esc_html( $qty . '× ' . $p->get_name() ) . '</td></tr>';
+	}
+	return $rows;
+}
+
 /** Carga un template de /emails y reemplaza {{placeholders}}. */
 function sc_auto_render( $template_file, $vars ) {
 	$path = get_stylesheet_directory() . '/emails/' . $template_file;
@@ -649,7 +690,9 @@ function sc_auto_subject( $key ) {
 		case 'reactivacion':
 			return 'Te extrañamos en Santo Café';
 		case 'carrito_abandonado':
-			return '¿Te quedó algo en el carrito? ☕';
+			return 'Tu carrito te espera en Santo Café';
+		case 'carrito_abandonado_7d':
+			return 'Tu carrito sigue ahí, con un descuento mayor';
 	}
 	return 'Santo Café';
 }
@@ -1167,7 +1210,7 @@ function sc_auto_ajax_test() {
 		'product'    => null,
 	);
 	// Para reposición/reseña usamos un pedido/producto de ejemplo.
-	if ( in_array( $key, array( 'reposicion', 'resena', 'carrito_abandonado' ), true ) ) {
+	if ( in_array( $key, array( 'reposicion', 'resena', 'carrito_abandonado', 'carrito_abandonado_7d' ), true ) ) {
 		if ( function_exists( 'wc_get_orders' ) ) {
 			$os = wc_get_orders( array( 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
 			if ( $os ) {

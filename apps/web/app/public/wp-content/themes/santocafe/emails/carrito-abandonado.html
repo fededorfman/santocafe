@@ -30,7 +30,7 @@
 <body style="margin:0; padding:0; background-color:#f3ece1;">
 
   <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f3ece1;">
-    Dejaste {{product_name}} en tu carrito. Te guardamos un {{coupon_value}} para terminar.&zwnj;&nbsp;&zwnj;&nbsp;
+    Guardamos tu carrito en Santo Café. Termina tu compra con un {{coupon_value}} de descuento.&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1;">
@@ -49,17 +49,25 @@
           <tr>
             <td class="px" style="padding:40px 44px 4px; font-family:'Hanken Grotesk',Arial,sans-serif;">
               <p style="margin:0 0 8px; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:#dfb33e; font-weight:700;">Tu carrito te espera</p>
-              <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">{{first_name}}, ¿te quedó algo? 🛒</h1>
+              <h1 class="h1" style="margin:0 0 14px; font-size:27px; line-height:33px; color:#1a1310; font-weight:700;">{{first_name}}, terminemos tu compra</h1>
               <p style="margin:0 0 22px; font-size:16px; line-height:1.65; color:#3a2f27;">
-                Vimos que dejaste <strong>{{product_name}}</strong> en tu carrito. Lo guardamos para ti.
-                Para terminar tu compra te dejamos un <strong>{{coupon_value}} de descuento</strong>.
+                Guardamos los cafés que dejaste en tu carrito, listos para cuando quieras.
+                Para darte un empujoncito, te dejamos un <strong>{{coupon_value}} de descuento</strong>:
               </p>
             </td>
           </tr>
 
+          <!-- resumen del carrito -->
           <tr>
-            <td class="px" align="center" style="padding:0 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
-              <img src="{{product_image}}" width="130" height="130" alt="{{product_name}}" style="display:block; width:130px; height:130px; border-radius:12px; background-color:#f3ece1; margin:0 auto;">
+            <td class="px" style="padding:6px 44px 8px; font-family:'Hanken Grotesk',Arial,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f3ece1; border-radius:12px;">
+                <tr><td style="padding:14px 18px;">
+                  <p style="margin:0 0 8px; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#8a7d6b;">En tu carrito</p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    {{order_summary}}
+                  </table>
+                </td></tr>
+              </table>
             </td>
           </tr>
 
@@ -70,6 +78,7 @@
                 <tr><td style="padding:16px 30px; text-align:center;">
                   <div style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#8a7d6b;">Tu código</div>
                   <div style="font-family:'Bricolage Grotesque',Arial,sans-serif; font-size:26px; font-weight:700; color:#1a1310; letter-spacing:2px;">{{coupon_code}}</div>
+                  <div style="margin-top:6px; font-size:14px; font-weight:600; color:#3a2f27;">{{coupon_value}} de descuento en tu compra</div>
                 </td></tr>
               </table>
             </td>
