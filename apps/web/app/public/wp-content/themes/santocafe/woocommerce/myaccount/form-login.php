@@ -40,8 +40,13 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
 
             <p class="woocommerce-form-row form-row">
                 <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" autocomplete="current-password" spellcheck="false"
-                       required aria-required="true" />
+                <span class="sc-pw-field">
+                    <input type="password" name="password" id="password" autocomplete="current-password" spellcheck="false"
+                           required aria-required="true" />
+                    <button type="button" class="sc-pw-toggle" aria-label="Ver contraseña" tabindex="-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line class="sc-pw-slash" x1="2" y1="2" x2="22" y2="22"/></svg>
+                    </button>
+                </span>
             </p>
 
             <?php do_action( 'woocommerce_login_form' ); ?>
@@ -83,14 +88,14 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
                 <p class="woocommerce-form-row form-row">
                     <label for="reg_first_name">Nombre</label>
                     <input type="text" name="first_name" id="reg_first_name" autocomplete="given-name"
-                           value="<?php echo ( ! empty( $_POST['first_name'] ) ) ? esc_attr( wp_unslash( $_POST['first_name'] ) ) : ''; ?>"
+                           value="<?php echo esc_attr( ! empty( $_POST['first_name'] ) ? wp_unslash( $_POST['first_name'] ) : ( ! empty( $_GET['reg_first_name'] ) ? sanitize_text_field( wp_unslash( $_GET['reg_first_name'] ) ) : '' ) ); ?>"
                            required aria-required="true" />
                 </p>
 
                 <p class="woocommerce-form-row form-row">
                     <label for="reg_last_name">Apellido</label>
                     <input type="text" name="last_name" id="reg_last_name" autocomplete="family-name"
-                           value="<?php echo ( ! empty( $_POST['last_name'] ) ) ? esc_attr( wp_unslash( $_POST['last_name'] ) ) : ''; ?>"
+                           value="<?php echo esc_attr( ! empty( $_POST['last_name'] ) ? wp_unslash( $_POST['last_name'] ) : ( ! empty( $_GET['reg_last_name'] ) ? sanitize_text_field( wp_unslash( $_GET['reg_last_name'] ) ) : '' ) ); ?>"
                            required aria-required="true" />
                 </p>
             </div>
@@ -120,8 +125,14 @@ $sc_registration = 'yes' === get_option( 'woocommerce_enable_myaccount_registrat
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
             <p class="woocommerce-form-row form-row validate-password">
                 <label for="reg_password">Contraseña</label>
-                <input type="password" name="password" id="reg_password" autocomplete="new-password" spellcheck="false"
-                       minlength="8" required aria-required="true" />
+                <span class="sc-pw-field">
+                    <input type="password" name="password" id="reg_password" autocomplete="new-password" spellcheck="false"
+                           minlength="8" required aria-required="true" />
+                    <button type="button" class="sc-pw-toggle" aria-label="Ver contraseña" tabindex="-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line class="sc-pw-slash" x1="2" y1="2" x2="22" y2="22"/></svg>
+                    </button>
+                    <button type="button" class="sc-pw-generate" tabindex="-1">Generar</button>
+                </span>
                 <small class="sc-account__hint">Mínimo 8 caracteres, con al menos una letra y un número.</small>
             </p>
             <?php else : ?>

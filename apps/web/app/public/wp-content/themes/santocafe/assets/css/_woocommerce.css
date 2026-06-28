@@ -103,6 +103,25 @@
     box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.18);
 }
 
+/* Anular borde/foco del input cuando está dentro del wrapper sc-pw-field */
+.sc-pw-field input[type="password"],
+.sc-pw-field input[type="text"] {
+    flex: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    outline: none !important;
+    padding: 0 var(--spacing-md) !important;
+}
+.sc-pw-field input:focus {
+    border: none !important;
+    box-shadow: none !important;
+}
+
 /* Remember-me checkbox row (horizontal) */
 .sc-account__remember {
     display: flex;
@@ -160,6 +179,65 @@
 @media (max-width: 600px) {
     .sc-account__switch { display: block; }
 }
+
+/* Password field with eye toggle + generate button */
+.sc-pw-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-sm);
+    background: var(--color-crema);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.sc-pw-field:focus-within {
+    border-color: var(--color-dorado);
+    box-shadow: 0 0 0 3px rgba(223, 179, 62, 0.18);
+}
+.sc-pw-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 100%;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-texto-suave);
+    transition: color var(--transition-fast);
+}
+.sc-pw-toggle svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    pointer-events: none;
+}
+.sc-pw-toggle .sc-pw-slash { display: none; }
+.sc-pw-toggle.is-visible .sc-pw-slash { display: block; }
+.sc-pw-toggle:hover { color: var(--color-dorado); }
+.sc-pw-generate {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px 0 10px;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--color-borde);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    letter-spacing: 0.02em;
+    color: var(--color-dorado);
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+}
+.sc-pw-generate:hover { color: var(--color-texto); }
 
 /* Password hint */
 .sc-account__hint {
@@ -1373,8 +1451,28 @@
     margin: 0;
 }
 
-.sc-account-invite__cta {
+.sc-account-invite__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
     flex-shrink: 0;
+}
+
+.sc-account-invite__cta {
+    width: 100%;
+}
+
+.sc-account-invite__login {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--transition-fast);
+}
+
+.sc-account-invite__login:hover {
+    color: var(--color-texto);
 }
 
 @media (max-width: 600px) {
@@ -1382,7 +1480,7 @@
         justify-content: center;
         text-align: center;
     }
-    .sc-account-invite__cta { width: 100%; }
+    .sc-account-invite__actions { width: 100%; }
 }
 
 /* --- Order detail: items table with thumbnails --- */

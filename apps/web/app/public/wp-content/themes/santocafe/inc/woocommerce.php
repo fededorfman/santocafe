@@ -441,7 +441,7 @@ function sc_address_fields_layout( array $fields, string $prefix ): array {
     $set( 'city',       [ 'priority' => 50, 'label' => 'Ciudad' ] );
     $set( 'address_1',  [ 'priority' => 60, 'label' => 'Dirección' ] );
     $set( 'address_2',  [ 'priority' => 70, 'label' => 'Dirección (depto, oficina, etc.)', 'placeholder' => 'Depto, oficina, etc. (opcional)' ] );
-    $set( 'phone',      [ 'priority' => 80, 'label' => 'Teléfono' ] );
+    $set( 'phone',      [ 'priority' => 80, 'label' => 'Teléfono', 'required' => true ] );
 
     // My Account address form only: drop email + postcode.
     if ( function_exists( 'is_account_page' ) && is_account_page() ) {
@@ -452,6 +452,47 @@ function sc_address_fields_layout( array $fields, string $prefix ): array {
 }
 add_filter( 'woocommerce_billing_fields',  fn( array $f ): array => sc_address_fields_layout( $f, 'billing_' ) );
 add_filter( 'woocommerce_shipping_fields', fn( array $f ): array => sc_address_fields_layout( $f, 'shipping_' ) );
+
+// Teléfono obligatorio en checkout clásico y block checkout.
+// El block checkout lee la opción de BD; el clásico usa woocommerce_checkout_fields.
+add_filter( 'pre_option_woocommerce_checkout_phone_field', fn() => 'required' );
+add_filter( 'woocommerce_checkout_fields', function ( array $fields ): array {
+    foreach ( [ 'billing', 'shipping' ] as $section ) {
+        $key = $section . '_phone';
+        if ( isset( $fields[ $section ][ $key ] ) ) {
+            $fields[ $section ][ $key ]['required'] = true;
+        }
+    }
+    return $fields;
+}, 99 );
+
+// Pre-fill first_name / last_name from the account when the address is empty.
+add_filter( 'woocommerce_address_to_edit', function ( array $address, string $type ): array {
+    $key_address = $type . '_address_1';
+    $key_first   = $type . '_first_name';
+    $key_last    = $type . '_last_name';
+
+    $address_empty = empty( $address[ $key_address ]['value'] ?? '' )
+                  && empty( $address[ $key_first ]['value'] ?? '' );
+
+    if ( ! $address_empty ) {
+        return $address;
+    }
+
+    $user = wp_get_current_user();
+    if ( ! $user->ID ) {
+        return $address;
+    }
+
+    if ( isset( $address[ $key_first ] ) && $user->first_name ) {
+        $address[ $key_first ]['value'] = $user->first_name;
+    }
+    if ( isset( $address[ $key_last ] ) && $user->last_name ) {
+        $address[ $key_last ]['value'] = $user->last_name;
+    }
+
+    return $address;
+}, 10, 2 );
 
 // WooCommerce's address-i18n.js relabels + reorders country/state/city/address
 // on the client from the per-country *locale* data. Mirror our labels/order
@@ -698,4 +739,27 @@ add_action( 'woocommerce_order_status_entregado', function ( $order_id ) {
         $order->update_meta_data( '_sc_delivered_at', time() );
         $order->save();
     }
+} );
+
+// Email "Ver mi pedido" → siempre usa la URL de confirmación con ?key=
+// así el mismo link funciona para clientes registrados e invitados.
+add_filter( 'woocommerce_get_view_order_url', function ( string $url, WC_Order $order ): string {
+    return $order->get_checkout_order_received_url();
+}, 10, 2 );
+
+// Si el usuario llega a la URL de confirmación ya logueado y el pedido es suyo,
+// lo redirigimos al detalle de pedido en su cuenta.
+add_action( 'template_redirect', function (): void {
+    if ( ! is_wc_endpoint_url( 'order-received' ) ) return;
+    if ( ! is_user_logged_in() ) return;
+
+    $order_id = absint( get_query_var( 'order-received' ) );
+    if ( ! $order_id ) return;
+
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) return;
+    if ( (int) $order->get_customer_id() !== get_current_user_id() ) return;
+
+    wp_safe_redirect( wc_get_endpoint_url( 'view-order', $order_id, wc_get_page_permalink( 'myaccount' ) ) );
+    exit;
 } );

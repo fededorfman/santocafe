@@ -69,8 +69,12 @@ defined( 'ABSPATH' ) || exit;
         // Invitación a crear cuenta — solo para quien compró como invitado.
         if ( ! is_user_logged_in() ) :
             $sc_register_url = wc_get_page_permalink( 'myaccount' );
-            if ( $order->get_billing_email() ) {
-                $sc_register_url = add_query_arg( 'reg_email', rawurlencode( $order->get_billing_email() ), $sc_register_url );
+            $sc_reg_args = [];
+            if ( $order->get_billing_email() )      $sc_reg_args['reg_email']      = $order->get_billing_email();
+            if ( $order->get_billing_first_name() ) $sc_reg_args['reg_first_name'] = $order->get_billing_first_name();
+            if ( $order->get_billing_last_name() )  $sc_reg_args['reg_last_name']  = $order->get_billing_last_name();
+            if ( $sc_reg_args ) {
+                $sc_register_url = add_query_arg( array_map( 'rawurlencode', $sc_reg_args ), $sc_register_url );
             }
             ?>
             <aside class="sc-account-invite">
@@ -86,9 +90,14 @@ defined( 'ABSPATH' ) || exit;
                         historial, con su estado y seguimiento. Además agilizás tus próximas compras.
                     </p>
                 </div>
-                <a class="btn btn--primary sc-account-invite__cta" href="<?php echo esc_url( $sc_register_url ); ?>">
-                    Crear cuenta
-                </a>
+                <div class="sc-account-invite__actions">
+                    <a class="btn btn--primary sc-account-invite__cta" href="<?php echo esc_url( $sc_register_url ); ?>">
+                        Crear cuenta
+                    </a>
+                    <a class="sc-account-invite__login" href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>">
+                        Ya tengo cuenta
+                    </a>
+                </div>
             </aside>
         <?php endif; ?>
 

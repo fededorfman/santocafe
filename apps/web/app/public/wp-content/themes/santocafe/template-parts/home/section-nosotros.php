@@ -2,7 +2,7 @@
 defined('ABSPATH') || exit;
 
 $values = [
-    [ 'text' => '<strong>Trato directo</strong> con los mejores orígenes del mundo.' ],
+    [ 'text' => '<strong>Selección rigurosa</strong> de los mejores orígenes del mundo.' ],
     [ 'text' => '<strong>100% arábica</strong>, la base del café de especialidad.' ],
     [ 'text' => 'Cafés de especialidad con <strong>+82 puntos SCA</strong>.' ],
     [ 'text' => '<strong>Tueste reciente</strong> para una máxima frescura.' ],
@@ -28,12 +28,13 @@ $values = [
                         de conocer la historia y el origen de cada grano que elijes.
                     </p>
                     <p>
-                        Trabajamos mano a mano con productores de Colombia, Perú, Bolivia,
-                        Brasil, Guatemala y Costa Rica. Seleccionamos exclusivamente cafés de
-                        especialidad <strong>100% arábica</strong>, con un
-                        <strong>puntaje SCA mínimo de 82 puntos</strong>
-                        y optamos siempre por un tueste reciente. Así, garantizamos que la
-                        frescura y los descriptores únicos del grano lleguen intactos a tu mesa.
+                        Seleccionamos exclusivamente cafés de especialidad
+                        <strong>100% arábica</strong> de Colombia, Perú, Bolivia, Brasil,
+                        Guatemala y Costa Rica, con un <strong>puntaje SCA mínimo de 82
+                        puntos</strong>. Trabajamos de cerca con nuestros tostadores para
+                        asegurar un proceso de calidad y un tueste siempre reciente, de modo
+                        que la frescura y los descriptores únicos del grano lleguen intactos
+                        a tu taza.
                     </p>
                 </div>
 
@@ -53,7 +54,7 @@ $values = [
 
             <!-- Galería -->
             <?php
-            $sc_nos_imgs = [ 'sobre-nosotros.jpg', 'sobre-nosotros2.jpg', 'sobre-nosotros3.jpg', 'sobre-nosotros4.jpg' ];
+            $sc_nos_imgs = [ 'sobre-nosotros2.jpg', 'sobre-nosotros3.jpg', 'sobre-nosotros4.jpg' ];
             $sc_nos_base = get_template_directory_uri() . '/assets/images/';
             ?>
             <div class="nosotros__image-wrap">

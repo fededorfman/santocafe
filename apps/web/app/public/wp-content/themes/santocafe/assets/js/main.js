@@ -398,8 +398,32 @@
         $drawer.toggleClass( 'is-empty', $drawer.find('.mini_cart_item').length === 0 );
     }
 
+    // Page-load cart refresh — replaces the dequeued wc-cart-fragments for the
+    // initial load. wc-cart-fragments was removed because its sessionStorage cache
+    // overwrote our AJAX updates; this version has no sessionStorage side effects.
+    // Only fires when woocommerce_items_in_cart cookie is present (cart has items),
+    // so visitors with empty carts pay zero cost.
+    $(function () {
+        function hasCookie(name) {
+            return document.cookie.split(';').some(function (c) {
+                return c.trim().indexOf(name + '=') === 0;
+            });
+        }
+        if (hasCookie('woocommerce_items_in_cart')) {
+            $.getJSON('/?wc-ajax=get_refreshed_fragments')
+                .done(function (data) {
+                    if (data && data.fragments) {
+                        applyFragments(data.fragments);
+                        $(document.body).trigger('wc_fragments_loaded');
+                    }
+                });
+        }
+    });
+
     // Mutate the cart (qty / molienda / remove) via sc_update_cart.
     // Works for both the cart page (.cart-item) and the drawer (.mini_cart_item).
+    var scCartModified = false;
+
     function postCart(data, $row) {
         if ($row && $row.length) $row.addClass('is-updating');
 
@@ -407,6 +431,7 @@
             .done(function (res) {
                 if (res && res.success) {
                     applyFragments(res.data.fragments);
+                    scCartModified = true;
                     if (res.data.notice) window.alert(res.data.notice);
                 }
             })
@@ -460,6 +485,9 @@
         $cartDrawer.removeClass('is-open').attr('aria-hidden', 'true');
         $cartDrawerOverlay.removeClass('is-visible');
         $('body').css('overflow', '');
+        if (scCartModified && $('body').hasClass('woocommerce-checkout')) {
+            window.location.reload();
+        }
     }
 
     // Open via cart icon / mobile menu link (closes the mobile menu first)
@@ -1105,6 +1133,49 @@
                 window.alert('Hubo un error. Intenta de nuevo.');
                 $btn.prop('disabled', false).text(original);
             });
+    });
+
+    // ── Password: eye toggle ──────────────────────────────────────────────
+    $(document).on('click', '.sc-pw-toggle', function () {
+        var $btn   = $(this);
+        var $input = $btn.closest('.sc-pw-field').find('input');
+        var hide   = $input.attr('type') === 'text';
+        $input.attr('type', hide ? 'password' : 'text');
+        $btn.toggleClass('is-visible', !hide);
+        $btn.attr('aria-label', hide ? 'Ver contraseña' : 'Ocultar contraseña');
+    });
+
+    // ── Password: generate ───────────────────────────────────────────────
+    function scFillPassword($input, pw) {
+        // Change type before setting value — some browsers discard the value on type change.
+        $input.attr('type', 'text').val(pw);
+        $input[0].dispatchEvent(new Event('input',  { bubbles: true }));
+        $input[0].dispatchEvent(new Event('change', { bubbles: true }));
+        $input.closest('.sc-pw-field').find('.sc-pw-toggle')
+              .addClass('is-visible').attr('aria-label', 'Ocultar contraseña');
+    }
+
+    $(document).on('click', '.sc-pw-generate', function () {
+        var upper  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var lower  = 'abcdefghijklmnopqrstuvwxyz';
+        var digits = '0123456789';
+        var all    = upper + lower + digits;
+        var pw     = [
+            upper [Math.floor(Math.random() * upper.length)],
+            lower [Math.floor(Math.random() * lower.length)],
+            digits[Math.floor(Math.random() * digits.length)]
+        ];
+        for (var i = 3; i < 8; i++) {
+            pw.push(all[Math.floor(Math.random() * all.length)]);
+        }
+        pw = pw.sort(function () { return Math.random() - 0.5; }).join('');
+
+        scFillPassword($(this).closest('.sc-pw-field').find('input'), pw);
+
+        var match = $(this).data('fill-match');
+        if (match) {
+            scFillPassword($(match), pw);
+        }
     });
 
 })(jQuery);

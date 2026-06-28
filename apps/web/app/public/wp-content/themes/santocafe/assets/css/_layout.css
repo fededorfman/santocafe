@@ -147,7 +147,7 @@
 }
 
 .site-nav__action-btn {
-    color: rgba(255, 255, 255, 0.85);
+    color: #e1e1e1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,10 +162,51 @@
     cursor: pointer;
 }
 
+.site-nav__cart { color: #e1e1e1; }
+
 .site-nav__action-btn:hover { color: var(--color-dorado); }
 /* El ícono no captura el puntero: todo el evento (y el cursor) lo resuelve el
    <a>, eliminando el cambio de cursor sobre los trazos del SVG (fill:none). */
 .site-nav__action-btn .icon { width: 22px; height: 22px; pointer-events: none; }
+
+/* Pastilla de cuenta */
+.site-nav__account { padding: 10px 8px; }
+
+.site-nav__account-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    pointer-events: none;
+    border: 2px solid #e1e1e1;
+    color: #e1e1e1;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.site-nav__account-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-right: 5px;
+    pointer-events: none;
+}
+
+/* Deslogueado: borde dorado para llamar la atención */
+.site-nav__account:not(.is-logged-in) .site-nav__account-pill {
+    border-color: var(--color-dorado);
+    color: var(--color-dorado);
+}
+
+.site-nav__account:hover .site-nav__account-pill {
+    border-color: var(--color-dorado);
+    color: var(--color-dorado);
+}
 
 /* El padding del botón corre el badge; lo reanclamos sobre el ícono. */
 .site-nav__cart .cart-icon__badge {
@@ -185,7 +226,7 @@
     padding: var(--spacing-sm);
     min-width: 44px;
     min-height: 44px;
-    color: #fff;
+    color: #e1e1e1;
     flex-shrink: 0;
     z-index: 1; /* above absolutely-positioned logo */
 }

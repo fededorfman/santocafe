@@ -3,7 +3,7 @@ defined('ABSPATH') || exit;
 
 $features = [
     [
-        'title' => 'Frescura en cada taza',
+        'title' => 'Frescura en Cada Taza',
         'desc'  => 'Elegimos el tueste más reciente posible para perfiles definidos y máxima frescura.',
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
@@ -14,8 +14,8 @@ $features = [
                     </svg>',
     ],
     [
-        'title' => 'Envíos Gratis',
-        'desc'  => 'En 24–48 horas hábiles para pedidos desde $50.000 a todo Chile.',
+        'title' => 'Envíos Gratis en Región Metropolitana',
+        'desc'  => 'En 24–48 horas hábiles para pedidos desde $50.000.',
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <rect x="1" y="3" width="15" height="13" rx="1"/>
                         <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
@@ -24,7 +24,7 @@ $features = [
                     </svg>',
     ],
     [
-        'title' => 'SCA 82 a 92 Puntos',
+        'title' => '+82 Puntos SCA',
         'desc'  => 'Garantía de cafés de especialidad evaluados internacionalmente.',
         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <circle cx="12" cy="8" r="7"/>

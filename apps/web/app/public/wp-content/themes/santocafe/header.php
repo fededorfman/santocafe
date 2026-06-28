@@ -9,6 +9,19 @@ $cart_url   = function_exists( 'wc_get_cart_url' )    ? wc_get_cart_url()    : h
 $account_url = function_exists( 'wc_get_account_endpoint_url' )
     ? wc_get_account_endpoint_url( 'dashboard' )
     : home_url( '/cuenta/' );
+
+if ( is_user_logged_in() ) {
+    $u          = wp_get_current_user();
+    $first      = $u->first_name ?: $u->display_name;
+    $last       = $u->last_name;
+    $account_label     = mb_strlen( $first ) <= 8
+        ? $first
+        : mb_strtoupper( mb_substr( $first, 0, 1 ) ) . ( $last ? mb_strtoupper( mb_substr( $last, 0, 1 ) ) : '' );
+    $account_logged_in = true;
+} else {
+    $account_label     = 'Cuenta';
+    $account_logged_in = false;
+}
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -86,13 +99,10 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
             <div class="site-nav__actions">
 
                 <a href="<?php echo esc_url( $account_url ); ?>"
-                   class="site-nav__action-btn" aria-label="Mi cuenta">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="8" r="4"/>
-                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                    </svg>
+                   class="site-nav__action-btn site-nav__account<?php echo $account_logged_in ? ' is-logged-in' : ''; ?>"
+                   aria-label="<?php echo $account_logged_in ? esc_attr( 'Mi cuenta, ' . $account_label ) : 'Iniciar sesión'; ?>">
+                    <span class="site-nav__account-pill" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="site-nav__account-icon"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><?php echo esc_html( $account_label ); ?></span>
                 </a>
 
                 <a href="<?php echo esc_url( $cart_url ); ?>"

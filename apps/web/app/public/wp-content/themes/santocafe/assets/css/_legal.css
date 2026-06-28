@@ -52,8 +52,14 @@
     text-wrap: pretty; /* evita viudas en texto largo */
 }
 
-.legal__body ul,
+.legal__body ul {
+    list-style: disc;
+    margin: 0 0 var(--spacing-md) var(--spacing-lg);
+    padding: 0;
+}
+
 .legal__body ol {
+    list-style: decimal;
     margin: 0 0 var(--spacing-md) var(--spacing-lg);
     padding: 0;
 }

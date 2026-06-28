@@ -51,8 +51,7 @@
 /* ---- Featured image ---- */
 .sc-article__featured-image {
     width: 100%;
-    aspect-ratio: 16 / 7;
-    object-fit: cover;
+    height: auto;
     border-radius: var(--radius-card);
     margin-bottom: var(--spacing-xl);
 }
@@ -83,8 +82,13 @@
     text-wrap: pretty; /* evita viudas en texto largo */
 }
 
-.sc-article__body ul,
+.sc-article__body ul {
+    list-style: disc;
+    margin: 0 0 var(--spacing-md) var(--spacing-lg);
+    padding: 0;
+}
 .sc-article__body ol {
+    list-style: decimal;
     margin: 0 0 var(--spacing-md) var(--spacing-lg);
     padding: 0;
 }

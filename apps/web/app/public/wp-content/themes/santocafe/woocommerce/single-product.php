@@ -57,6 +57,15 @@ while ( have_posts() ) :
     $pr_250  = sc_weight_pricing( $price_250, $reg_250 );
     $pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
+    // Ahorro del 1kg vs 4×250g
+    $saving_pct_1kg = 0;
+    if ( $var_1kg && $price_250 > 0 ) {
+        $equiv_4x250 = $price_250 * 4;
+        if ( $equiv_4x250 > $price_1kg ) {
+            $saving_pct_1kg = (int) round( ( $equiv_4x250 - $price_1kg ) / $equiv_4x250 * 100 );
+        }
+    }
+
     // ---- Stock por peso (gramos) ----
     $sc_stock  = sc_weight_stock_states( $id );
     $sc_in_250 = $sc_stock['250g'] ?? true;
@@ -244,7 +253,9 @@ while ( have_posts() ) :
                                 data-peso="1kg"
                                 type="button">
                             <span class="format-weight">1kg</span>
-                            <span class="format-cups">~120 tazas</span>
+                            <?php if ( $saving_pct_1kg > 0 ) : ?>
+                            <span class="format-discount">-<?php echo esc_html( $saving_pct_1kg ); ?>%</span>
+                            <?php endif; ?>
                         </button>
                         <?php endif; ?>
                     </div>
@@ -291,7 +302,7 @@ while ( have_posts() ) :
                         ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>', 'text' => 'Envío gratis desde $50.000'],
                         ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'text' => 'Entrega 24-48 horas'],
                         ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>', 'text' => 'Pago 100% seguro'],
-                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 00-4-4H4"/></svg>', 'text' => '30 días devolución'],
+                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>', 'text' => '100% Arábica'],
                     ];
                     foreach ( $guarantees as $g ) : ?>
                     <div class="guarantee-item">
