@@ -763,3 +763,21 @@ add_action( 'template_redirect', function (): void {
     wp_safe_redirect( wc_get_endpoint_url( 'view-order', $order_id, wc_get_page_permalink( 'myaccount' ) ) );
     exit;
 } );
+
+// Cambiar "Ciudad" por "Comuna" en todos los formularios de dirección (checkout + mi cuenta).
+add_filter( 'woocommerce_default_address_fields', function ( array $fields ): array {
+    if ( isset( $fields['city'] ) ) {
+        $fields['city']['label']       = 'Comuna';
+        $fields['city']['placeholder'] = 'Tu comuna';
+    }
+    return $fields;
+} );
+
+// El locale de Chile puede sobreescribir el label anterior; lo neutralizamos.
+add_filter( 'woocommerce_get_country_locale', function ( array $locale ): array {
+    if ( isset( $locale['CL']['city'] ) ) {
+        $locale['CL']['city']['label']       = 'Comuna';
+        $locale['CL']['city']['placeholder'] = 'Tu comuna';
+    }
+    return $locale;
+} );

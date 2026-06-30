@@ -437,17 +437,20 @@ while ( have_posts() ) :
                     <tbody>
                     <?php
                     $info = [
-                        'Origen'      => $pais,
-                        'Especie'     => '100% Arábica',
-                        'SCA'         => $sca,
-                        'Altitud'     => $altitud ? $altitud . 'm' : '',
-                        'Proceso'     => $proceso,
-                        'Notas'       => $notas,
-                        'Peso'        => '250g, 1kg',
-                        'Molienda'    => 'En Grano, Espresso, Italiana, Filtro',
-                        'Intensidad'  => $intensidad ? $intensidad . '/5' : '',
-                        'Acidez'      => $acidez    ? $acidez    . '/5' : '',
-                        'Cuerpo'      => $cuerpo    ? $cuerpo    . '/5' : '',
+                        'Origen'     => $pais,
+                        'Región'     => $region,
+                        'Especie'    => '100% Arábica',
+                        'Variedad'   => $variedad,
+                        'SCA'        => $sca,
+                        'Altitud'    => $altitud ? $altitud . 'm' : '',
+                        'Proceso'    => $proceso,
+                        'Productor'  => $productor,
+                        'Notas'      => $notas,
+                        'Peso'       => '250g, 1kg',
+                        'Molienda'   => 'En Grano, Espresso, Italiana, Filtro',
+                        'Intensidad' => $intensidad ? $intensidad . '/5' : '',
+                        'Acidez'     => $acidez    ? $acidez    . '/5' : '',
+                        'Cuerpo'     => $cuerpo    ? $cuerpo    . '/5' : '',
                     ];
                     foreach ( $info as $label => $value ) :
                         if ( ! $value ) continue; ?>

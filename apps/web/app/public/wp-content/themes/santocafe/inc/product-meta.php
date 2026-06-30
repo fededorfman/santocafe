@@ -92,9 +92,8 @@ add_action( 'woocommerce_product_data_panels', function (): void {
         woocommerce_wp_text_input( [
             'id'    => '_sc_altitud',
             'label' => 'Altitud (msnm)',
-            'type'  => 'number',
+            'type'  => 'text',
             'value' => get_post_meta( $id, '_sc_altitud', true ),
-            'custom_attributes' => [ 'min' => '0', 'step' => '1' ],
         ] );
         ?>
 
