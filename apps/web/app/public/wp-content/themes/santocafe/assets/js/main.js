@@ -1178,4 +1178,23 @@
         }
     });
 
+    // ── Validación de teléfono (Chile y Argentina) ───────────────────────
+    function scPhoneValid(val) {
+        var digits = val.replace(/[\s\-\(\)\+\.]/g, '');
+        return /^\d{8,13}$/.test(digits);
+    }
+
+    $(document).on('blur', 'input[name="billing_phone"], input[name="shipping_phone"]', function () {
+        var val = $(this).val();
+        var msg = (val && !scPhoneValid(val))
+            ? 'Ingresa un número válido de Chile o Argentina.'
+            : '';
+        this.setCustomValidity(msg);
+        if (msg) this.reportValidity();
+    });
+
+    $(document).on('input', 'input[name="billing_phone"], input[name="shipping_phone"]', function () {
+        this.setCustomValidity('');
+    });
+
 })(jQuery);

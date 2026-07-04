@@ -781,3 +781,81 @@ add_filter( 'woocommerce_get_country_locale', function ( array $locale ): array 
     }
     return $locale;
 } );
+
+// ============================================================
+// Validación de teléfono (Chile y Argentina)
+// ============================================================
+
+/**
+ * Valida que el teléfono tenga entre 8 y 13 dígitos (tras quitar espacios,
+ * guiones, paréntesis y +). Cubre móviles de Chile (+569XXXXXXXX / 9XXXXXXXX)
+ * y Argentina (+54XXXXXXXXXX / 11XXXXXXXX, etc.).
+ */
+function sc_is_valid_phone( string $phone ): bool {
+    $digits = preg_replace( '/[\s\-\(\)\+\.]/', '', $phone );
+    return (bool) preg_match( '/^\d{8,13}$/', $digits );
+}
+
+// Validar en el checkout clásico y en el bloque de checkout.
+add_action( 'woocommerce_checkout_process', function (): void {
+    $phone = isset( $_POST['billing_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_phone'] ) ) : '';
+    if ( $phone && ! sc_is_valid_phone( $phone ) ) {
+        wc_add_notice( 'El número de teléfono no es válido. Ingresa un número de Chile o Argentina.', 'error' );
+    }
+} );
+
+// Validar al guardar dirección en Mi Cuenta.
+// Se ejecuta en init:19, antes de que WC guarde en init:20.
+add_action( 'init', function (): void {
+    if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) ) return;
+    if ( empty( $_POST['action'] ) || 'edit_address' !== $_POST['action'] ) return;
+    if ( ! is_user_logged_in() ) return;
+
+    $section   = isset( $_POST['shipping_country'] ) ? 'shipping' : 'billing';
+    $phone_key = $section . '_phone';
+    $phone     = isset( $_POST[ $phone_key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $phone_key ] ) ) : '';
+
+    if ( $phone && ! sc_is_valid_phone( $phone ) ) {
+        wc_add_notice( 'El número de teléfono no es válido. Ingresa un número de Chile o Argentina.', 'error' );
+    }
+}, 19 );
+
+// ============================================================
+// Limpiar el carrito al iniciar sesión para evitar sesiones
+// sucias al cambiar de cuenta. También limpia order_awaiting_payment
+// para que WooCommerce no intente reutilizar un pedido de otra sesión
+// (previene el error de Flow "commerceOrder has been previously paid").
+// ============================================================
+add_action( 'wp_login', function ( string $user_login, WP_User $user ): void {
+    if ( ! function_exists( 'WC' ) ) return;
+    if ( WC()->cart ) {
+        WC()->cart->empty_cart();
+    }
+    if ( WC()->session ) {
+        WC()->session->set( 'order_awaiting_payment', null );
+    }
+}, 10, 2 );
+
+// Limpiar el carrito al cerrar sesión.
+add_action( 'wp_logout', function (): void {
+    if ( ! function_exists( 'WC' ) ) return;
+    if ( WC()->cart ) {
+        WC()->cart->empty_cart();
+    }
+    if ( WC()->session ) {
+        WC()->session->set( 'order_awaiting_payment', null );
+    }
+} );
+
+// Asegurar que el carrito quede vacío tras completar un pedido.
+// WooCommerce lo hace automáticamente, pero si la sesión está sucia
+// puede quedar con items; este hook lo garantiza.
+add_action( 'woocommerce_thankyou', function ( int $order_id ): void {
+    if ( ! function_exists( 'WC' ) ) return;
+    if ( WC()->cart && ! WC()->cart->is_empty() ) {
+        WC()->cart->empty_cart();
+    }
+    if ( WC()->session ) {
+        WC()->session->set( 'order_awaiting_payment', null );
+    }
+} );
