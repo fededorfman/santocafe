@@ -821,31 +821,18 @@ add_action( 'init', function (): void {
 }, 19 );
 
 // ============================================================
-// Limpiar el carrito al iniciar sesión para evitar sesiones
-// sucias al cambiar de cuenta. También limpia order_awaiting_payment
-// para que WooCommerce no intente reutilizar un pedido de otra sesión
+// Al iniciar sesión, no tocar el carrito (si venía comprando como
+// invitado y se loguea, debe conservar lo que agregó).
+// Solo se limpia order_awaiting_payment para que WooCommerce no
+// intente reutilizar un pedido pendiente de otra sesión/cuenta
 // (previene el error de Flow "commerceOrder has been previously paid").
 // ============================================================
 add_action( 'wp_login', function ( string $user_login, WP_User $user ): void {
     if ( ! function_exists( 'WC' ) ) return;
-    if ( WC()->cart ) {
-        WC()->cart->empty_cart();
-    }
     if ( WC()->session ) {
         WC()->session->set( 'order_awaiting_payment', null );
     }
 }, 10, 2 );
-
-// Limpiar el carrito al cerrar sesión.
-add_action( 'wp_logout', function (): void {
-    if ( ! function_exists( 'WC' ) ) return;
-    if ( WC()->cart ) {
-        WC()->cart->empty_cart();
-    }
-    if ( WC()->session ) {
-        WC()->session->set( 'order_awaiting_payment', null );
-    }
-} );
 
 // Asegurar que el carrito quede vacío tras completar un pedido.
 // WooCommerce lo hace automáticamente, pero si la sesión está sucia
