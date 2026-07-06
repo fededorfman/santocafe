@@ -393,8 +393,13 @@ add_action( 'template_redirect', function (): void {
 // en vez de la página genérica de "pedido recibido". Solo si el usuario está
 // logueado y es el dueño del pedido — los invitados (guest checkout activado) no
 // tienen vista de cuenta, así que se quedan en order-received, su única
-// confirmación. Flow ya completó el pago antes de esta página y no engancha
-// woocommerce_thankyou, así que el redirect no interfiere con el cobro.
+// confirmación. Flow ya completó el pago antes de esta página, así que el
+// redirect no interfiere con el cobro — pero SÍ hay que vaciar el carrito acá
+// a mano, porque esta redirección corta la ejecución con exit antes de que
+// WordPress llegue a cargar la plantilla de "gracias", que es donde vive
+// woocommerce_thankyou (el hook que normalmente vacía el carrito). Sin esto,
+// un cliente logueado nunca ve limpiarse el carrito tras pagar, aunque a los
+// invitados sí les funcione (ellos sí llegan a esa plantilla).
 add_action( 'template_redirect', function (): void {
     // is_order_received_page() exige estar en la PÁGINA de checkout (no solo
     // que exista el query var), así que nunca se dispara en /cuenta/orden ni
@@ -414,6 +419,15 @@ add_action( 'template_redirect', function (): void {
         || ! is_user_logged_in()
         || (int) $order->get_customer_id() !== get_current_user_id() ) {
         return;
+    }
+
+    if ( function_exists( 'WC' ) ) {
+        if ( WC()->cart && ! WC()->cart->is_empty() ) {
+            WC()->cart->empty_cart();
+        }
+        if ( WC()->session ) {
+            WC()->session->set( 'order_awaiting_payment', null );
+        }
     }
 
     wp_safe_redirect( wc_get_endpoint_url( 'view-order', $order_id, wc_get_page_permalink( 'myaccount' ) ) );
@@ -747,23 +761,6 @@ add_action( 'woocommerce_order_status_entregado', function ( $order_id ) {
 add_filter( 'woocommerce_get_view_order_url', function ( string $url, WC_Order $order ): string {
     return $order->get_checkout_order_received_url();
 }, 10, 2 );
-
-// Si el usuario llega a la URL de confirmación ya logueado y el pedido es suyo,
-// lo redirigimos al detalle de pedido en su cuenta.
-add_action( 'template_redirect', function (): void {
-    if ( ! is_wc_endpoint_url( 'order-received' ) ) return;
-    if ( ! is_user_logged_in() ) return;
-
-    $order_id = absint( get_query_var( 'order-received' ) );
-    if ( ! $order_id ) return;
-
-    $order = wc_get_order( $order_id );
-    if ( ! $order ) return;
-    if ( (int) $order->get_customer_id() !== get_current_user_id() ) return;
-
-    wp_safe_redirect( wc_get_endpoint_url( 'view-order', $order_id, wc_get_page_permalink( 'myaccount' ) ) );
-    exit;
-} );
 
 // Cambiar "Ciudad" por "Comuna" en todos los formularios de dirección (checkout + mi cuenta).
 add_filter( 'woocommerce_default_address_fields', function ( array $fields ): array {
