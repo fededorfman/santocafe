@@ -401,23 +401,19 @@
     // Page-load cart refresh — replaces the dequeued wc-cart-fragments for the
     // initial load. wc-cart-fragments was removed because its sessionStorage cache
     // overwrote our AJAX updates; this version has no sessionStorage side effects.
-    // Only fires when woocommerce_items_in_cart cookie is present (cart has items),
-    // so visitors with empty carts pay zero cost.
+    // Se ejecuta siempre (sin condicionar a una cookie): la home y otras páginas
+    // se sirven desde caché de LiteSpeed, así que el HTML inicial del badge/mini-
+    // carrito puede quedar desactualizado (por ejemplo, mostrando un carrito ya
+    // vacío tras completar una compra). Este refresco corrige eso apenas carga,
+    // sin depender de que el servidor de cache sepa nada del carrito.
     $(function () {
-        function hasCookie(name) {
-            return document.cookie.split(';').some(function (c) {
-                return c.trim().indexOf(name + '=') === 0;
+        $.getJSON('/?wc-ajax=get_refreshed_fragments')
+            .done(function (data) {
+                if (data && data.fragments) {
+                    applyFragments(data.fragments);
+                    $(document.body).trigger('wc_fragments_loaded');
+                }
             });
-        }
-        if (hasCookie('woocommerce_items_in_cart')) {
-            $.getJSON('/?wc-ajax=get_refreshed_fragments')
-                .done(function (data) {
-                    if (data && data.fragments) {
-                        applyFragments(data.fragments);
-                        $(document.body).trigger('wc_fragments_loaded');
-                    }
-                });
-        }
     });
 
     // Mutate the cart (qty / molienda / remove) via sc_update_cart.
