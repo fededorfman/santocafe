@@ -155,6 +155,42 @@ function sc_country_flag_url( string $country ): ?string {
 }
 
 /**
+ * Monto mínimo (CLP) configurado para el método "Envío gratis" de WooCommerce.
+ * Única fuente de verdad: lee directo de las zonas de envío
+ * (WooCommerce > Ajustes > Envío > zona > Envío gratis > Monto mínimo del pedido),
+ * así todo el sitio queda sincronizado con lo que se configura ahí.
+ *
+ * @return int 0 si no hay ningún método de envío gratis activo/configurado.
+ */
+function sc_get_free_shipping_min(): int {
+    static $cached = null;
+    if ( null !== $cached ) {
+        return $cached;
+    }
+
+    $cached = 0;
+
+    if ( ! class_exists( 'WC_Shipping_Zones' ) ) {
+        return $cached;
+    }
+
+    $zones   = WC_Shipping_Zones::get_zones();
+    $zones[] = [ 'zone_id' => 0 ]; // "Localización no cubierta por tus zonas de envío".
+
+    foreach ( $zones as $zone_data ) {
+        $zone = new WC_Shipping_Zone( $zone_data['zone_id'] );
+        foreach ( $zone->get_shipping_methods( true ) as $method ) {
+            if ( 'free_shipping' === $method->id ) {
+                $cached = (int) $method->min_amount;
+                return $cached;
+            }
+        }
+    }
+
+    return $cached;
+}
+
+/**
  * Calculate how much (in CLP) is left to reach free shipping.
  * Returns 0 if the threshold is already reached or WooCommerce is not active.
  *
@@ -165,7 +201,7 @@ function sc_get_shipping_gap(): int {
         return 0;
     }
 
-    $min      = (int) get_option( 'sc_shipping_free_min', 50000 );
+    $min      = sc_get_free_shipping_min();
     $subtotal = (int) WC()->cart->get_subtotal();
 
     return max( 0, $min - $subtotal );
@@ -182,7 +218,7 @@ function sc_get_shipping_progress(): int {
         return 100;
     }
 
-    $min = (int) get_option( 'sc_shipping_free_min', 50000 );
+    $min = sc_get_free_shipping_min();
     if ( $min <= 0 ) {
         return 100;
     }

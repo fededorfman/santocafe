@@ -55,7 +55,8 @@ function sc_llms_build(): string {
 		. 'puntaje SCA 83–85, tueste reciente, en grano o molido (espresso, italiana, filtro). '
 		. 'Envío a domicilio en la Región Metropolitana de Santiago.' . $nl . $nl;
 
-	$out .= '- Moneda: CLP · País: Chile · Envío gratis desde $50.000' . $nl;
+	$free_min = function_exists( 'sc_get_free_shipping_min' ) ? sc_get_free_shipping_min() : 0;
+	$out     .= '- Moneda: CLP · País: Chile · Envío gratis desde ' . sc_format_clp( $free_min ) . $nl;
 	$out .= '- Contacto: hola@santocafe.cl · WhatsApp +56 9 5141 4791 · Instagram @santocafespecialtycoffee' . $nl . $nl;
 
 	// --- Cafés (con datos de especialidad) ---

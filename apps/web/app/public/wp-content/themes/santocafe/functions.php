@@ -51,7 +51,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_localize_script('santocafe-main', 'SC', [
         'ajaxUrl'         => admin_url('admin-ajax.php'),
         'nonce'           => wp_create_nonce('sc_nonce'),
-        'freeShippingMin' => (int) get_option('sc_shipping_free_min', 50000),
+        'freeShippingMin' => function_exists('sc_get_free_shipping_min') ? sc_get_free_shipping_min() : 0,
         'currency'        => get_woocommerce_currency_symbol(),
         'cartUrl'         => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/carrito/'),
         'checkoutUrl'     => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/finalizar-compra/'),

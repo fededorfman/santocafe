@@ -373,7 +373,8 @@ add_filter( 'woocommerce_account_menu_items', function ( array $items ): array {
 //
 // Shipping (also DB state — Ajustes → Envío):
 //   - Zona "Región Metropolitana de Santiago" (CL:CL-RM) con dos métodos:
-//       · "Envío gratis"  (mínimo $50.000)
+//       · "Envío gratis"  (monto mínimo configurable ahí mismo; todo el sitio
+//         lo lee dinámicamente vía sc_get_free_shipping_min(), ver inc/theme-helpers.php)
 //       · "Tarifa plana"  ($3.990 — placeholder, ajustar al costo real)
 //     Cuando el envío gratis aplica, el filtro woocommerce_package_rates de
 //     abajo oculta la tarifa plana.
@@ -845,4 +846,24 @@ add_action( 'woocommerce_thankyou', function ( int $order_id ): void {
     if ( WC()->session ) {
         WC()->session->set( 'order_awaiting_payment', null );
     }
+} );
+
+// ============================================================
+// Flow (y pasarelas similares) vuelven del pago con un POST de
+// flow.cl hacia nuestro sitio (el gateway lee el token desde
+// $_POST). Por defecto los navegadores no envían la cookie de
+// sesión de WooCommerce en un POST de otro dominio (SameSite=Lax),
+// así que en ese momento WooCommerce arranca una sesión nueva y
+// vacía, distinta de la que tenía el carrito real. El resultado:
+// el pedido se paga bien, pero el carrito original queda huérfano
+// y reaparece al seguir navegando. Se marca la cookie de sesión
+// como SameSite=None para que sobreviva ese POST entre dominios.
+// Solo aplica con HTTPS porque SameSite=None requiere Secure.
+// ============================================================
+add_filter( 'woocommerce_set_cookie_options', function ( array $options ): array {
+    if ( is_ssl() ) {
+        $options['samesite'] = 'None';
+        $options['secure']   = true;
+    }
+    return $options;
 } );

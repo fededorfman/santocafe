@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 function sc_ajax_shipping_progress(): void {
     check_ajax_referer( 'sc_nonce', 'nonce' );
 
-    $min      = (int) get_option( 'sc_shipping_free_min', 50000 );
+    $min      = sc_get_free_shipping_min();
     $cart     = function_exists( 'WC' ) ? WC()->cart : null;
     $subtotal = $cart ? (int) $cart->get_subtotal() : 0;
     $gap      = max( 0, $min - $subtotal );

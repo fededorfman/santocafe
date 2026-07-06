@@ -23,7 +23,7 @@ $hero_image = get_template_directory_uri() . '/assets/images/hero.jpg';
         <p class="hero__description">
             Seleccionamos los mejores orígenes de especialidad con el tueste más
             reciente, para que lleguen frescos a tu taza.<br>
-            Envío gratis desde $50.000.
+            Envío gratis desde <?php echo esc_html( sc_format_clp( function_exists( 'sc_get_free_shipping_min' ) ? sc_get_free_shipping_min() : 0 ) ); ?>.
         </p>
 
         <div class="hero__chips">
