@@ -57,10 +57,11 @@ while ( have_posts() ) :
     $pr_250  = sc_weight_pricing( $price_250, $reg_250 );
     $pr_1kg  = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
 
-    // Ahorro del 1kg vs 4×250g
+    // Ahorro del 1kg vs 4×250g al precio regular (incluye descuento promocional
+    // si hay uno activo, así el kilo siempre muestra el ahorro total).
     $saving_pct_1kg = 0;
-    if ( $var_1kg && $price_250 > 0 ) {
-        $equiv_4x250 = $price_250 * 4;
+    if ( $var_1kg && $reg_250 > 0 ) {
+        $equiv_4x250 = $reg_250 * 4;
         if ( $equiv_4x250 > $price_1kg ) {
             $saving_pct_1kg = (int) round( ( $equiv_4x250 - $price_1kg ) / $equiv_4x250 * 100 );
         }
@@ -239,6 +240,9 @@ while ( have_posts() ) :
                                 type="button">
                             <span class="format-weight">250g</span>
                             <span class="format-cups">~30 tazas</span>
+                            <?php if ( $pr_250['discount'] > 0 ) : ?>
+                            <span class="format-discount">-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
+                            <?php endif; ?>
                         </button>
                         <?php if ( $var_1kg ) : ?>
                         <button class="pill-selector__option<?php echo $sc_in_1kg ? '' : ' pill-selector__option--out'; ?>"

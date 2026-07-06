@@ -49,7 +49,7 @@ $reg_250 = $var_250 ? (float) $var_250['display_regular_price'] : (float) $produ
 $reg_1kg = $var_1kg  ? (float) $var_1kg['display_regular_price']  : $reg_250 * 3.8;
 
 $pr_250 = sc_weight_pricing( $price_250, $reg_250 );
-$pr_1kg = sc_weight_pricing( $price_1kg, $reg_1kg, $price_250 );
+$pr_1kg = sc_weight_pricing( $price_1kg, $reg_1kg, $reg_250 );
 
 // ---- Add-to-cart URLs ----
 $add_250_url = add_query_arg( [
@@ -65,9 +65,6 @@ $add_1kg_url = add_query_arg( [
     'quantity'          => 1,
     'attribute_pa_peso' => '1kg',
 ], trailingslashit( home_url() ) );
-
-// ---- On sale ----
-$on_sale = $product->is_on_sale();
 
 // ---- Country flag ----
 $sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
@@ -109,8 +106,8 @@ $sc_in_1kg  = $sc_stock['1kg'] ?? true;
         </div>
         <?php endif; ?>
 
-        <?php if ( $on_sale ) : ?>
-        <span class="product-card__offer-badge" aria-label="En oferta">Oferta</span>
+        <?php if ( $pr_250['discount'] > 0 ) : ?>
+        <span class="product-card__offer-badge" aria-label="<?php echo esc_attr( '-' . $pr_250['discount'] . '% de descuento' ); ?>">-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
         <?php endif; ?>
 
     </div>
@@ -158,6 +155,11 @@ $sc_in_1kg  = $sc_stock['1kg'] ?? true;
                     data-discount="<?php echo esc_attr( $pr_250['discount'] ); ?>"
                     data-add-url="<?php echo esc_url( $add_250_url ); ?>"
                     type="button">
+                <?php if ( $pr_250['discount'] > 0 ) : ?>
+                <span class="product-card__weight-badge" aria-hidden="true">
+                    -<?php echo esc_html( $pr_250['discount'] ); ?>%
+                </span>
+                <?php endif; ?>
                 <span class="product-card__weight-price"><?php echo esc_html( $pr_250['price_fmt'] ); ?></span>
                 <span class="product-card__weight-unit">250g</span>
             </button>

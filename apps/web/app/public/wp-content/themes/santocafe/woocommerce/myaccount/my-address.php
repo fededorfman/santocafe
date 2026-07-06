@@ -157,7 +157,7 @@ $sc_icon_phone    = '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.6
 					<button type="button" class="sc-address-card__copy js-copy-shipping"
 						data-has-billing="<?php echo $address ? '1' : '0'; ?>"
 						<?php disabled( ! $sc_shipping_filled ); ?>
-						<?php echo $sc_shipping_filled ? '' : 'title="Primero cargá tu dirección de envío"'; ?>>
+						<?php echo $sc_shipping_filled ? '' : 'title="Primero carga tu dirección de envío"'; ?>>
 						Usar dirección de envío
 					</button>
 				<?php endif; ?>

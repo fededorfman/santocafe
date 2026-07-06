@@ -64,7 +64,7 @@ function sc_handle_contact() {
 	$assets = get_stylesheet_directory_uri() . '/assets/images';
 	/**
 	 * URL del logo en los emails. En producción resuelve al dominio público;
-	 * en local apuntá a una URL accesible si querés que cargue en clientes externos.
+	 * en local apunta a una URL accesible si quieres que cargue en clientes externos.
 	 *
 	 * @param string $logo_url URL absoluta del logo.
 	 */

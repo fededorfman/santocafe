@@ -69,7 +69,7 @@ get_header();
             ?>
             <div class="sc-article__cta">
                 <span class="sc-article__cta-text">
-                    Explorá nuestros cafés de especialidad
+                    Explora nuestros cafés de especialidad
                 </span>
                 <a href="<?php echo esc_url( home_url( '/#catalogo' ) ); ?>" class="btn btn--primary">
                     Ver cafés
@@ -91,7 +91,7 @@ get_header();
         if ( ! empty( $sc_related ) ) :
         ?>
         <aside class="sc-article__related">
-            <h2 class="sc-article__related-title">Seguí leyendo</h2>
+            <h2 class="sc-article__related-title">Sigue leyendo</h2>
             <div class="sc-article__related-grid">
                 <?php foreach ( $sc_related as $sc_rpost ) : ?>
                     <a class="sc-guide-card" href="<?php echo esc_url( get_permalink( $sc_rpost->ID ) ); ?>">

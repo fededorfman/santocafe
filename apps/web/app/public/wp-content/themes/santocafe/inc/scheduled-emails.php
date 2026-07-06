@@ -1234,7 +1234,7 @@ function sc_auto_ajax_test() {
 	if ( $ok ) {
 		wp_send_json_success( array( 'message' => 'Prueba enviada a ' . $item['email'] ) );
 	}
-	wp_send_json_error( array( 'message' => 'No se pudo enviar (revisá SMTP / que el template exista).' ) );
+	wp_send_json_error( array( 'message' => 'No se pudo enviar (revisa SMTP / que el template exista).' ) );
 }
 
 add_action( 'wp_ajax_sc_auto_run_now', 'sc_auto_ajax_run_now' );

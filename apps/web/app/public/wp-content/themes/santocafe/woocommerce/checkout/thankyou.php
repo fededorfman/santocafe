@@ -84,10 +84,10 @@ defined( 'ABSPATH' ) || exit;
                     </svg>
                 </div>
                 <div class="sc-account-invite__body">
-                    <h3 class="sc-account-invite__title">Creá tu cuenta y seguí tu pedido</h3>
+                    <h3 class="sc-account-invite__title">Crea tu cuenta y sigue tu pedido</h3>
                     <p class="sc-account-invite__text">
                         Regístrate con el mismo email de tu compra y este pedido aparecerá en tu
-                        historial, con su estado y seguimiento. Además agilizás tus próximas compras.
+                        historial, con su estado y seguimiento. Además agilizas tus próximas compras.
                     </p>
                 </div>
                 <div class="sc-account-invite__actions">

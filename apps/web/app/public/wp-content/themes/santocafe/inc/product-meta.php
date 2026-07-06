@@ -97,6 +97,20 @@ add_action( 'woocommerce_product_data_panels', function (): void {
         ] );
         ?>
 
+        <h4 style="padding:12px 12px 4px; font-size:13px; color:#555;">Descuento</h4>
+
+        <?php
+        woocommerce_wp_text_input( [
+            'id'                => '_sc_discount_pct',
+            'label'             => '% de descuento',
+            'type'              => 'number',
+            'value'             => get_post_meta( $id, '_sc_discount_pct', true ),
+            'description'       => 'Se aplica automáticamente al precio de 250g y 1kg. Dejar vacío o en 0 para quitar el descuento.',
+            'desc_tip'          => true,
+            'custom_attributes' => [ 'min' => '0', 'max' => '90', 'step' => '1' ],
+        ] );
+        ?>
+
         <h4 style="padding:12px 12px 4px; font-size:13px; color:#555;">Técnico</h4>
 
         <?php
@@ -196,6 +210,33 @@ add_action( 'woocommerce_process_product_meta', function ( int $post_id ): void 
     foreach ( $textarea_fields as $key ) {
         if ( isset( $_POST[ $key ] ) ) {
             update_post_meta( $post_id, $key, sanitize_textarea_field( $_POST[ $key ] ) );
+        }
+    }
+
+    // Descuento: un solo % a nivel producto, aplicado como precio rebajado
+    // real de WooCommerce en las variaciones 250g y 1kg (cada una sobre su
+    // propio precio regular). Vacío o 0 quita el descuento de ambas.
+    if ( isset( $_POST['_sc_discount_pct'] ) ) {
+        $discount_pct = max( 0, min( 90, (int) $_POST['_sc_discount_pct'] ) );
+        update_post_meta( $post_id, '_sc_discount_pct', $discount_pct );
+
+        $product = wc_get_product( $post_id );
+        if ( $product && $product->is_type( 'variable' ) ) {
+            foreach ( $product->get_children() as $variation_id ) {
+                $variation = wc_get_product( $variation_id );
+                if ( ! $variation ) {
+                    continue;
+                }
+                $regular = (float) $variation->get_regular_price();
+                if ( $regular <= 0 ) {
+                    continue;
+                }
+                $variation->set_sale_price(
+                    $discount_pct > 0 ? (string) (int) round( $regular * ( 1 - $discount_pct / 100 ) ) : ''
+                );
+                $variation->save();
+            }
+            wc_delete_product_transients( $post_id );
         }
     }
 } );

@@ -75,19 +75,30 @@
     top: -1px;
 }
 
-/* Sale badge (diagonal ribbon) */
+/* Discount badge — estrella/sello dorado con el % de descuento.
+   drop-shadow (sigue el contorno recortado, a diferencia de box-shadow)
+   para que no se pierda contra fotos oscuras o claras. */
 .product-card__offer-badge {
     position: absolute;
-    bottom: var(--spacing-sm);
-    left: var(--spacing-sm);
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--color-dorado);
     color: var(--color-oscuro);
-    font-size: var(--font-size-xs);
+    font-size: 13px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 3px 10px;
-    border-radius: var(--radius-pill);
+    line-height: 1;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+    clip-path: polygon(
+        50% 0%, 63.78% 16.74%, 85.36% 14.64%, 83.26% 36.22%,
+        100% 50%, 83.26% 63.78%, 85.36% 85.36%, 63.78% 83.26%,
+        50% 100%, 36.22% 83.26%, 14.64% 85.36%, 16.74% 63.78%,
+        0% 50%, 16.74% 36.22%, 14.64% 14.64%, 36.22% 16.74%
+    );
     z-index: 2;
 }
 
@@ -177,7 +188,8 @@
     transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* Discount badge — centered on the top edge, half in / half out */
+/* Discount badge — centered on the top edge, half in / half out. A white
+   ring (border) keeps it visible regardless of what's behind it. */
 .product-card__weight-badge {
     position: absolute;
     top: 0;
@@ -190,6 +202,8 @@
     letter-spacing: 0.04em;
     padding: 2px 7px;
     border-radius: 9999px;
+    border: 1.5px solid var(--color-tarjeta);
+    box-shadow: var(--shadow-card);
     pointer-events: none;
     white-space: nowrap;
     line-height: 1.5;
