@@ -407,14 +407,16 @@
 }
 
 /* Landscape / pantallas bajas: a pantalla completa el contenido se desbordaba
-   (el eyebrow se metía bajo la navbar). Se alinea arriba y se reducen tipografía
-   y paddings para que entre. No afecta tamaños normales (altura > 700px). */
+   (el eyebrow se metía bajo la navbar). Se reduce tipografía y paddings para
+   que entre, y se centra verticalmente (con las medidas ya reducidas, entre
+   600 y 700px de alto sobra lugar y queda mejor centrado que pegado arriba).
+   No afecta tamaños normales (altura > 700px). */
 @media (orientation: landscape) and (max-height: 700px) {
     .hero {
         height: auto;
         min-height: 100vh;
         min-height: 100svh;
-        align-items: flex-start;
+        align-items: center;
     }
     .hero__content {
         padding-top: calc(var(--header-height-mob) + var(--spacing-md));
@@ -424,6 +426,14 @@
     .hero__eyebrow { padding-bottom: 6px; }
     .hero__title { font-size: clamp(1.6rem, 5vw, 2.3rem); }
     .hero__description { font-size: var(--font-size-sm); }
+}
+
+/* Debajo de los 600px de alto ya no entra centrado sin superponerse a la
+   navbar — se vuelve a anclar arriba, como en el fix original. */
+@media (orientation: landscape) and (max-height: 600px) {
+    .hero {
+        align-items: flex-start;
+    }
 }
 
 /* Below 800px the 4 panels become a swipeable horizontal carousel
