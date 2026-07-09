@@ -48,15 +48,33 @@
     height: 100%;
 }
 
-/* Badges (top-left of image zone) */
+/* Badges (top-left of image zone) — pegado al borde izquierdo (left: 0)
+   para que el SCA se vea como una etiqueta que sale del borde, no un botón
+   flotante. Se mantiene el margen superior para no invadir la esquina
+   redondeada de la tarjeta. */
 .product-card__badges {
     position: absolute;
     top: var(--spacing-sm);
-    left: var(--spacing-sm);
+    left: 0;
     z-index: 2;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+}
+
+/* El badge SCA dentro de la tarjeta de catálogo: sin redondeo a la
+   izquierda (nace del borde de la foto), redondeado solo a la derecha. */
+.product-card__badges .sca-badge--gold {
+    border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+    padding-left: var(--spacing-sm);
+}
+
+/* Botón "Ver ficha" — abajo a la izquierda, mismo look que "Añadir". */
+.product-card__view-link {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 2;
 }
 
 /* Country name in title — rendered in gold (tono oscuro para contraste AA sobre la tarjeta blanca) */

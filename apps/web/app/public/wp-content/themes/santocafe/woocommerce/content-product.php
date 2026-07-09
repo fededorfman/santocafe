@@ -110,6 +110,11 @@ $sc_in_1kg  = $sc_stock['1kg'] ?? true;
         <span class="product-card__offer-badge" aria-label="<?php echo esc_attr( '-' . $pr_250['discount'] . '% de descuento' ); ?>">-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
         <?php endif; ?>
 
+        <a href="<?php the_permalink(); ?>" class="btn btn--primary btn--sm product-card__view-link"
+           aria-label="<?php echo esc_attr( 'Ver ficha de ' . get_the_title() ); ?>">
+            Ver ficha
+        </a>
+
     </div>
     <!-- /Image zone -->
 
