@@ -864,3 +864,38 @@ add_filter( 'woocommerce_set_cookie_options', function ( array $options ): array
     }
     return $options;
 } );
+
+// ============================================================
+// El plugin "Meta Pixel for WordPress" (official-facebook-pixel) engancha
+// su evento de Compra a woocommerce_thankyou Y a woocommerce_payment_complete,
+// sin ningún control de duplicados ni event_id estable: cada carga de la
+// página "gracias" (donde el invitado puede volver a consultar su pedido)
+// dispara una Compra nueva en Meta. Se agrega acá el control que le falta
+// al plugin: solo se deja pasar el evento la primera vez que corre
+// cualquiera de los dos hooks para un pedido; en cargas siguientes se saca
+// el callback del plugin antes de que llegue a disparar.
+add_action( 'woocommerce_thankyou', 'sc_guard_meta_pixel_purchase_dedup', 5 );
+add_action( 'woocommerce_payment_complete', 'sc_guard_meta_pixel_purchase_dedup', 5 );
+
+function sc_guard_meta_pixel_purchase_dedup( int $order_id ): void {
+    if ( ! class_exists( 'FacebookPixelPlugin\Integration\FacebookWordpressWooCommerce' ) ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) {
+        return;
+    }
+
+    if ( $order->get_meta( '_sc_meta_pixel_purchase_sent' ) ) {
+        remove_action(
+            current_action(),
+            [ 'FacebookPixelPlugin\Integration\FacebookWordpressWooCommerce', 'trackPurchaseEvent' ],
+            40
+        );
+        return;
+    }
+
+    $order->update_meta_data( '_sc_meta_pixel_purchase_sent', 1 );
+    $order->save();
+}
