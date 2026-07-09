@@ -102,6 +102,7 @@ $modules = [
     'inc/theme-helpers.php',
     'inc/woocommerce.php',
     'inc/product-meta.php',
+    'inc/ab-testing.php',
     'inc/ajax-handlers.php',
     'inc/stock.php',
     'inc/seo.php',
