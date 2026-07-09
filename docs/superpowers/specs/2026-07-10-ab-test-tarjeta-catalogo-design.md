@@ -6,7 +6,7 @@ La tarjeta de producto actual en la grilla de catálogo de la home (`content-pro
 
 La hipótesis a probar: una tarjeta mucho más chica y minimalista —solo imagen, nombre, precio y un botón "Ver"— invita más a los visitantes a entrar a la ficha del producto (en vez de decidir todo desde la home), y esto podría traducirse en más "agregar al carrito" en total durante la visita, aunque la tarjeta chica no tenga botón de agregado rápido.
 
-Se implementa como test A/B propio (sin plugin), usando cookie para asignar variante y el Google Tag Manager / GA4 ya instalados para medir resultados.
+Se implementa como test A/B propio (sin plugin), usando cookie para asignar variante y un panel propio en wp-admin para ver los resultados (contadores simples, sin depender de saber usar Google Analytics).
 
 ## Alcance
 
@@ -43,21 +43,35 @@ Estructura:
 
 La tarjeta `control` (la actual) no se modifica.
 
-## Tracking
+## Dónde se ve la info: panel propio en wp-admin
 
-Todo vía `dataLayer` (GTM ya está cargado en `inc/analytics.php`), sin tocar la configuración de GTM/GA4 desde el tema (eso se arma en la consola de GTM, fuera de este repo):
+Forma principal de ver resultados, sin depender de saber armar reportes en GA4. Nueva página `WooCommerce > Test A/B Catálogo` (mismo patrón que el panel existente "Emails automáticos" en `inc/scheduled-emails.php`), con una tabla:
 
-1. **Variante asignada** — en cada carga de la home, push de `{ event: 'sc_ab_view', ab_test: 'catalog_card', ab_variant: 'control' | 'compact' }`. Esto permite crear una dimensión personalizada en GA4 para segmentar cualquier reporte por variante.
-2. **Clic a la ficha desde la tarjeta** (señal secundaria/diagnóstica) — push de `{ event: 'sc_ab_card_click', ab_variant: '...' , product_id }` al hacer clic en la imagen/nombre/botón "Ver" de cualquier tarjeta.
-3. **Agregar al carrito** (métrica principal) — este tema no toca el tracking de "add to cart" en sí (eso ya existe o se configura del lado de GTM). Lo que sí agrega es que la variante (`ab_variant`) quede disponible en el `dataLayer` durante toda la sesión (no solo en la home), leyendo la cookie `sc_ab_card` en cada página. Con eso disponible, en GTM se arma una dimensión que etiqueta cualquier evento de "add to cart" con la variante del visitante, sin importar en qué página del sitio ocurra. Confirmar del lado de GTM que el evento de "add to cart" ya está configurado antes de sacar conclusiones del test.
+| | Vistas | Agregaron al carrito | Conversión |
+|---|---|---|---|
+| Tarjeta actual | N | N | % |
+| Tarjeta chica | N | N | % |
 
-No se declara un "ganador" automáticamente — se revisa el reporte de GA4 manualmente cuando haya tráfico suficiente.
+**Contadores** (guardados como `wp_options`, uno por variante y métrica — `sc_ab_views_control`, `sc_ab_views_compact`, `sc_ab_conv_control`, `sc_ab_conv_compact`):
+
+- **Vistas**: se incrementa el contador de la variante **solo la primera vez** que se asigna la cookie `sc_ab_card` a un visitante nuevo (no en cada recarga de la home).
+- **Agregaron al carrito**: para no contar de más a alguien que agrega varios productos, se usa una segunda cookie `sc_ab_converted`. Al agregar algo al carrito (hook `woocommerce_add_to_cart`), si esa cookie todavía no existe para este visitante: se incrementa el contador de conversión de su variante y se marca la cookie, así visitas/compras posteriores del mismo visitante no se vuelven a contar.
+- Botón "Reiniciar contadores" en el panel, para arrancar de cero si hace falta (por ejemplo, después de pruebas propias antes de lanzar el test de verdad).
+
+## Tracking adicional (opcional, vía GTM)
+
+Además del panel de wp-admin, se deja disponible la variante (`ab_variant`) en el `dataLayer` (GTM ya está cargado en `inc/analytics.php`) por si más adelante se quiere cruzar el resultado con otros datos (origen de tráfico, campaña, etc.) en GA4 — esto es un extra, no la forma principal de ver los resultados:
+
+1. En cada carga de página, push de `{ event: 'sc_ab_ready', ab_test: 'catalog_card', ab_variant: 'control' | 'compact' }` (lee la cookie `sc_ab_card`; no dispara nada si el visitante está excluido del test).
+2. Requiere configuración manual del lado de GTM/GA4 (crear la dimensión personalizada, etc.) — no es necesario para usar el panel de wp-admin.
+
+No se declara un "ganador" automáticamente — se decide mirando la tabla del panel cuando haya tráfico suficiente.
 
 ## Cómo se cierra el test
 
 Cuando haya una variante ganadora clara:
 1. Se hardcodea esa tarjeta como la única (se borra la lógica de cookie/split y el template part que no ganó).
-2. Se quitan los eventos `sc_ab_view` / `sc_ab_card_click` del dataLayer (ya no hacen falta).
+2. Se borra el panel de wp-admin, los contadores en `wp_options`, y el push a `dataLayer` (ya no hacen falta).
 3. Bump de versión y deploy normal.
 
 Esto queda como tarea aparte, a pedido, una vez que haya datos.
@@ -65,8 +79,9 @@ Esto queda como tarea aparte, a pedido, una vez que haya datos.
 ## Testing
 
 - Verificar que la cookie se asigna una sola vez y persiste 30 días (no se reasigna en cada visita).
-- Verificar que un admin logueado con `edit_posts` siempre ve `control`, sin importar la cookie.
+- Verificar que un admin logueado con `edit_posts` siempre ve `control`, sin importar la cookie, y no suma a los contadores.
 - Verificar visualmente la tarjeta compacta en desktop y en mobile (2 columnas).
 - Verificar que el campo `_sc_card_photo` se guarda/lee bien, y que el fallback al thumbnail normal funciona cuando está vacío.
-- Verificar en el inspector de red / consola que el `dataLayer.push` de `sc_ab_view` y `sc_ab_card_click` lleva los datos correctos.
+- Verificar que el contador de "Vistas" solo sube una vez por visitante (no en cada recarga), y que "Agregaron al carrito" solo sube una vez por visitante aunque agregue varios productos.
+- Probar el botón "Reiniciar contadores" del panel.
 - Confirmar que el carrito vacío (`cart-empty.php`) sigue mostrando siempre la tarjeta actual, sin importar la cookie de variante.
