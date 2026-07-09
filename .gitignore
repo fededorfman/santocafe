@@ -50,3 +50,6 @@ mysql-data/
 apps/web/app/public/wp-content/themes/santocafe/scripts/
 apps/web/source-assets/
 apps/web/app/public/wp-content/ai1wm-backups/
+
+# Brainstorming visual companion (superpowers skill)
+.superpowers/
