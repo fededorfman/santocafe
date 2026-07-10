@@ -1,0 +1,77 @@
+/* ============================================================
+   Tarjeta compacta de catálogo — variante "compact" del test A/B
+   Ver docs/superpowers/specs/2026-07-10-ab-test-tarjeta-catalogo-design.md
+   ============================================================ */
+
+.product-card-compact__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card-compact__image-zone {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--color-oscuro);
+}
+
+.product-card-compact__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+}
+
+.product-card-compact__link:hover .product-card-compact__image {
+    transform: scale(1.04);
+}
+
+.product-card-compact__image--placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2a1f1a 0%, #1a1310 100%);
+}
+
+.product-card-compact__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-sm);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    pointer-events: none;
+}
+
+.product-card-compact__name {
+    color: #fff;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.product-card-compact__price {
+    color: var(--color-dorado);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+}
+
+.product-card-compact__view {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+    pointer-events: none;
+}
+
+/* Grilla de catálogo en modo compacto: 2 columnas en mobile en vez de 1
+   (section-catalog.php agrega la clase --compact al contenedor cuando
+   la variante activa es 'compact'). */
+@media (max-width: 600px) {
+    .catalog-section__grid--compact {
+        grid-template-columns: 1fr 1fr;
+    }
+}

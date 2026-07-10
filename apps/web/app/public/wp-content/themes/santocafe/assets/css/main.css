@@ -23,6 +23,7 @@
 
 /* 7. Product card */
 @import url('_product-card.css');
+@import url('_product-card-compact.css');
 
 /* 8. Product detail */
 @import url('_product-detail.css');
