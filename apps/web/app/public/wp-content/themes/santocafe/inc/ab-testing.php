@@ -80,3 +80,77 @@ function sc_ab_track_conversion(): void {
     update_option( $option_key, (int) get_option( $option_key, 0 ) + 1, false );
 }
 add_action( 'woocommerce_add_to_cart', 'sc_ab_track_conversion' );
+
+/**
+ * Panel de resultados: WooCommerce > Test A/B Catálogo.
+ */
+add_action( 'admin_menu', function (): void {
+    add_submenu_page(
+        'woocommerce',
+        'Test A/B Catálogo',
+        'Test A/B Catálogo',
+        'manage_woocommerce',
+        'sc-ab-catalog',
+        'sc_ab_admin_page'
+    );
+} );
+
+function sc_ab_admin_page(): void {
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        return;
+    }
+
+    if ( isset( $_POST['sc_ab_reset'] ) && check_admin_referer( 'sc_ab_reset_action', 'sc_ab_reset_nonce' ) ) {
+        foreach ( [ 'sc_ab_views_control', 'sc_ab_views_compact', 'sc_ab_conv_control', 'sc_ab_conv_compact' ] as $option_key ) {
+            delete_option( $option_key );
+        }
+        echo '<div class="notice notice-success"><p>Contadores reiniciados.</p></div>';
+    }
+
+    $views_control = (int) get_option( 'sc_ab_views_control', 0 );
+    $views_compact = (int) get_option( 'sc_ab_views_compact', 0 );
+    $conv_control  = (int) get_option( 'sc_ab_conv_control', 0 );
+    $conv_compact  = (int) get_option( 'sc_ab_conv_compact', 0 );
+
+    $rate_control = $views_control > 0 ? round( $conv_control / $views_control * 100, 1 ) : 0;
+    $rate_compact = $views_compact > 0 ? round( $conv_compact / $views_compact * 100, 1 ) : 0;
+    ?>
+    <div class="wrap">
+        <h1>Test A/B: Tarjeta de Catálogo</h1>
+        <p>Comparación entre la tarjeta actual y la tarjeta compacta en la grilla de la home. "Agregaron al carrito" cuenta una sola vez por visitante, sin importar cuántos productos agregue.</p>
+
+        <table class="widefat striped" style="max-width:640px;margin-top:16px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Vistas</th>
+                    <th>Agregaron al carrito</th>
+                    <th>Conversión</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Tarjeta actual</strong></td>
+                    <td><?php echo esc_html( $views_control ); ?></td>
+                    <td><?php echo esc_html( $conv_control ); ?></td>
+                    <td><?php echo esc_html( $rate_control ); ?>%</td>
+                </tr>
+                <tr>
+                    <td><strong>Tarjeta chica</strong></td>
+                    <td><?php echo esc_html( $views_compact ); ?></td>
+                    <td><?php echo esc_html( $conv_compact ); ?></td>
+                    <td><?php echo esc_html( $rate_compact ); ?>%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method="post" style="margin-top:20px;">
+            <?php wp_nonce_field( 'sc_ab_reset_action', 'sc_ab_reset_nonce' ); ?>
+            <button type="submit" name="sc_ab_reset" value="1" class="button"
+                    onclick="return confirm('¿Reiniciar todos los contadores del test?');">
+                Reiniciar contadores
+            </button>
+        </form>
+    </div>
+    <?php
+}
