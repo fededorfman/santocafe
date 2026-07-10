@@ -158,3 +158,26 @@ function sc_ab_admin_page(): void {
     </div>
     <?php
 }
+
+/**
+ * Deja la variante disponible en el dataLayer en cada carga de página
+ * (no solo en la home) para poder cruzarla con otros datos en GA4 más
+ * adelante. Es tracking adicional — el panel de wp-admin es la forma
+ * principal de ver resultados, esto no hace falta para usarlo.
+ */
+add_action( 'wp_head', function (): void {
+    if ( is_admin() ) {
+        return;
+    }
+
+    $variant = isset( $_COOKIE[ SC_AB_COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ SC_AB_COOKIE ] ) ) : '';
+    if ( ! in_array( $variant, [ 'control', 'compact' ], true ) ) {
+        return;
+    }
+    ?>
+<script>
+window.dataLayer = window.dataLayer || [];
+dataLayer.push({ event: 'sc_ab_ready', ab_test: 'catalog_card', ab_variant: '<?php echo esc_js( $variant ); ?>' });
+</script>
+    <?php
+}, 2 );
