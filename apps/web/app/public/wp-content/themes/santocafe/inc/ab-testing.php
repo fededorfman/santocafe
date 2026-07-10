@@ -74,7 +74,7 @@ function sc_ab_track_conversion(): void {
 
     $expires = time() + SC_AB_COOKIE_DAYS * DAY_IN_SECONDS;
     setcookie( SC_AB_CONVERTED_COOKIE, '1', $expires, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN );
-    $_COOKIE[ SC_AB_CONVERTED_COOKIE ] = '1';
+    $_COOKIE[ SC_AB_CONVERTED_COOKIE ] = '1'; // por si el hook dispara más de una vez en este mismo request
 
     $option_key = ( 'control' === $variant ) ? 'sc_ab_conv_control' : 'sc_ab_conv_compact';
     update_option( $option_key, (int) get_option( $option_key, 0 ) + 1, false );
