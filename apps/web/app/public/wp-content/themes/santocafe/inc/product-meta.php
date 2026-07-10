@@ -49,6 +49,20 @@ add_action( 'init', function (): void {
 }, 20 );
 
 // ============================================================
+// 1.5 Encolar el selector de medios de WP en la pantalla de producto
+//     (lo usa el campo "Foto para tarjeta compacta" del test A/B).
+// ============================================================
+add_action( 'admin_enqueue_scripts', function ( string $hook ): void {
+    if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+        return;
+    }
+    if ( 'product' !== get_post_type() ) {
+        return;
+    }
+    wp_enqueue_media();
+} );
+
+// ============================================================
 // 2. Add "☕ Café" tab in the product data panel
 // ============================================================
 add_filter( 'woocommerce_product_data_tabs', function ( array $tabs ): array {
@@ -163,6 +177,55 @@ add_action( 'woocommerce_product_data_panels', function (): void {
         }
         ?>
 
+        <h4 style="padding:12px 12px 4px; font-size:13px; color:#555;">Test A/B — Tarjeta de catálogo</h4>
+
+        <?php
+        $sc_card_photo_id = (int) get_post_meta( $id, '_sc_card_photo', true );
+        ?>
+        <p class="form-field">
+            <label for="_sc_card_photo_button">Foto para tarjeta compacta</label>
+            <span class="sc-card-photo-preview" style="display:block;margin:6px 0;">
+                <?php if ( $sc_card_photo_id ) : ?>
+                    <?php echo wp_get_attachment_image( $sc_card_photo_id, [ 100, 100 ], false, [ 'style' => 'border-radius:8px;object-fit:cover;' ] ); ?>
+                <?php endif; ?>
+            </span>
+            <input type="hidden" id="_sc_card_photo" name="_sc_card_photo" value="<?php echo esc_attr( $sc_card_photo_id ); ?>">
+            <button type="button" id="_sc_card_photo_button" class="button sc-card-photo-upload">Subir imagen</button>
+            <button type="button" class="button sc-card-photo-remove" <?php echo $sc_card_photo_id ? '' : 'style="display:none;"'; ?>>Quitar</button>
+            <span class="description" style="display:block;margin-top:4px;">
+                Foto alternativa para la tarjeta chica de la home (test A/B). Si no cargás una, se usa la foto normal del producto.
+            </span>
+        </p>
+        <script>
+        jQuery(function ($) {
+            var frame;
+            $('.sc-card-photo-upload').on('click', function (e) {
+                e.preventDefault();
+                if (frame) { frame.open(); return; }
+                frame = wp.media({
+                    title: 'Elegir foto para la tarjeta compacta',
+                    button: { text: 'Usar esta foto' },
+                    multiple: false
+                });
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    $('#_sc_card_photo').val(attachment.id);
+                    $('.sc-card-photo-preview').html(
+                        '<img src="' + attachment.url + '" style="width:100px;height:100px;object-fit:cover;border-radius:8px;">'
+                    );
+                    $('.sc-card-photo-remove').show();
+                });
+                frame.open();
+            });
+            $('.sc-card-photo-remove').on('click', function (e) {
+                e.preventDefault();
+                $('#_sc_card_photo').val('');
+                $('.sc-card-photo-preview').empty();
+                $(this).hide();
+            });
+        });
+        </script>
+
     </div>
     <?php
 } );
@@ -238,5 +301,9 @@ add_action( 'woocommerce_process_product_meta', function ( int $post_id ): void 
             }
             wc_delete_product_transients( $post_id );
         }
+    }
+
+    if ( isset( $_POST['_sc_card_photo'] ) ) {
+        update_post_meta( $post_id, '_sc_card_photo', absint( $_POST['_sc_card_photo'] ) );
     }
 } );
