@@ -169,6 +169,12 @@ add_action( 'wp_head', function (): void {
     if ( is_admin() ) {
         return;
     }
+    if ( defined( 'SC_DISABLE_ANALYTICS' ) && SC_DISABLE_ANALYTICS ) {
+        return;
+    }
+    if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+        return;
+    }
 
     $variant = isset( $_COOKIE[ SC_AB_COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ SC_AB_COOKIE ] ) ) : '';
     if ( ! in_array( $variant, [ 'control', 'compact' ], true ) ) {
