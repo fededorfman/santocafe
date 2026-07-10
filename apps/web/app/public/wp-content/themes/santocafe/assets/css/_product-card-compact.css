@@ -40,8 +40,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-sm);
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 1));
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -50,13 +50,13 @@
 
 .product-card-compact__name {
     color: #fff;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: 600;
 }
 
 .product-card-compact__price {
     color: var(--color-dorado);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: 700;
 }
 
