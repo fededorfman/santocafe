@@ -71,7 +71,7 @@
    (section-catalog.php agrega la clase --compact al contenedor cuando
    la variante activa es 'compact'). */
 @media (max-width: 600px) {
-    .catalog-section__grid--compact {
+    .catalog-section__grid.catalog-section__grid--compact {
         grid-template-columns: 1fr 1fr;
     }
 }
