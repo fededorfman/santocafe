@@ -49,6 +49,6 @@ function sc_ab_maybe_assign_variant(): void {
     $_COOKIE[ SC_AB_COOKIE ] = $variant; // disponible ya en este mismo request
 
     $option_key = ( 'control' === $variant ) ? 'sc_ab_views_control' : 'sc_ab_views_compact';
-    update_option( $option_key, (int) get_option( $option_key, 0 ) + 1 );
+    update_option( $option_key, (int) get_option( $option_key, 0 ) + 1, false );
 }
 add_action( 'template_redirect', 'sc_ab_maybe_assign_variant' );
