@@ -100,11 +100,12 @@ function sc_ab_admin_page(): void {
         return;
     }
 
+    $sc_ab_reset_done = false;
     if ( isset( $_POST['sc_ab_reset'] ) && check_admin_referer( 'sc_ab_reset_action', 'sc_ab_reset_nonce' ) ) {
         foreach ( [ 'sc_ab_views_control', 'sc_ab_views_compact', 'sc_ab_conv_control', 'sc_ab_conv_compact' ] as $option_key ) {
             delete_option( $option_key );
         }
-        echo '<div class="notice notice-success"><p>Contadores reiniciados.</p></div>';
+        $sc_ab_reset_done = true;
     }
 
     $views_control = (int) get_option( 'sc_ab_views_control', 0 );
@@ -117,6 +118,9 @@ function sc_ab_admin_page(): void {
     ?>
     <div class="wrap">
         <h1>Test A/B: Tarjeta de Catálogo</h1>
+        <?php if ( $sc_ab_reset_done ) : ?>
+        <div class="notice notice-success"><p>Contadores reiniciados.</p></div>
+        <?php endif; ?>
         <p>Comparación entre la tarjeta actual y la tarjeta compacta en la grilla de la home. "Agregaron al carrito" cuenta una sola vez por visitante, sin importar cuántos productos agregue.</p>
 
         <table class="widefat striped" style="max-width:640px;margin-top:16px;">
