@@ -13,7 +13,7 @@ $products = new WP_Query( [
     'order'          => 'ASC',
 ] );
 
-$sc_ab_variant = function_exists( 'sc_ab_get_variant' ) ? sc_ab_get_variant() : 'control';
+$sc_ab_variant = function_exists( 'sc_ab_get_variant' ) ? sc_ab_get_variant( 'catalog_card' ) : 'control';
 $sc_grid_class = 'catalog-section__grid' . ( 'compact' === $sc_ab_variant ? ' catalog-section__grid--compact' : '' );
 ?>
 
