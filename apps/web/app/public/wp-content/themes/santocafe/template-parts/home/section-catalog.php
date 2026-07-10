@@ -12,6 +12,9 @@ $products = new WP_Query( [
     'orderby'        => 'menu_order title',
     'order'          => 'ASC',
 ] );
+
+$sc_ab_variant = function_exists( 'sc_ab_get_variant' ) ? sc_ab_get_variant() : 'control';
+$sc_grid_class = 'catalog-section__grid' . ( 'compact' === $sc_ab_variant ? ' catalog-section__grid--compact' : '' );
 ?>
 
 <section class="catalog-section" id="catalogo" aria-label="Catálogo de productos">
@@ -26,11 +29,15 @@ $products = new WP_Query( [
 
         <?php if ( $products->have_posts() ) : ?>
 
-        <div class="catalog-section__grid">
+        <div class="<?php echo esc_attr( $sc_grid_class ); ?>">
             <?php
             while ( $products->have_posts() ) {
                 $products->the_post();
-                wc_get_template_part( 'content', 'product' );
+                if ( 'compact' === $sc_ab_variant ) {
+                    get_template_part( 'template-parts/product/card-compact' );
+                } else {
+                    wc_get_template_part( 'content', 'product' );
+                }
             }
             wp_reset_postdata();
             ?>
