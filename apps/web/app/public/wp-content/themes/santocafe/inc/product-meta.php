@@ -205,6 +205,7 @@ add_action( 'woocommerce_product_data_panels', function (): void {
                 frame = wp.media({
                     title: 'Elegir foto para la tarjeta compacta',
                     button: { text: 'Usar esta foto' },
+                    library: { type: 'image' },
                     multiple: false
                 });
                 frame.on('select', function () {
