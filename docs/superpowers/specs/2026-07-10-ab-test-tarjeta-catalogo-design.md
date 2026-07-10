@@ -72,7 +72,8 @@ No se declara un "ganador" automáticamente — se decide mirando la tabla del p
 Cuando haya una variante ganadora clara:
 1. Se hardcodea esa tarjeta como la única (se borra la lógica de cookie/split y el template part que no ganó).
 2. Se borra el panel de wp-admin, los contadores en `wp_options`, y el push a `dataLayer` (ya no hacen falta).
-3. Bump de versión y deploy normal.
+3. Si ganó la tarjeta actual (no la compacta), también se borra el campo "Foto para tarjeta compacta" (`_sc_card_photo`) en `inc/product-meta.php` — ya no se usa en ningún lado.
+4. Bump de versión y deploy normal.
 
 Esto queda como tarea aparte, a pedido, una vez que haya datos.
 
