@@ -52,3 +52,31 @@ function sc_ab_maybe_assign_variant(): void {
     update_option( $option_key, (int) get_option( $option_key, 0 ) + 1, false );
 }
 add_action( 'template_redirect', 'sc_ab_maybe_assign_variant' );
+
+/**
+ * Suma una conversión (agregar al carrito) para la variante del
+ * visitante, una sola vez por visitante — usa la cookie
+ * sc_ab_converted para no contar de más a quien agrega varios
+ * productos durante la misma visita.
+ */
+function sc_ab_track_conversion(): void {
+    if ( is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+        return;
+    }
+    if ( isset( $_COOKIE[ SC_AB_CONVERTED_COOKIE ] ) ) {
+        return;
+    }
+
+    $variant = isset( $_COOKIE[ SC_AB_COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ SC_AB_COOKIE ] ) ) : '';
+    if ( ! in_array( $variant, [ 'control', 'compact' ], true ) ) {
+        return; // este visitante no está en el test
+    }
+
+    $expires = time() + SC_AB_COOKIE_DAYS * DAY_IN_SECONDS;
+    setcookie( SC_AB_CONVERTED_COOKIE, '1', $expires, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN );
+    $_COOKIE[ SC_AB_CONVERTED_COOKIE ] = '1';
+
+    $option_key = ( 'control' === $variant ) ? 'sc_ab_conv_control' : 'sc_ab_conv_compact';
+    update_option( $option_key, (int) get_option( $option_key, 0 ) + 1, false );
+}
+add_action( 'woocommerce_add_to_cart', 'sc_ab_track_conversion' );
