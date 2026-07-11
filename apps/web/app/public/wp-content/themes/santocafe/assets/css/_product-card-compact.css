@@ -35,6 +35,26 @@
     background: linear-gradient(135deg, #2a1f1a 0%, #1a1310 100%);
 }
 
+/* Badge de país (arriba a la izquierda) — mismo tratamiento que el SCA
+   de la tarjeta grande: pegado al borde izquierdo (left: 0) para que se
+   vea como una etiqueta que sale del borde, no un botón flotante. */
+.product-card-compact__badges {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: 0;
+    z-index: 2;
+}
+
+.product-card-compact__badges .sca-badge--gold {
+    border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+    padding-left: var(--spacing-sm);
+}
+
+.product-card-compact__badges .sca-badge--gold img {
+    display: block;
+    border-radius: 2px;
+}
+
 .product-card-compact__overlay {
     position: absolute;
     bottom: 0;

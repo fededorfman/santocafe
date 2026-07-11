@@ -18,6 +18,9 @@ $id            = $product->get_id();
 $card_photo_id = (int) sc_get_product_meta( $id, 'card_photo' );
 $prices        = sc_product_weight_prices( $id );
 $price_fmt     = sc_format_clp( (int) $prices['p250'] );
+
+$pais        = sc_get_product_meta( $id, 'pais' );
+$sc_flag_url = $pais ? sc_country_flag_url( (string) $pais ) : null;
 ?>
 
 <article <?php wc_product_class( 'product-card-compact', $product ); ?>>
@@ -40,6 +43,17 @@ $price_fmt     = sc_format_clp( (int) $prices['p250'] );
                 echo '<div class="product-card-compact__image product-card-compact__image--placeholder"></div>';
             }
             ?>
+
+            <?php if ( $pais ) : ?>
+            <div class="product-card-compact__badges">
+                <span class="sca-badge sca-badge--gold">
+                    <?php if ( $sc_flag_url ) : ?>
+                    <img src="<?php echo esc_url( $sc_flag_url ); ?>" alt="" width="18" height="12" aria-hidden="true">
+                    <?php endif; ?>
+                    <?php echo esc_html( $pais ); ?>
+                </span>
+            </div>
+            <?php endif; ?>
 
             <div class="product-card-compact__overlay">
                 <span class="product-card-compact__name"><?php the_title(); ?></span>
