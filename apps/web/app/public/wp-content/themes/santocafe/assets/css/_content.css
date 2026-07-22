@@ -172,18 +172,24 @@
 
 /* El CTA "Explora nuestros cafés" vive dentro de la misma grilla cuando
    hay productos recomendados (ver single.php): en desktop ocupa el ancho
-   completo como una barra debajo de las tarjetas... */
+   completo como una barra debajo de las tarjetas. Sin margin propio — el
+   espacio entre celdas ya lo da el gap de la grilla, igual que entre
+   tarjetas (con el margin original quedaba descuadrado dentro de su celda). */
 .sc-article__products .catalog-section__grid > .sc-article__cta {
     grid-column: 1 / -1;
+    margin: 0;
 }
 
-/* ...y en el modo compacto de 2 columnas pasa a ser una celda más,
-   llenando el hueco que deja un número impar de tarjetas (ej. 3
-   recomendados en 2 columnas) en vez de ir aparte, abajo de todo. */
+/* ...y en el modo compacto de 2 columnas pasa a ser una celda más, del
+   mismo alto que la tarjeta de al lado (height: 100% + stretch por
+   default de la grilla), llenando el hueco que deja un número impar de
+   recomendados (ej. 3 en 2 columnas) en vez de ir aparte, abajo de todo. */
 @media (max-width: 1024px) {
     .sc-article__products .catalog-section__grid > .sc-article__cta {
         grid-column: auto;
+        height: 100%;
         flex-direction: column;
+        justify-content: center;
         text-align: center;
         padding: var(--spacing-md);
     }
