@@ -130,6 +130,12 @@ function sc_ab_get_variant( string $test_key ): string {
         return sc_ab_first_variant( $test_key );
     }
 
+    // El contenido de esta página varía por visitante mientras el test esté
+    // activo — nunca debe quedar cacheada (LiteSpeed), o todos los visitantes
+    // sin cookie recibirían la misma variante que quedó guardada en la copia
+    // cacheada, en vez de un sorteo propio.
+    do_action( 'litespeed_control_set_nocache', 'sc-ab-' . $test_key );
+
     $cookie_name = 'sc_ab_' . $test_key;
     $cookie      = isset( $_COOKIE[ $cookie_name ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) ) : '';
 
