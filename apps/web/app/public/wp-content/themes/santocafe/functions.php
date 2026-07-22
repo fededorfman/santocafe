@@ -103,6 +103,7 @@ $modules = [
     'inc/woocommerce.php',
     'inc/product-meta.php',
     'inc/ab-testing.php',
+    'inc/guide-related-products.php',
     'inc/ajax-handlers.php',
     'inc/stock.php',
     'inc/seo.php',
