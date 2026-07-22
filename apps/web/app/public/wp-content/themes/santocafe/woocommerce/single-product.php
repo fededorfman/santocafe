@@ -192,8 +192,8 @@ while ( have_posts() ) :
                 </div>
                 <?php endif; ?>
 
-                <!-- Spec + profile cards (3 columns) -->
-                <?php if ( $altitud || $proceso || $intensidad || $acidez || $cuerpo ) : ?>
+                <!-- Spec + profile cards (grilla 2x2: Altitud, Proceso, Características, Especie) -->
+                <?php if ( $altitud || $proceso || $intensidad || $acidez || $cuerpo || $variedad ) : ?>
                 <div class="product-detail__specs">
                     <?php if ( $altitud ) : ?>
                     <div class="detail-spec">
@@ -218,6 +218,15 @@ while ( have_posts() ) :
                         <?php if ( $intensidad ) sc_render_profile_bar( 'Intensidad', $intensidad ); ?>
                         <?php if ( $acidez )     sc_render_profile_bar( 'Acidez',     $acidez ); ?>
                         <?php if ( $cuerpo )     sc_render_profile_bar( 'Cuerpo',     $cuerpo ); ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ( $variedad ) : ?>
+                    <div class="detail-spec">
+                        <span class="detail-spec__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="6"/><path d="M12 8V4"/><path d="M12 4c1.5-1 3-1 4 0"/></svg>
+                        </span>
+                        <span class="detail-spec__label">Especie</span>
+                        <span class="detail-spec__value"><?php echo esc_html( $variedad ); ?></span>
                     </div>
                     <?php endif; ?>
                 </div>

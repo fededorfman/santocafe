@@ -202,10 +202,10 @@
     margin: 0;
 }
 
-/* Spec + profile cards (Altitud / Proceso / Perfil — 3 columns) */
+/* Spec + profile cards (Altitud / Proceso / Características / Especie — grilla 2x2) */
 .product-detail__specs {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-sm);
 }
 
@@ -866,14 +866,12 @@
 }
 
 @media (max-width: 600px) {
-    .product-detail__specs {
-        grid-template-columns: 1fr;
-        justify-items: center;
+    .detail-spec {
+        padding: var(--spacing-sm);
     }
 
-    .detail-spec {
-        max-width: 230px;
-        width: 100%;
+    .detail-spec--profile {
+        padding: var(--spacing-sm);
     }
 
     .molienda-selector {
