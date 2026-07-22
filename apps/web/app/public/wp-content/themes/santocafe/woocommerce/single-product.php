@@ -193,7 +193,6 @@ while ( have_posts() ) :
                 <?php endif; ?>
 
                 <!-- Spec + profile cards (grilla 2x2: Altitud, Proceso, Características, Especie) -->
-                <?php if ( $altitud || $proceso || $intensidad || $acidez || $cuerpo || $variedad ) : ?>
                 <div class="product-detail__specs">
                     <?php if ( $altitud ) : ?>
                     <div class="detail-spec">
@@ -220,17 +219,20 @@ while ( have_posts() ) :
                         <?php if ( $cuerpo )     sc_render_profile_bar( 'Cuerpo',     $cuerpo ); ?>
                     </div>
                     <?php endif; ?>
-                    <?php if ( $variedad ) : ?>
                     <div class="detail-spec">
                         <span class="detail-spec__icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="6"/><path d="M12 8V4"/><path d="M12 4c1.5-1 3-1 4 0"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3v3.2"/>
+                                <path d="M12 6.2c-2 0-3.6 1.3-4 3.1"/>
+                                <path d="M12 6.2c2 0 3.6 1.3 4 3.1"/>
+                                <circle cx="8.3" cy="14.8" r="4.4"/>
+                                <circle cx="15.5" cy="13.2" r="3.9"/>
+                            </svg>
                         </span>
                         <span class="detail-spec__label">Especie</span>
-                        <span class="detail-spec__value"><?php echo esc_html( $variedad ); ?></span>
+                        <span class="detail-spec__value">100% Arábica</span>
                     </div>
-                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
 
                 <!-- FORMATO selector -->
                 <div class="product-detail__section">
