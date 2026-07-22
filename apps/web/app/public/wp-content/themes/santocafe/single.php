@@ -71,15 +71,25 @@ get_header();
             <?php if ( ! empty( $sc_related_product_ids ) ) : ?>
             <section class="sc-article__products">
                 <h2 class="sc-article__products-title">Recomendados para esta preparación</h2>
-                <div class="catalog-section__grid catalog-section__grid--compact sc-article__products-grid">
+                <div class="catalog-section__grid catalog-section__grid--compact">
                     <?php
                     global $product;
                     foreach ( $sc_related_product_ids as $sc_rp_id ) {
                         $product = wc_get_product( $sc_rp_id );
                         if ( $product && $product->is_visible() ) {
+                            // card-compact.php usa the_title()/the_permalink()/the_post_thumbnail(),
+                            // que leen el $post global del loop, no $product — hay que
+                            // adelantarlo al producto en cada vuelta (igual que the_post()
+                            // adelanta ambos en section-catalog.php). Se asigna $GLOBALS['post']
+                            // directo (no solo setup_postdata()) porque dentro del loop del
+                            // artículo, setup_postdata() por sí solo no lo actualiza.
+                            $sc_rp_post = get_post( $sc_rp_id );
+                            $GLOBALS['post'] = $sc_rp_post;
+                            setup_postdata( $sc_rp_post );
                             get_template_part( 'template-parts/product/card-compact' );
                         }
                     }
+                    wp_reset_postdata(); // restaura $post al artículo de la guía
                     $product = null; // esta página no es de producto — no dejar $product global apuntando al último recomendado
                     ?>
                 </div>
