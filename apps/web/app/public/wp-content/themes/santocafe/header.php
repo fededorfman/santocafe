@@ -74,7 +74,7 @@ if ( is_user_logged_in() ) {
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-nav__logo">
                 <img src="<?php echo esc_url( $logo_url ); ?>"
                      alt="<?php bloginfo( 'name' ); ?>"
-                     width="80" height="52">
+                     width="65" height="42">
             </a>
 
             <?php
