@@ -150,6 +150,17 @@
 }
 .sc-article__cta .btn { flex-shrink: 0; }
 
+/* ---- Recomendados para esta preparación (guías) ---- */
+.sc-article__products {
+    margin: var(--spacing-xl) 0;
+}
+
+.sc-article__products-title {
+    font-size: var(--font-size-lg);
+    color: var(--color-oscuro);
+    margin-bottom: var(--spacing-lg);
+}
+
 /* ---- Related posts ---- */
 .sc-article__related {
     margin-top: var(--spacing-2xl);

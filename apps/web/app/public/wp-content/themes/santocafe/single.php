@@ -65,6 +65,28 @@ get_header();
             </div>
 
             <?php
+            $sc_related_product_ids = get_post_meta( get_the_ID(), '_sc_related_products', true );
+            $sc_related_product_ids = is_array( $sc_related_product_ids ) ? $sc_related_product_ids : [];
+            ?>
+            <?php if ( ! empty( $sc_related_product_ids ) ) : ?>
+            <section class="sc-article__products">
+                <h2 class="sc-article__products-title">Recomendados para esta preparación</h2>
+                <div class="catalog-section__grid catalog-section__grid--compact sc-article__products-grid">
+                    <?php
+                    global $product;
+                    foreach ( $sc_related_product_ids as $sc_rp_id ) {
+                        $product = wc_get_product( $sc_rp_id );
+                        if ( $product && $product->is_visible() ) {
+                            get_template_part( 'template-parts/product/card-compact' );
+                        }
+                    }
+                    $product = null; // esta página no es de producto — no dejar $product global apuntando al último recomendado
+                    ?>
+                </div>
+            </section>
+            <?php endif; ?>
+
+            <?php
             // CTA block — link to store
             ?>
             <div class="sc-article__cta">
