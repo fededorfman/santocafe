@@ -180,22 +180,33 @@
     margin: 0;
 }
 
-/* ...y en el modo compacto de 2 columnas pasa a ser una celda más, del
-   mismo alto que la tarjeta de al lado (height: 100% + stretch por
-   default de la grilla), llenando el hueco que deja un número impar de
-   recomendados (ej. 3 en 2 columnas) en vez de ir aparte, abajo de todo. */
+/* ...y en el modo compacto de 2 columnas pasa a ser una celda más,
+   cuadrada (mismo aspect-ratio 1/1 que .product-card-compact__image-zone,
+   así el alto sale del mismo cálculo — ancho de columna — que las
+   tarjetas, en vez de depender de cómo la grilla reparte el alto de la
+   fila). Llena el hueco que deja un número impar de recomendados (ej. 3
+   en 2 columnas) en vez de ir aparte, abajo de todo. */
 @media (max-width: 1024px) {
     .sc-article__products .catalog-section__grid > .sc-article__cta {
         grid-column: auto;
-        height: 100%;
+        aspect-ratio: 1 / 1;
+        height: auto;
         flex-direction: column;
         justify-content: center;
+        gap: var(--spacing-sm);
         text-align: center;
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
+        overflow: hidden;
+    }
+    .sc-article__products .catalog-section__grid > .sc-article__cta .sc-article__cta-text {
+        font-size: var(--font-size-sm);
+        line-height: 1.3;
     }
     .sc-article__products .catalog-section__grid > .sc-article__cta .btn {
         width: 100%;
         justify-content: center;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-sm);
     }
 }
 
