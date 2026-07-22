@@ -871,7 +871,7 @@
     }
 
     .detail-spec--profile {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-lg);
     }
 
     .molienda-selector {
