@@ -58,6 +58,20 @@ add_action( 'send_headers', function (): void {
 } );
 
 // ============================================================
+// Cache: nunca servir una respuesta cacheada (LiteSpeed) al bot de
+// Microsoft Clarity, para que no capture una versión vieja de la
+// página (CSS desactualizado) al generar sus grabaciones/heatmaps.
+// Usa el hook oficial de LiteSpeed Cache — si el plugin no está
+// activo, do_action() no hace nada (no-op seguro).
+// ============================================================
+add_action( 'init', function (): void {
+    $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+    if ( '' !== $user_agent && false !== stripos( $user_agent, 'Clarity-Bot' ) ) {
+        do_action( 'litespeed_control_set_nocache', 'clarity-bot' );
+    }
+} );
+
+// ============================================================
 // Enumeración de usuarios por ?author=N y archivas de autor.
 // Complementa el bloqueo REST: /?author=1 normalmente redirige a
 // /author/<login>/ y filtra el nombre de usuario. Para anónimos lo
