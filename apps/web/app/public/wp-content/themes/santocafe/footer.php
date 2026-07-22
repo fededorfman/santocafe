@@ -17,9 +17,9 @@ $account_url = function_exists( 'wc_get_account_endpoint_url' )
             <!-- Col 1: Identidad -->
             <div class="site-footer__col site-footer__brand">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-footer__logo">
-                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo.png' ); ?>"
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo_fondo_oscuro.svg' ); ?>"
                          alt="<?php bloginfo( 'name' ); ?>"
-                         width="100" height="35">
+                         width="74" height="48">
                 </a>
                 <p class="site-footer__tagline">
                     Café de especialidad en Santiago de Chile.

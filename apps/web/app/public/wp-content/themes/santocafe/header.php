@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 $cart_count = ( function_exists( 'WC' ) && WC()->cart )
     ? WC()->cart->get_cart_contents_count()
     : 0;
-$logo_url   = get_template_directory_uri() . '/assets/images/logo.png';
+$logo_url   = get_template_directory_uri() . '/assets/images/logo_fondo_oscuro.svg';
 $cart_url   = function_exists( 'wc_get_cart_url' )    ? wc_get_cart_url()    : home_url( '/carrito/' );
 $account_url = function_exists( 'wc_get_account_endpoint_url' )
     ? wc_get_account_endpoint_url( 'dashboard' )
@@ -74,10 +74,7 @@ if ( is_user_logged_in() ) {
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-nav__logo">
                 <img src="<?php echo esc_url( $logo_url ); ?>"
                      alt="<?php bloginfo( 'name' ); ?>"
-                     width="120" height="52">
-                <img class="site-nav__brand-img"
-                     src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/logo_santocafe.png' ); ?>"
-                     alt="" width="656" height="291">
+                     width="80" height="52">
             </a>
 
             <?php

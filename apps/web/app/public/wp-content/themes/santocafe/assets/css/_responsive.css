@@ -30,8 +30,6 @@
         transform: translateX(-50%);
     }
 
-    .site-nav__logo .site-nav__brand-img { display: none; }
-
     /* Keep actions z-index above the absolute logo */
     .site-nav__actions {
         position: relative;
