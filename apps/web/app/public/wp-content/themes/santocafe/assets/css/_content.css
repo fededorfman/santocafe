@@ -161,6 +161,38 @@
     margin-bottom: var(--spacing-lg);
 }
 
+/* Por encima de 1024px, tope de 3 columnas siempre (en vez de las 4 de
+   .catalog-section__grid) — con 2-3 recomendados por guía, 4 columnas
+   dejaba espacio vacío o una sola tarjeta suelta en la fila. */
+@media (min-width: 1025px) {
+    .sc-article__products .catalog-section__grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* El CTA "Explora nuestros cafés" vive dentro de la misma grilla cuando
+   hay productos recomendados (ver single.php): en desktop ocupa el ancho
+   completo como una barra debajo de las tarjetas... */
+.sc-article__products .catalog-section__grid > .sc-article__cta {
+    grid-column: 1 / -1;
+}
+
+/* ...y en el modo compacto de 2 columnas pasa a ser una celda más,
+   llenando el hueco que deja un número impar de tarjetas (ej. 3
+   recomendados en 2 columnas) en vez de ir aparte, abajo de todo. */
+@media (max-width: 1024px) {
+    .sc-article__products .catalog-section__grid > .sc-article__cta {
+        grid-column: auto;
+        flex-direction: column;
+        text-align: center;
+        padding: var(--spacing-md);
+    }
+    .sc-article__products .catalog-section__grid > .sc-article__cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* ---- Related posts ---- */
 .sc-article__related {
     margin-top: var(--spacing-2xl);

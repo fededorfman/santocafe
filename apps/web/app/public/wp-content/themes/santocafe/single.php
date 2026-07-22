@@ -92,21 +92,18 @@ get_header();
                     wp_reset_postdata(); // restaura $post al artículo de la guía
                     $product = null; // esta página no es de producto — no dejar $product global apuntando al último recomendado
                     ?>
+
+                    <?php // El CTA se suma como último elemento de esta misma grilla: ocupa el
+                    // ancho completo en desktop (3 columnas) y pasa a ser una celda más en el
+                    // modo compacto de 2 columnas, llenando el hueco que deja un número impar
+                    // de tarjetas (ver reglas .sc-article__products en _content.css). ?>
+                    <?php get_template_part( 'template-parts/article-cta' ); ?>
                 </div>
             </section>
-            <?php endif; ?>
+            <?php else : ?>
 
-            <?php
-            // CTA block — link to store
-            ?>
-            <div class="sc-article__cta">
-                <span class="sc-article__cta-text">
-                    Explora nuestros cafés de especialidad
-                </span>
-                <a href="<?php echo esc_url( home_url( '/#catalogo' ) ); ?>" class="btn btn--primary">
-                    Ver cafés
-                </a>
-            </div>
+            <?php get_template_part( 'template-parts/article-cta' ); ?>
+            <?php endif; ?>
 
         </article>
 
