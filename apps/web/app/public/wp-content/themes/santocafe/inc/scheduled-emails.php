@@ -536,7 +536,7 @@ function sc_auto_common_vars( $user_id ) {
 	$assets = get_stylesheet_directory_uri() . '/assets/images';
 	$icons  = apply_filters( 'sc_email_assets_url', $assets . '/email' );
 	return array(
-		'LOGO_URL'        => esc_url( apply_filters( 'sc_email_logo_url', $assets . '/logo.png' ) ),
+		'LOGO_URL'        => esc_url( apply_filters( 'sc_email_logo_url', $assets . '/email/logo-email-oscuro.png' ) ),
 		'SITE_URL'        => esc_url( home_url( '/' ) ),
 		'SHOP_URL'        => esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' ) ),
 		'INSTAGRAM_URL'   => 'https://instagram.com/santocafespecialtycoffee',
@@ -876,7 +876,7 @@ add_action(
 function sc_unsub_render_page( $title, $body_html, $status = 200 ) {
 	status_header( (int) $status );
 	nocache_headers();
-	$logo = esc_url( get_stylesheet_directory_uri() . '/assets/images/logo.png' );
+	$logo = esc_url( get_stylesheet_directory_uri() . '/assets/images/email/logo-email-claro.png' );
 	?>
 <!doctype html>
 <html lang="es">

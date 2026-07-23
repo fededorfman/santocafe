@@ -68,7 +68,7 @@ function sc_handle_contact() {
 	 *
 	 * @param string $logo_url URL absoluta del logo.
 	 */
-	$logo      = apply_filters( 'sc_email_logo_url', $assets . '/logo.png' );
+	$logo      = apply_filters( 'sc_email_logo_url', $assets . '/email/logo-email-oscuro.png' );
 	$icons     = apply_filters( 'sc_email_assets_url', $assets . '/email' );
 	$instagram = 'https://instagram.com/santocafespecialtycoffee';
 	$whatsapp  = 'https://wa.me/56951414791';

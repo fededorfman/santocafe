@@ -24,7 +24,7 @@ $email_id   = ( $email && isset( $email->id ) ) ? $email->id : '';
 /* Logo para la barra oscura: respeta el configurado en WooCommerce; si no, usa el del tema. */
 $sc_logo = get_option( 'woocommerce_email_header_image' );
 if ( empty( $sc_logo ) ) {
-	$sc_logo = get_stylesheet_directory_uri() . '/assets/images/logo.png';
+	$sc_logo = get_stylesheet_directory_uri() . '/assets/images/email/logo-email-oscuro.png';
 }
 
 /* "Eyebrow" dorado según el tipo de correo. */

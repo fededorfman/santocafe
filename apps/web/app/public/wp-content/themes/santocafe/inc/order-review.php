@@ -121,7 +121,7 @@ add_action( 'template_redirect', function () {
 function sc_review_layout_open( $title ) {
 	status_header( 200 );
 	nocache_headers();
-	$logo = esc_url( get_stylesheet_directory_uri() . '/assets/images/logo.png' );
+	$logo = esc_url( get_stylesheet_directory_uri() . '/assets/images/email/logo-email-claro.png' );
 	ob_start();
 	?>
 <!doctype html>
