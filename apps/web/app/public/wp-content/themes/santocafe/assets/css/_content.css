@@ -195,7 +195,7 @@
         justify-content: center;
         gap: var(--spacing-sm);
         text-align: center;
-        padding: var(--spacing-sm);
+        padding: var(--spacing-lg);
         overflow: hidden;
     }
     .sc-article__products .catalog-section__grid > .sc-article__cta .sc-article__cta-text {
