@@ -249,11 +249,11 @@ while ( have_posts() ) :
                                 data-per-cup="<?php echo esc_attr( $per_cup_250 ); ?>"
                                 data-peso="250g"
                                 type="button">
-                            <span class="format-weight">250g</span>
-                            <span class="format-cups">~30 tazas</span>
                             <?php if ( $pr_250['discount'] > 0 ) : ?>
                             <span class="format-discount">-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
                             <?php endif; ?>
+                            <span class="format-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                            <span class="format-weight">250g</span>
                         </button>
                         <?php if ( $var_1kg ) : ?>
                         <button class="pill-selector__option<?php echo $sc_in_1kg ? '' : ' pill-selector__option--out'; ?>"
@@ -267,10 +267,11 @@ while ( have_posts() ) :
                                 data-per-cup="<?php echo esc_attr( $per_cup_1kg ); ?>"
                                 data-peso="1kg"
                                 type="button">
-                            <span class="format-weight">1kg</span>
                             <?php if ( $saving_pct_1kg > 0 ) : ?>
                             <span class="format-discount">-<?php echo esc_html( $saving_pct_1kg ); ?>%</span>
                             <?php endif; ?>
+                            <span class="format-price"><?php echo esc_html( $price_1kg_fmt ); ?></span>
+                            <span class="format-weight">1kg</span>
                         </button>
                         <?php endif; ?>
                     </div>
@@ -310,22 +311,26 @@ while ( have_posts() ) :
                     </div>
                 </div>
 
-                <!-- Guarantees (2×2 grid) -->
-                <div class="product-detail__guarantees">
-                    <?php
-                    $sc_free_min = function_exists( 'sc_get_free_shipping_min' ) ? sc_get_free_shipping_min() : 0;
-                    $guarantees = [
-                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>', 'text' => 'Envío gratis desde ' . sc_format_clp( $sc_free_min )],
-                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'text' => 'Entrega 24-48 horas'],
-                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>', 'text' => 'Pago 100% seguro'],
-                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>', 'text' => '100% Arábica'],
-                    ];
-                    foreach ( $guarantees as $g ) : ?>
-                    <div class="guarantee-item">
-                        <span class="guarantee-item__icon" aria-hidden="true"><?php echo $g['icon']; ?></span>
-                        <span class="guarantee-item__text"><?php echo esc_html( $g['text'] ); ?></span>
+                <!-- Mini resumen de la selección (visible sin tener que scrollear a los selectores) -->
+                <div class="product-detail__summary-wrap">
+                    <span class="product-detail__summary-label">Tu selección</span>
+                    <div class="product-detail__summary">
+                        <div class="product-detail__summary-media">
+                            <img src="<?php echo esc_url( get_the_post_thumbnail_url( $id, 'thumbnail' ) ); ?>" alt="" width="56" height="56" loading="lazy">
+                        </div>
+                        <div class="product-detail__summary-info">
+                            <span class="product-detail__summary-line">
+                                <span class="js-summary-qty">1</span> ×
+                                <span class="js-summary-format">250g</span> ·
+                                <span class="js-summary-molienda">En Grano</span>
+                            </span>
+                            <span class="product-detail__summary-price-row">
+                                <span class="product-detail__summary-price js-summary-price"><?php echo esc_html( $price_250_fmt ); ?></span>
+                                <span class="product-detail__summary-was js-summary-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                                <span class="product-detail__summary-discount js-summary-discount"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>>-<?php echo esc_html( $pr_250['discount'] ); ?>%</span>
+                            </span>
+                        </div>
                     </div>
-                    <?php endforeach; ?>
                 </div>
 
                 <!-- Add-to-cart form -->
@@ -344,11 +349,27 @@ while ( have_posts() ) :
                             <line x1="3" y1="6" x2="21" y2="6"/>
                             <path d="M16 10a4 4 0 01-8 0"/>
                         </svg>
-                        <span class="js-cta-label">Agregar al carrito —</span>
-                        <span class="js-cta-price"><?php echo esc_html( $price_250_fmt ); ?></span>
-                        <span class="product-detail__cta-was js-cta-original"<?php echo $pr_250['discount'] ? '' : ' hidden'; ?>><?php echo esc_html( $pr_250['compare_fmt'] ); ?></span>
+                        <span class="js-cta-label">Agregar al carrito</span>
                     </button>
                 </form>
+
+                <!-- Guarantees (2×2 grid) -->
+                <div class="product-detail__guarantees">
+                    <?php
+                    $sc_free_min = function_exists( 'sc_get_free_shipping_min' ) ? sc_get_free_shipping_min() : 0;
+                    $guarantees = [
+                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>', 'text' => 'Envío gratis desde ' . sc_format_clp( $sc_free_min )],
+                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'text' => 'Entrega 24-48 horas'],
+                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>', 'text' => 'Pago 100% seguro'],
+                        ['icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>', 'text' => '100% Arábica'],
+                    ];
+                    foreach ( $guarantees as $g ) : ?>
+                    <div class="guarantee-item">
+                        <span class="guarantee-item__icon" aria-hidden="true"><?php echo $g['icon']; ?></span>
+                        <span class="guarantee-item__text"><?php echo esc_html( $g['text'] ); ?></span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
 
             </div>
             <!-- /info -->

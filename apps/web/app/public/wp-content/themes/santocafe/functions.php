@@ -101,6 +101,7 @@ add_action( 'template_redirect', function (): void {
 $modules = [
     'inc/theme-helpers.php',
     'inc/woocommerce.php',
+    'inc/user-profile-fields.php',
     'inc/product-meta.php',
     'inc/ab-testing.php',
     'inc/guide-related-products.php',

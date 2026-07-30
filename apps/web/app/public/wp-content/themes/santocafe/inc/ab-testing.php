@@ -165,6 +165,13 @@ function sc_ab_maybe_assign_variant( string $test_key ): void {
         return;
     }
 
+    // Esta respuesta trae una cookie recién creada: si un caché de página
+    // (LiteSpeed) la sirviera a otro visitante, esa cookie nunca llegaría al
+    // navegador real y cada refresh se contaría como visita nueva. Lo
+    // marcamos no-cacheable ACÁ (no más adelante, al leer la variante) para
+    // no dejar una ventana entre "se crea la cookie" y "se evita el caché".
+    do_action( 'litespeed_control_set_nocache', 'sc-ab-' . $test_key . '-new-visitor' );
+
     $variant = sc_ab_pick_weighted_variant( $test_key );
     $expires = time() + SC_AB_COOKIE_DAYS * DAY_IN_SECONDS;
 

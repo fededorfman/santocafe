@@ -90,6 +90,12 @@ defined('ABSPATH') || exit;
                                placeholder="tu@email.com" autocomplete="email" spellcheck="false" required aria-required="true">
                     </div>
 
+                    <div class="form-field">
+                        <label for="contact-telefono">Teléfono <span class="form-field__optional">(opcional)</span></label>
+                        <input type="tel" id="contact-telefono" name="telefono" maxlength="30"
+                               placeholder="+56 9 1234 5678" autocomplete="tel">
+                    </div>
+
                     <div class="form-field validate-required" data-minlength="5">
                         <label for="contact-mensaje">Mensaje <span class="form-field__req" aria-hidden="true">*</span></label>
                         <textarea id="contact-mensaje" name="mensaje" maxlength="3000"

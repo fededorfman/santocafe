@@ -655,7 +655,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: end;
+    align-items: center;
 }
 
 /* Prevent grid children from overflowing their tracks */
@@ -763,6 +763,13 @@ a.contacto__item-value:hover {
 
 .form-field__req {
     color: var(--color-dorado);
+}
+
+.form-field__optional {
+    color: var(--color-texto-suave);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
 }
 
 /* Mensaje de éxito (reemplaza al form tras enviar) */

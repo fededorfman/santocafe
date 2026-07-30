@@ -86,11 +86,16 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( array $fragments ): 
 add_filter( 'wc_add_to_cart_message_html', '__return_null' );
 
 // ============================================================
-// My Account — enable registration on the login page and show a
-// password field (instead of emailing an auto-generated one).
+// My Account — enable registration on the login page.
+// Contraseña autogenerada (en vez de mostrar un campo de password): el
+// checkout por bloques trae su propio medidor de fuerza hardcodeado en su JS
+// compilado (sin filtro de WordPress para ajustarlo) que rechaza contraseñas
+// que sí cumplen nuestros requisitos, así que la única forma de evitar ese
+// choque es no pedirle una contraseña al usuario. Aplica también al registro
+// manual (Mi Cuenta), que ya soporta este modo (ver woocommerce/myaccount/form-login.php).
 // ============================================================
 add_filter( 'option_woocommerce_enable_myaccount_registration', fn() => 'yes' );
-add_filter( 'option_woocommerce_registration_generate_password', fn() => 'no' );
+add_filter( 'option_woocommerce_registration_generate_password', fn() => 'yes' );
 
 // Privacy notice on the register form — Spanish, short.
 add_filter( 'option_woocommerce_registration_privacy_policy_text', fn() =>
@@ -169,17 +174,43 @@ add_action( 'wp_enqueue_scripts', function (): void {
     wp_dequeue_script( 'wc-cart-fragments' );
 }, 99 );
 
+// El checkout por bloques crea la cuenta vía Store API (REST, body JSON), así
+// que en ese flujo $_POST está vacío. Guardamos el request ahí para poder leer
+// nombre/apellido/contraseña también en ese caso.
+add_filter( 'rest_request_before_callbacks', function ( $response, $handlers, $request ) {
+    if ( 0 === strpos( $request->get_route(), '/wc/store/v1/checkout' ) ) {
+        $GLOBALS['sc_store_api_checkout_request'] = $request;
+    }
+    return $response;
+}, 10, 3 );
+
 // Register validation: name + surname required, password >= 8 with a letter and a number.
+// Corre tanto para el registro clásico (Mi cuenta) como para "Crear una cuenta"
+// en el checkout por bloques (Store API) — cada uno lee sus datos de donde
+// realmente vienen.
 add_action( 'woocommerce_register_post', function ( $username, $email, $errors ): void {
-    if ( empty( trim( $_POST['first_name'] ?? '' ) ) ) {
+    $store_api_request = $GLOBALS['sc_store_api_checkout_request'] ?? null;
+    if ( $store_api_request instanceof WP_REST_Request ) {
+        $first_name = trim( (string) ( $store_api_request['billing_address']['first_name'] ?? '' ) );
+        $last_name  = trim( (string) ( $store_api_request['billing_address']['last_name'] ?? '' ) );
+        $password   = (string) ( $store_api_request['customer_password'] ?? '' );
+    } else {
+        $first_name = trim( wp_unslash( $_POST['first_name'] ?? '' ) );
+        $last_name  = trim( wp_unslash( $_POST['last_name'] ?? '' ) );
+        $password   = (string) ( $_POST['password'] ?? '' );
+    }
+
+    if ( empty( $first_name ) ) {
         $errors->add( 'first_name_required', 'Ingresa tu nombre.' );
     }
-    if ( empty( trim( $_POST['last_name'] ?? '' ) ) ) {
+    if ( empty( $last_name ) ) {
         $errors->add( 'last_name_required', 'Ingresa tu apellido.' );
     }
 
-    $password = (string) ( $_POST['password'] ?? '' );
-    if ( strlen( $password ) < 8 || ! preg_match( '/[A-Za-z]/', $password ) || ! preg_match( '/[0-9]/', $password ) ) {
+    // Con contraseña autogenerada no se pide (ni se envía) password: nada que validar.
+    if ( 'yes' !== get_option( 'woocommerce_registration_generate_password' )
+        && ( strlen( $password ) < 8 || ! preg_match( '/[A-Za-z]/', $password ) || ! preg_match( '/[0-9]/', $password ) )
+    ) {
         $errors->add(
             'password_invalid',
             'La contraseña debe tener al menos 8 caracteres, con al menos una letra y un número.'

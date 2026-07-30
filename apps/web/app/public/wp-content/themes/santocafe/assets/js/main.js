@@ -91,6 +91,63 @@
     }
 
     // ============================================================
+    // Checkout por bloques: mensaje de "sin opciones de envío" cuando la
+    // dirección cae fuera de las zonas de despacho configuradas (regiones
+    // fuera de la RM). El texto original es un __() de WooCommerce, pero
+    // WordPress arma el catálogo de traducciones del bloque directamente
+    // desde el .mo (no pasa por el filtro 'gettext' en cada request), así
+    // que no hay forma de interceptarlo por PHP — se reemplaza en el DOM.
+    // El contenido es fijo (no hay input de usuario), por eso usar innerHTML
+    // acá es seguro. IMPORTANTE: no usar un flag de "ya reemplazado" — React
+    // vuelve a pisar el nodo en re-renders posteriores (p. ej. al recalcular
+    // el envío), así que hay que comparar el texto actual en cada mutación
+    // y corregirlo de nuevo si React lo restauró.
+    // ============================================================
+    if ($('.wp-block-woocommerce-checkout').length) {
+        var scReplaceNoShippingNotice = function () {
+            var $content = $('.wc-block-components-shipping-rates-control__no-results-notice .wc-block-components-notice-banner__content');
+            if ($content.length && -1 !== $content.text().indexOf('No hay opciones de envío disponibles')) {
+                $content.html(
+                    '<strong>Importante – Envíos a Regiones</strong><br><br>' +
+                    'Actualmente nuestra tienda online solo procesa envíos dentro de la Región Metropolitana.<br><br>' +
+                    'Si necesitas despacho a otra región, contáctanos por WhatsApp al número ' +
+                    '<a href="https://wa.me/56951414791" target="_blank" rel="noopener" style="color:var(--color-dorado-hover,#b08d4a); text-decoration:underline; font-weight:600;">+56 9 5141 4791</a> ' +
+                    'antes de realizar tu compra. Gestionaremos el envío de forma personalizada.<br><br>' +
+                    'El costo del despacho a regiones no está incluido en la compra y se paga directamente al retirar el pedido en la empresa de transporte en destino.'
+                );
+            }
+
+            // Mismo caso en el resumen del pedido ("No hay opción de entrega disponible").
+            $('.wc-block-components-shipping-placeholder__value').each(function () {
+                var $el = $(this);
+                if ('No hay opción de entrega disponible' !== $el.text().trim()) {
+                    return;
+                }
+                $el.html(
+                    '<a href="https://wa.me/56951414791" target="_blank" rel="noopener" style="color:var(--color-dorado-hover,#b08d4a); text-decoration:underline; font-weight:600;">Escríbenos para envíos a regiones</a>'
+                );
+            });
+        };
+        scReplaceNoShippingNotice();
+        new MutationObserver(scReplaceNoShippingNotice)
+            .observe(document.querySelector('.wp-block-woocommerce-checkout'), { childList: true, subtree: true });
+    }
+
+    // ============================================================
+    // Checkout por bloques: checkbox "Crear una cuenta con SantoCafé". La
+    // contraseña se autogenera (no hay campo para escribirla), así que
+    // avisamos que llega por email — mismo criterio que el registro manual
+    // (Mi cuenta) cuando está en modo autogenerado.
+    // ============================================================
+    $(document).on('change', '.wc-block-checkout__create-account input[type="checkbox"]', function () {
+        var $box = $(this).closest('.wc-block-checkout__create-account');
+        $box.next('.sc-account__hint').remove();
+        if (this.checked) {
+            $box.after('<small class="sc-account__hint">Te enviaremos un email para definir tu contraseña.</small>');
+        }
+    });
+
+    // ============================================================
     // Mobile Drawer
     // ============================================================
     var $drawer  = $('.js-mobile-drawer');
@@ -229,28 +286,38 @@
 
     if ($detail.length) {
 
-        // Recalculate CTA price (+ struck original) = unit × quantity
-        function updateDetailCtaPrice() {
-            var $sel = $detail.find('.product-detail__format .is-selected');
-            var raw  = parseInt($sel.data('raw-price'), 10) || 0;
-            var comp = parseInt($sel.data('original-raw'), 10) || 0;
-            var disc = parseInt($sel.data('discount'), 10) || 0;
-            var qty  = parseInt($detail.find('.js-qty-input').val(), 10) || 1;
-
-            $detail.find('.js-cta-price').text(formatClp(raw * qty));
-
-            var $o = $detail.find('.js-cta-original');
-            if (disc > 0) {
-                $o.text(formatClp(comp * qty)).prop('hidden', false);
-            } else {
-                $o.prop('hidden', true);
-            }
-        }
-
         // Format an integer as CLP: 15500 → "$15.500"
         function formatClp(amount) {
             return '$' + String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
+
+        // Mini resumen (arriba del CTA): formato, molienda, cantidad y precio
+        // (unitario × cantidad) de la selección actual.
+        function updateDetailSummary() {
+            var $sel  = $detail.find('.product-detail__format .is-selected');
+            var raw   = parseInt($sel.data('raw-price'), 10) || 0;
+            var comp  = parseInt($sel.data('original-raw'), 10) || 0;
+            var disc  = parseInt($sel.data('discount'), 10) || 0;
+            var qty   = parseInt($detail.find('.js-qty-input').val(), 10) || 1;
+            var peso  = $sel.data('peso') || '';
+            var molienda = $detail.find('.molienda-option.is-selected .molienda-option__label').text().trim();
+
+            $detail.find('.js-summary-qty').text(qty);
+            $detail.find('.js-summary-format').text(peso);
+            $detail.find('.js-summary-molienda').text(molienda);
+            $detail.find('.js-summary-price').text(formatClp(raw * qty));
+
+            var $o = $detail.find('.js-summary-original');
+            var $d = $detail.find('.js-summary-discount');
+            if (disc > 0) {
+                $o.text(formatClp(comp * qty)).prop('hidden', false);
+                $d.text('-' + disc + '%').prop('hidden', false);
+            } else {
+                $o.prop('hidden', true);
+                $d.prop('hidden', true);
+            }
+        }
+        updateDetailSummary();
 
         // --- Format selector (250g / 1kg) ---
         $detail.on('click', '.product-detail__format .pill-selector__option', function () {
@@ -285,7 +352,7 @@
             $detail.find('.js-variation-id').val(varId);
             $detail.find('.js-peso-input').val(peso);
 
-            updateDetailCtaPrice();
+            updateDetailSummary();
             setDetailCtaState();
         });
 
@@ -295,9 +362,7 @@
             var inStock = !$sel.length || String($sel.data('instock')) !== '0';
             var $cta    = $detail.find('.product-detail__cta');
             $cta.toggleClass('is-disabled', !inStock).prop('disabled', !inStock);
-            $cta.find('.js-cta-label').text(inStock ? 'Agregar al carrito —' : 'Sin stock');
-            $cta.find('.js-cta-price').prop('hidden', !inStock);
-            if (!inStock) $cta.find('.js-cta-original').prop('hidden', true);
+            $cta.find('.js-cta-label').text(inStock ? 'Agregar al carrito' : 'Sin stock');
         }
         setDetailCtaState();
 
@@ -307,6 +372,7 @@
             $opt.siblings('.molienda-option').removeClass('is-selected').attr('aria-pressed', 'false');
             $opt.addClass('is-selected').attr('aria-pressed', 'true');
             $detail.find('.js-molienda-input').val($opt.data('value'));
+            updateDetailSummary();
         });
 
         // --- Quantity picker ---
@@ -320,7 +386,7 @@
 
             $input.val(next);
             $detail.find('.js-qty-input').val(next);
-            updateDetailCtaPrice();
+            updateDetailSummary();
         });
 
         // --- Tabs ---
@@ -799,6 +865,7 @@
             action:     'sc_contact',
             nombre:     $form.find('[name="nombre"]').val(),
             email:      $form.find('[name="email"]').val(),
+            telefono:   $form.find('[name="telefono"]').val(),
             mensaje:    $form.find('[name="mensaje"]').val(),
             sc_website: $form.find('[name="sc_website"]').val()
         }).done(function (res) {

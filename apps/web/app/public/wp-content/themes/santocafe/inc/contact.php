@@ -30,6 +30,7 @@ function sc_handle_contact() {
 
 	$name    = sanitize_text_field( wp_unslash( $_POST['nombre'] ?? '' ) );
 	$email   = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+	$phone   = sanitize_text_field( wp_unslash( $_POST['telefono'] ?? '' ) );
 	$message = sanitize_textarea_field( wp_unslash( $_POST['mensaje'] ?? '' ) );
 	$subject = sanitize_text_field( wp_unslash( $_POST['asunto'] ?? '' ) );
 
@@ -44,6 +45,8 @@ function sc_handle_contact() {
 	if ( mb_strlen( $message ) < 5 || mb_strlen( $message ) > 3000 ) {
 		$fields[] = 'mensaje';
 	}
+	// Teléfono es opcional: solo lo acotamos, no lo validamos.
+	$phone   = mb_substr( $phone, 0, 30 );
 	// El asunto no viene del form (default), pero lo acotamos por las dudas.
 	$subject = mb_substr( $subject, 0, 150 );
 	if ( $fields ) {
@@ -74,6 +77,17 @@ function sc_handle_contact() {
 	$whatsapp  = 'https://wa.me/56951414791';
 	$year      = date_i18n( 'Y' );
 
+	// Fila de teléfono: solo se arma si el dato vino completo (campo opcional).
+	// El valor se muestra como link a WhatsApp (best-effort: asume Chile si no trae código de país).
+	$phone_row = '';
+	if ( '' !== $phone ) {
+		$phone_wa_url = sc_phone_to_wa_url( $phone );
+		$phone_row    = '<tr>'
+			. '<td class="lbl" width="120" valign="top" style="padding:14px 0 14px 18px; font-size:13px; color:#8a7d6b; text-transform:uppercase; letter-spacing:0.06em;">Teléfono</td>'
+			. '<td class="val" valign="top" style="padding:14px 18px; font-size:15px; border-bottom:1px solid #f1eadd;"><a href="' . esc_url( $phone_wa_url ) . '" style="color:#8a6d1f; text-decoration:underline;">' . esc_html( $phone ) . '</a></td>'
+			. '</tr>';
+	}
+
 	// Render del aviso al admin.
 	$admin_html = sc_render_contact_email(
 		'contacto-admin.html',
@@ -81,6 +95,7 @@ function sc_handle_contact() {
 			'LOGO_URL'     => esc_url( $logo ),
 			'name'         => esc_html( $name ),
 			'email'        => esc_html( $email ),
+			'PHONE_ROW'    => $phone_row,
 			'subject'      => esc_html( $subject ),
 			'message'      => $message_html,
 			'submitted_at' => esc_html( $submitted_at ),
@@ -149,6 +164,29 @@ function sc_handle_contact() {
 	}
 
 	wp_send_json_success( array( 'message' => '¡Mensaje enviado! Te responderemos a la brevedad.' ) );
+}
+
+/**
+ * Convierte un teléfono ingresado a mano (formato libre) en un link wa.me.
+ * Best-effort: se queda solo con los dígitos y asume Chile (56) si el
+ * usuario no incluyó código de país.
+ *
+ * @param string $raw Teléfono tal como lo escribió el usuario.
+ * @return string URL de WhatsApp (https://wa.me/<digits>).
+ */
+function sc_phone_to_wa_url( string $raw ): string {
+	$digits = preg_replace( '/\D+/', '', $raw );
+	$digits = (string) $digits;
+	if ( '' === $digits ) {
+		return 'https://wa.me/56951414791';
+	}
+	if ( '0' === substr( $digits, 0, 1 ) ) {
+		$digits = substr( $digits, 1 );
+	}
+	if ( '56' !== substr( $digits, 0, 2 ) ) {
+		$digits = '56' . $digits;
+	}
+	return 'https://wa.me/' . $digits;
 }
 
 /**

@@ -298,9 +298,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
+    /* Room for the discount badge that protrudes above the buttons */
+    padding-top: 10px;
 }
 
 .product-detail__format .pill-selector__option {
+    position: relative;
     flex: 0 0 auto;
     min-width: 132px;
     display: flex;
@@ -326,25 +329,37 @@
     color: var(--color-oscuro);
 }
 
-.format-weight {
+.format-price {
     font-size: var(--font-size-lg);
     font-weight: 700;
     line-height: 1.1;
 }
 
-.format-cups {
-    display: none;
+.format-weight {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-texto-suave);
 }
 
+/* Discount badge — centered on the top edge, half in / half out, matching
+   the home catalog's format-selector badge. */
 .format-discount {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: var(--color-oscuro);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: var(--color-dorado);
+    color: var(--color-oscuro);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     padding: 2px 7px;
-    border-radius: var(--radius-pill);
-    line-height: 1.4;
+    border-radius: 9999px;
+    border: 1.5px solid var(--color-tarjeta);
+    box-shadow: var(--shadow-card);
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1.5;
 }
 
 /* Molienda selector (2×4 / 4 col) */
@@ -486,6 +501,86 @@
     height: 18px;
 }
 
+/* Mini resumen de la selección (arriba del CTA) */
+.product-detail__summary-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+}
+
+.product-detail__summary-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-texto-suave);
+    flex-shrink: 0;
+}
+
+.product-detail__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: fit-content;
+    max-width: 100%;
+    padding: 10px;
+    background: #f3ece1;
+    border-radius: var(--radius-card);
+}
+
+.product-detail__summary-media img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--color-beige);
+    display: block;
+    flex-shrink: 0;
+}
+
+.product-detail__summary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.product-detail__summary-line {
+    font-size: var(--font-size-sm);
+    color: var(--color-texto-suave);
+}
+
+.product-detail__summary-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.product-detail__summary-price {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-oscuro);
+}
+
+.product-detail__summary-was {
+    font-size: var(--font-size-sm);
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: var(--color-texto-suave);
+}
+
+.product-detail__summary-discount {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-oscuro);
+    background: var(--color-dorado);
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    line-height: 1.4;
+}
+
 /* CTA */
 .product-detail__cart-form {
     margin-top: var(--spacing-xs);
@@ -493,6 +588,12 @@
 
 .product-detail__cta {
     gap: var(--spacing-sm);
+}
+
+@media (min-width: 1025px) {
+    .product-detail__cta {
+        max-width: 380px;
+    }
 }
 
 /* Formato sin stock: atenuado y tachado (sigue seleccionable para ver "Sin stock"). */
@@ -511,12 +612,6 @@
 }
 .product-detail__cta.is-disabled svg,
 .product-detail__cta:disabled svg { display: none; }
-
-.product-detail__cta-was {
-    text-decoration: line-through;
-    opacity: 0.6;
-    font-weight: 500;
-}
 
 /* ============================================================
    Sections (descripción / notas / origen / información)
